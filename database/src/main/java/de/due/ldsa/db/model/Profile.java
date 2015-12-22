@@ -26,7 +26,7 @@ public class Profile extends SocialNetworkContentImpl
     ArrayList<Profile> friends;
     ArrayList<ProfileFeed> profileFeeds;
     ArrayList<Event> attendingEvents;
-    ArrayList<SocialNetworkContent> linkedOtherSocialNetworkContent;
+    ArrayList<Profile> linkedOtherSocialNetworkProfile;
 
     public boolean link(SocialNetworkContent snc)
         throws DbException

@@ -9,6 +9,9 @@ import java.time.ZoneOffset;
  *
  */
 public interface SocialNetworkContent {
+
+
+
     OffsetDateTime getContentTimestamp();
 
     OffsetDateTime getCrawlingTimestamp();

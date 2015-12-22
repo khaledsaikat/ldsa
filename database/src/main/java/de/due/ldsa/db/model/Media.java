@@ -7,17 +7,16 @@ public class Media
 {
     long size;
     String crawlingPath;
-    //Der Typ "Filetyp" fehlt im Modell
-    //Filetyp filetyp;
+    String filename;
     byte[] bytes;
 
     public long getSize() {
         return size;
     }
 
-    //public Filetyp getFiletyp() {
-    //    return filetyp;
-    //}
+    public String getFilename() {
+        return filename;
+    }
 
     public String getCrawlingPath() {
         return crawlingPath;

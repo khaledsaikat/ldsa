@@ -133,3 +133,25 @@ CREATE TABLE events (
     attendingIds LIST<BIGINT>,
     eventText VARCHAR
 );
+
+CREATE TABLE comments (
+
+    id BIGINT PRIMARY KEY,
+    snId INT,
+    text VARCHAR,
+    commenter BIGINT,
+    media ,
+    hastagsIds LIST<BIGINT>,
+    likerIds LIST<BIGINT>,
+    commentsIds LIST<BIGINT>,
+
+);
+
+CREATE TABLE hastags (
+
+    id BIGINT PRIMARY KEY,
+    snId INT,
+    title VARCHAR,
+    usedAtListIds LIST<BIGINT>,
+
+);
