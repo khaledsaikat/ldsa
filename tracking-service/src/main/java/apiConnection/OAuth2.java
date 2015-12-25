@@ -28,7 +28,7 @@ public interface OAuth2 {
 	 * @param verifierString
 	 * @return Token
 	 */
-	public Token saveAccessToken(String clientID, String verifierString);
+	public Token saveAccessToken(String clientID, String verifyString);
 	
 	/**
 	 * gets accessToken from .token File with verifyString
@@ -36,4 +36,10 @@ public interface OAuth2 {
 	 * @return Token
 	 */
 	public Token getStoredAccessToken(String verifyCode);
+	/**
+	 * creates Access Token and returns it
+	 * @param verifyString
+	 * @return Token
+	 */
+	public Token createAccessToken(String verifyString);
 }

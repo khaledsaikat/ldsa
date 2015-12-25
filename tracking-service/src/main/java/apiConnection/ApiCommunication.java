@@ -8,7 +8,7 @@ import java.util.List;
  *
  * @param <T>
  */
-public interface API<T> {
+public interface ApiCommunication<T> {
 
 	/**
 	 * gets connection to serve the OAuth protocol

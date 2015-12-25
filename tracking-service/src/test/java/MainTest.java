@@ -11,8 +11,8 @@ import org.jinstagram.entity.users.feed.UserFeed;
 import org.jinstagram.entity.users.feed.UserFeedData;
 import org.jinstagram.exceptions.InstagramException;
 
-import apiConnection.API;
-import apiConnection.InstagramAPI;
+import apiConnection.ApiCommunication;
+import apiConnection.InstagramApiCommunication;
 import apiConnection.OAuth2;
 import apiConnection.OAuth2Instagram;
 
@@ -34,7 +34,7 @@ public class MainTest {
 																		// UI!
 
 		OAuth2 oAuth2 = new OAuth2Instagram();
-		API<?> api = new InstagramAPI();
+		ApiCommunication<?> api = new InstagramApiCommunication();
 		Token accessToken = null;
 
 		if (oAuth2.getStoredAccessToken(verifycode) != null) {

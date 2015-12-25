@@ -8,7 +8,7 @@ import org.jinstagram.Instagram;
  * @author Salah Beck
  *
  */
-public class InstagramAPI implements API<Instagram> {
+public class InstagramApiCommunication implements ApiCommunication<Instagram> {
 
 	@Override
 	public Instagram getconnection(String accesstoken, String clientSecret) {
