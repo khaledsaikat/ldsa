@@ -140,7 +140,7 @@ CREATE TABLE comments (
     snId INT,
     text VARCHAR,
     commenter BIGINT,
-    media ,
+    mediaId BIGINT,
     hastagsIds LIST<BIGINT>,
     likerIds LIST<BIGINT>,
     commentsIds LIST<BIGINT>,

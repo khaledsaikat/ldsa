@@ -1,39 +1,85 @@
 package de.due.ldsa.db.model;
 
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
 import de.due.ldsa.db.DbException;
 
 import java.awt.Image;
 import java.net.URL;
 import java.util.ArrayList;
 
+import java.nio.ByteBuffer;
+
 /**
  *
  */
+@Table(keyspace = "ldsa", name = "socialNetworks")
 public class SocialNetwork
 {
-    public String name;
-    public URL homeURL;
-    public Image logo;
+    @PartitionKey
+    private int id;
 
-    public ArrayList<Profile> allProfiles()
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "homeURL")
+    private String homeURL;
+
+    @Column(name = "logo")
+    private ByteBuffer logo;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getHomeURL() {
+        return homeURL;
+    }
+
+    public void setHomeURL(String homeURL) {
+        this.homeURL = homeURL;
+    }
+
+    public ByteBuffer getLogo() {
+        return logo;
+    }
+
+    public void setLogo(ByteBuffer logo) {
+        this.logo = logo;
+    }
+
+    public Iterable<Profile> allProfiles()
         throws DbException
     {
         throw new DbException("not yet implemented.");
     }
 
-    public ArrayList<ProfileFeed> allProfileFeed()
+    public Iterable<ProfileFeed> allProfileFeed()
         throws DbException
     {
         throw new DbException("not yet implemented.");
     }
 
-    public ArrayList<Media> allMedia()
+    public Iterable<Media> allMedia()
         throws DbException
     {
         throw new DbException("not yet implemented.");
     }
 
-    public ArrayList<SocialNetworkContent> allContent()
+    public Iterable<SocialNetworkContent> allContent()
         throws DbException
     {
         throw new DbException("not yet implemented.");
