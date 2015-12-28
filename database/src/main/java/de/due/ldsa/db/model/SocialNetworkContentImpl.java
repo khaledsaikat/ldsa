@@ -8,38 +8,18 @@ import java.time.ZoneOffset;
 /**
  *
  */
-public class SocialNetworkContentImpl implements SocialNetworkContent {
-    public ContentMeta metaInfos;
+public abstract class SocialNetworkContentImpl implements SocialNetworkContent
+{
+    @Override
+    public abstract OffsetDateTime getContentTimestamp() throws DbException;
 
     @Override
-    public OffsetDateTime getContentTimestamp()
-    {
-        return metaInfos.contentTimestamp;
-    }
+    public abstract OffsetDateTime getCrawlingTimestamp() throws DbException;
 
     @Override
-    public OffsetDateTime getCrawlingTimestamp()
-    {
-        return metaInfos.crawlingTimestamp;
-    }
+    public abstract SocialNetwork getSourceNetwork() throws DbException;
 
     @Override
-    public SocialNetwork getSourceNetwork()
-    {
-        return metaInfos.sourceNetwork;
-    }
-
-    @Override
-    public void setContentMeta(OffsetDateTime contentTs, OffsetDateTime crawlingTs, SocialNetwork sn)
-            throws DbException
-    {
-        throw new DbException("not yet implemented");
-    }
-
-    @Override
-    public void changeTimezones(ZoneOffset zo)
-            throws DbException
-    {
-        throw new DbException("not yet implemented");
-    }
+    public abstract void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn)
+            throws DbException;
 }

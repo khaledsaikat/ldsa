@@ -10,11 +10,15 @@ package de.due.ldsa.db;
     https://docs.datastax.com/en/developer/java-driver/2.1/java-driver/reference/crudOperations.html
  */
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.CodecRegistry;
+import com.datastax.driver.core.CodecUtils;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Truncate;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import de.due.ldsa.db.codecs.OffsetDateTimeCodec;
+import de.due.ldsa.db.model.ProfileFeed;
 import de.due.ldsa.db.model.SocialNetwork;
 
 import java.io.Closeable;
@@ -25,6 +29,7 @@ public class DatabaseImpl implements Database, Closeable
     static DatabaseImpl singleton;
     static Session session;
     Mapper<SocialNetwork> socialNetworkMapper;
+    Mapper<ProfileFeed> profileFeedMapper;
 
     @Override
     public void close() throws IOException {
@@ -37,6 +42,8 @@ public class DatabaseImpl implements Database, Closeable
         Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
         session = cluster.connect();
 
+        CodecRegistry registry = cluster.getConfiguration().getCodecRegistry();
+        registry.register(new OffsetDateTimeCodec());
     }
 
     public static Database getInstance()
@@ -81,5 +88,26 @@ public class DatabaseImpl implements Database, Closeable
         return result;
     }
 
+    public void saveProfileFeed(ProfileFeed pf)
+    {
+        if (profileFeedMapper == null)
+        {
+            profileFeedMapper = new MappingManager(session).mapper(ProfileFeed.class);
+        }
+
+        profileFeedMapper.save(pf);
+
+    }
+
+    public ProfileFeed getProfileFeed(long id)
+    {
+        if (profileFeedMapper == null)
+        {
+            profileFeedMapper = new MappingManager(session).mapper(ProfileFeed.class);
+        }
+
+        ProfileFeed result = profileFeedMapper.get(id);
+        return result;
+    }
 
 }

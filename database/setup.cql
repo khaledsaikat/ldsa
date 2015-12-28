@@ -25,12 +25,12 @@ CREATE TABLE profileFeeds (
     rawStoryText VARCHAR,
     likerIds LIST<BIGINT>,
     sharerIds LIST<BIGINT>,
-    hashtagIds LIST<INT>,
+    hashtags LIST<VARCHAR>,
     links LIST<VARCHAR>,
     locationId INT,
     mediaId INT,
     taggedUserIds LIST<BIGINT>,
-    commentIds LIST<INT>
+    commentIds LIST<BIGINT>
 );
 
 CREATE TABLE media (
@@ -147,11 +147,3 @@ CREATE TABLE comments (
 
 );
 
-CREATE TABLE hastags (
-
-    id BIGINT PRIMARY KEY,
-    snId INT,
-    title VARCHAR,
-    usedAtListIds LIST<BIGINT>,
-
-);

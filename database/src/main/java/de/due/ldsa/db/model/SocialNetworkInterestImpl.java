@@ -1,7 +1,6 @@
 package de.due.ldsa.db.model;
 
 import de.due.ldsa.db.DbException;
-
 import java.util.ArrayList;
 
 /**

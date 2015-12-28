@@ -1,15 +1,19 @@
 package de.due.ldsa.db.model;
 
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.Table;
 import de.due.ldsa.db.DbException;
 
 import java.net.URL;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
  *
  */
-public class Profile extends SocialNetworkContentImpl
+public abstract class Profile implements SocialNetworkContent
 {
+
     long userID;
     String username;
     URL profileURL;
@@ -32,5 +36,21 @@ public class Profile extends SocialNetworkContentImpl
         throws DbException
     {
         throw new DbException("not yet implemented");
+    }
+
+    public OffsetDateTime getContentTimestamp() throws DbException {
+        throw new DbException("not yet implemented.");
+    }
+
+    public OffsetDateTime getCrawlingTimestamp() throws DbException {
+        throw new DbException("not yet implemented.");
+    }
+
+    public SocialNetwork getSourceNetwork() throws DbException {
+        throw new DbException("not yet implemented.");
+    }
+
+    public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+        throw new DbException("not yet implemented.");
     }
 }

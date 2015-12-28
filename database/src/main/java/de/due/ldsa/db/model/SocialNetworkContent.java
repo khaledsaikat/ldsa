@@ -8,19 +8,20 @@ import java.time.ZoneOffset;
 /**
  *
  */
-public interface SocialNetworkContent {
+public interface SocialNetworkContent
+{
+    //We need to put these methods here, because Datastax' Mapping driver does not support inheritance.
+    //If we would declare fields in an abstract class, they would neither be written nor read in the database.
 
-
-
-    OffsetDateTime getContentTimestamp();
-
-    OffsetDateTime getCrawlingTimestamp();
-
-    SocialNetwork getSourceNetwork();
-
-    void setContentMeta(OffsetDateTime contentTs, OffsetDateTime crawlingTs, SocialNetwork sn)
+    OffsetDateTime getContentTimestamp()
             throws DbException;
 
-    void changeTimezones(ZoneOffset zo)
-                    throws DbException;
+    OffsetDateTime getCrawlingTimestamp()
+            throws DbException;
+
+    SocialNetwork getSourceNetwork()
+            throws DbException;
+
+    void setContentMeta(OffsetDateTime content,OffsetDateTime crawling,SocialNetwork sn)
+            throws DbException;
 }

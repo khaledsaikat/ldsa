@@ -1,15 +1,6 @@
 dependencies {
     // Cassandra
-    compile 'com.datastax.cassandra:cassandra-driver-core:3.0.0-alpha5'
+    compile 'com.datastax.cassandra:cassandra-driver-core:3.0.0-beta1'
     compile 'com.datastax.cassandra:cassandra-driver-mapping:3.0.0-beta1'
-
-    /*
-    We really can't use Kundera because it won't work with the 3.0.0 series of Datastax' Cassandra drivers.
-    It does however work fine with the older ones (2.0) - but we can't use these because they can't connect with 3.0.0
-    Cassandra nodes. Therefore we fell back to QueryBuilder in Datastax' driver - even though this isn't JPA =(
-    */
-
-    /*compile 'com.impetus.kundera.client:kundera-cassandra:3.2'
-    compile 'com.impetus.kundera.client:kundera-cassandra-ds-driver:3.2'*/
 
 }
