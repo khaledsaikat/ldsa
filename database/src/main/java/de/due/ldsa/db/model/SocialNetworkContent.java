@@ -24,4 +24,8 @@ public interface SocialNetworkContent
 
     void setContentMeta(OffsetDateTime content,OffsetDateTime crawling,SocialNetwork sn)
             throws DbException;
+
+    void setId(long id);
+
+    long getId();
 }

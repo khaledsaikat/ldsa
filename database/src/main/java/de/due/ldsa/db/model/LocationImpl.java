@@ -11,11 +11,8 @@ import java.time.OffsetDateTime;
 /**
  *
  */
-
-//We know this should extend LocationImpl, but we can't do that, because the Cassandra driver does not support inheritance.
-@Table(keyspace = "ldsa", name = "organisationPlaces")
-public class OrganisationPlace implements Location
-{
+@Table(keyspace = "ldsa", name = "locations")
+public class LocationImpl implements Location {
     /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
       If you need access to these fields use the getters and setters from the upper classes.*/
     @Column(name = "snId")
@@ -39,37 +36,19 @@ public class OrganisationPlace implements Location
     public double positionLongitude;
     @Column(name = "isInId")
     public long isInId;
-    @Column(name = "organisationProfileId")
-    public long organisationProfileId;
+
+    //------------------------------------------------------------------------------------------------------------------
+    //Getters and setters
+    //------------------------------------------------------------------------------------------------------------------
 
     @Override
-    public int getSocialNetworkId() {
-        return socialNetworkId;
+    public long getIsInId() {
+        return isInId;
     }
 
     @Override
-    public void setSocialNetworkId(int socialNetworkId) {
-        this.socialNetworkId = socialNetworkId;
-    }
-
-    @Override
-    public OffsetDateTime getContentTimestamp() {
-        return contentTimestamp;
-    }
-
-    @Override
-    public void setContentTimestamp(OffsetDateTime contentTimestamp) {
-        this.contentTimestamp = contentTimestamp;
-    }
-
-    @Override
-    public OffsetDateTime getCrawlingTimestamp() {
-        return crawlingTimestamp;
-    }
-
-    @Override
-    public void setCrawlingTimestamp(OffsetDateTime crawlingTimestamp) {
-        this.crawlingTimestamp = crawlingTimestamp;
+    public void setIsInId(long isInId) {
+        this.isInId = isInId;
     }
 
     @Override
@@ -80,16 +59,6 @@ public class OrganisationPlace implements Location
     @Override
     public void setId(long id) {
         this.id = id;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override
@@ -133,46 +102,51 @@ public class OrganisationPlace implements Location
     }
 
     @Override
-    public long getIsInId() {
-        return isInId;
+    public String getName() {
+        return name;
     }
 
     @Override
-    public void setIsInId(long isInId) {
-        this.isInId = isInId;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public long getOrganisationProfileId() {
-        return organisationProfileId;
+    @Override
+    public int getSocialNetworkId() {
+        return socialNetworkId;
     }
 
-    public void setOrganisationProfileId(long organisationProfileId) {
-        this.organisationProfileId = organisationProfileId;
+    @Override
+    public void setSocialNetworkId(int socialNetworkId) {
+        this.socialNetworkId = socialNetworkId;
+    }
+
+    @Override
+    public void setContentTimestamp(OffsetDateTime contentTimestamp) {
+        this.contentTimestamp = contentTimestamp;
+    }
+
+    @Override
+    public void setCrawlingTimestamp(OffsetDateTime crawlingTimestamp) {
+        this.crawlingTimestamp = crawlingTimestamp;
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    //  Complex methods
+    //Complex methods
     //------------------------------------------------------------------------------------------------------------------
-    public CoopProfile getOrganisation()
-            throws DbException
-    {
-        throw new DbException("not yet implemented.");
-    }
-
-    @Override
-    public Position getPosition() {
-        return new Position(this.positionLatidue, this.positionLongitude);
-    }
-
-    @Override
-    public void setPosition(Position p) {
-        this.positionLatidue = p.getLatidue();
-        this.positionLongitude = p.getLongitude();
-    }
-
     @Override
     public int getTimesUsed() throws DbException {
         throw new DbException("not yet implemented.");
+    }
+
+    @Override
+    public OffsetDateTime getContentTimestamp() throws DbException {
+        return contentTimestamp;
+    }
+
+    @Override
+    public OffsetDateTime getCrawlingTimestamp() throws DbException {
+        return crawlingTimestamp;
     }
 
     @Override
@@ -185,5 +159,16 @@ public class OrganisationPlace implements Location
         this.contentTimestamp = content;
         this.crawlingTimestamp = crawling;
         this.socialNetworkId = sn.getId();
+    }
+
+    @Override
+    public Position getPosition() {
+        return new Position(positionLongitude, positionLatidue);
+    }
+
+    @Override
+    public void setPosition(Position p) {
+        this.positionLatidue = p.getLatidue();
+        this.positionLongitude = p.getLongitude();
     }
 }

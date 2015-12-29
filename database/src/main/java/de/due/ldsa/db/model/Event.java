@@ -19,6 +19,8 @@ public class Event implements SocialNetworkContent
     OffsetDateTime contentTimestamp;
     @Column(name = "crawlingTimestamp")
     OffsetDateTime crawlingTimestamp;
+    @Column(name = "id")
+    long id;
 
     public String name;
     public ArrayList<Profile> hosts;
@@ -65,5 +67,15 @@ public class Event implements SocialNetworkContent
 
     public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
         throw new DbException("not yet implemented.");
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id = id;
     }
 }

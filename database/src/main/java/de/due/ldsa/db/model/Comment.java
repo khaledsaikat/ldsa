@@ -20,6 +20,8 @@ public class Comment implements SocialNetworkContent
     OffsetDateTime contentTimestamp;
     @Column(name = "crawlingTimestamp")
     OffsetDateTime crawlingTimestamp;
+    @Column(name = "id")
+    long id;
 
     private String text;
     private Profile commenter;
@@ -74,5 +76,15 @@ public class Comment implements SocialNetworkContent
 
     public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
         throw new DbException("not yet implemented.");
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id = id;
     }
 }

@@ -34,9 +34,12 @@ CREATE TABLE profileFeeds (
 );
 
 CREATE TABLE media (
-    id INT PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
+    snId INT,
+    contentTimestamp TIMESTAMP,
+    crawlingTimestamp TIMESTAMP,
     crawlingPath VARCHAR,
-    filetyp INT,
+    filename VARCHAR,
     bytes BLOB
 );
 
@@ -46,7 +49,6 @@ CREATE TABLE locations (
     contentTimestamp TIMESTAMP,
     crawlingTimestamp TIMESTAMP,
     name VARCHAR,
-    timesUsed INT,
     city VARCHAR,
     country VARCHAR,
     latidue DOUBLE,
@@ -60,7 +62,6 @@ CREATE TABLE organisationPlaces (
     contentTimestamp TIMESTAMP,
     crawlingTimestamp TIMESTAMP,
     name VARCHAR,
-    timesUsed INT,
     city VARCHAR,
     country VARCHAR,
     latidue DOUBLE,
@@ -69,56 +70,56 @@ CREATE TABLE organisationPlaces (
     organisationProfileId BIGINT
 );
 
-
 CREATE TABLE coopProfiles (
     id BIGINT PRIMARY KEY,
     snId INT,
     contentTimestamp TIMESTAMP,
     crawlingTimestamp TIMESTAMP,
-    userId BIGINT,
     username VARCHAR,
     profileURL VARCHAR,
     fullname VARCHAR,
     bio VARCHAR,
-    interestIds LIST<INT>,
+    interestIds LIST<BIGINT>,
     userEmail VARCHAR,
     userWebsite VARCHAR,
-    profilePhotoMediaId INT,
-    lastUpdateProfileFeedId INT,
-    followedIds LIST<INT>,
-    followedByIds LIST<INT>,
-    friendIds LIST<INT>,
-    profileFeedIds LIST<INT>,
-    attendingEventIds LIST<INT>,
-    kind INT
+    profilePhotoMediaId BIGINT,
+    lastUpdateProfileFeedId BIGINT,
+    hometownLocationId BIGINT,
+    followedIds LIST<BIGINT>,
+    followedByIds LIST<BIGINT>,
+    friendIds LIST<BIGINT>,
+    profileFeedIds LIST<BIGINT>,
+    attendingEventIds LIST<BIGINT>,
+    linkedOtherProfileIds LIST<BIGINT>,
+    dateFounded TIMESTAMP
 );
 
 
 CREATE TABLE humanProfiles (
-    id BIGINT PRIMARY KEY,
+id BIGINT PRIMARY KEY,
     snId INT,
     contentTimestamp TIMESTAMP,
     crawlingTimestamp TIMESTAMP,
-    userId BIGINT,
     username VARCHAR,
     profileURL VARCHAR,
     fullname VARCHAR,
     bio VARCHAR,
-    interestIds LIST<INT>,
+    interestIds LIST<BIGINT>,
     userEmail VARCHAR,
     userWebsite VARCHAR,
-    profilePhotoMediaId INT,
-    lastUpdateProfileFeedId INT,
-    followedIds LIST<INT>,
-    followedByIds LIST<INT>,
-    friendIds LIST<INT>,
-    profileFeedIds LIST<INT>,
-    attendingEventIds LIST<INT>,
-    sexId INT,
+    profilePhotoMediaId BIGINT,
+    lastUpdateProfileFeedId BIGINT,
+    hometownLocationId BIGINT,
+    followedIds LIST<BIGINT>,
+    followedByIds LIST<BIGINT>,
+    friendIds LIST<BIGINT>,
+    profileFeedIds LIST<BIGINT>,
+    attendingEventIds LIST<BIGINT>,
+    linkedOtherProfileIds LIST<BIGINT>,
+    sex INT,
     birthday TIMESTAMP,
-    relationshipStatusId INT,
-    relationshipPersons LIST<BIGINT>    //this is a LIST and not a single number because open relationships may include
-                                        //more than two people.
+    relationshipStatus INT,
+    relationshipPeopleIds LIST<BIGINT>
 );
 
 CREATE TABLE events (

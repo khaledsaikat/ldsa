@@ -11,15 +11,16 @@ package de.due.ldsa.db;
  */
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.CodecRegistry;
-import com.datastax.driver.core.CodecUtils;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Truncate;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import de.due.ldsa.db.codecs.ByteArrayCodec;
+import de.due.ldsa.db.codecs.LongArrayListCodec;
 import de.due.ldsa.db.codecs.OffsetDateTimeCodec;
-import de.due.ldsa.db.model.ProfileFeed;
-import de.due.ldsa.db.model.SocialNetwork;
+import de.due.ldsa.db.codecs.StringArrayListCodec;
+import de.due.ldsa.db.model.*;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -30,6 +31,9 @@ public class DatabaseImpl implements Database, Closeable
     static Session session;
     Mapper<SocialNetwork> socialNetworkMapper;
     Mapper<ProfileFeed> profileFeedMapper;
+    Mapper<Media> mediaMapper;
+    Mapper<LocationImpl> locationMapper;
+    Mapper<OrganisationPlace> organisationPlaceMapper;
 
     @Override
     public void close() throws IOException {
@@ -44,6 +48,9 @@ public class DatabaseImpl implements Database, Closeable
 
         CodecRegistry registry = cluster.getConfiguration().getCodecRegistry();
         registry.register(new OffsetDateTimeCodec());
+        registry.register(new LongArrayListCodec());
+        registry.register(new StringArrayListCodec());
+        registry.register(new ByteArrayCodec());
     }
 
     public static Database getInstance()
@@ -110,4 +117,66 @@ public class DatabaseImpl implements Database, Closeable
         return result;
     }
 
+    public void saveMedia(Media m)
+    {
+        if (mediaMapper == null)
+        {
+            mediaMapper = new MappingManager(session).mapper(Media.class);
+        }
+
+        mediaMapper.save(m);
+    }
+
+    public Media getMedia(long id)
+    {
+        if (mediaMapper == null)
+        {
+            mediaMapper = new MappingManager(session).mapper(Media.class);
+        }
+
+        Media result = mediaMapper.get(id);
+        return result;
+    }
+
+    public void saveLocation(LocationImpl l)
+    {
+        if (locationMapper == null)
+        {
+            locationMapper = new MappingManager(session).mapper(LocationImpl.class);
+        }
+
+        locationMapper.save(l);
+    }
+
+    public LocationImpl getLocation(long id)
+    {
+        if (locationMapper == null)
+        {
+            locationMapper = new MappingManager(session).mapper(LocationImpl.class);
+        }
+
+        LocationImpl result = locationMapper.get(id);
+        return result;
+    }
+
+    public void saveOrganisationPlace(OrganisationPlace op)
+    {
+        if (organisationPlaceMapper == null)
+        {
+            organisationPlaceMapper = new MappingManager(session).mapper(OrganisationPlace.class);
+        }
+
+        organisationPlaceMapper.save(op);
+    }
+
+    public OrganisationPlace getOrganisationPlace(long id)
+    {
+        if (organisationPlaceMapper == null)
+        {
+            organisationPlaceMapper = new MappingManager(session).mapper(OrganisationPlace.class);
+        }
+
+        OrganisationPlace result = organisationPlaceMapper.get(id);
+        return result;
+    }
 }

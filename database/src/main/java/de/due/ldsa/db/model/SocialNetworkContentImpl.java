@@ -22,4 +22,10 @@ public abstract class SocialNetworkContentImpl implements SocialNetworkContent
     @Override
     public abstract void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn)
             throws DbException;
+
+    @Override
+    public abstract void setId(long id);
+
+    @Override
+    public abstract long getId();
 }

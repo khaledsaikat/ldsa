@@ -1,15 +1,9 @@
-import com.datastax.driver.core.DataType;
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
-import de.due.ldsa.db.codecs.OffsetDateTimeCodec;
-import de.due.ldsa.db.model.ProfileFeed;
-import de.due.ldsa.db.model.SocialNetwork;
+import de.due.ldsa.db.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.ByteBuffer;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 
 /**
@@ -19,8 +13,7 @@ import java.util.ArrayList;
 public class DatabaseTests
 {
     @Test
-    public void testSaveSocialNetwork() throws Exception
-    {
+    public void testSaveSocialNetwork() throws Exception {
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("socialNetworks");
 
@@ -31,11 +24,8 @@ public class DatabaseTests
         Assert.assertArrayEquals(sn.getLogo().array(),result.getLogo().array());
     }
 
-
-
     @Test
-    public void testSaveProfileFeed() throws Exception
-    {
+    public void testSaveProfileFeed() throws Exception {
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("socialNetworks");
         db.truncateTable("profileFeeds");
@@ -57,6 +47,74 @@ public class DatabaseTests
 
         ProfileFeed pf2 = db.getProfileFeed(1);
 
-        Assert.assertEquals(pf.getContentTimestamp(),pf2.getContentTimestamp());
+        Assert.assertEquals(pf.getHashtags(), pf2.getHashtags());
+    }
+
+    @Test
+    public void testSaveMedia() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("socialNetworks");
+        db.truncateTable("media");
+
+        SocialNetwork sn = TestUtils.createDummySocialNetwork(db);
+
+        Media first = new Media();
+        first.setContentMeta(TestUtils.createRandomDateTime(), TestUtils.createRandomDateTime(), sn);
+        first.setBytes(TestUtils.createRandomMedia());
+        first.setFilename(TestUtils.randomFilename());
+        first.setCrawlingPath("/");
+        first.setId(1);
+        db.saveMedia(first);
+
+        Media second = db.getMedia(1);
+        Assert.assertArrayEquals(first.getBytes(), second.getBytes());
+    }
+
+    @Test
+    public void testSaveLocation() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("socialNetworks");
+        db.truncateTable("locations");
+
+        SocialNetwork sn = TestUtils.createDummySocialNetwork(db);
+
+        LocationImpl l = new LocationImpl();
+        l.setCity(TestUtils.randomCityName());
+        l.setContentMeta(TestUtils.createRandomDateTime(), TestUtils.createRandomDateTime(), sn);
+        l.setCountry(TestUtils.randomCountry());
+        l.setId(1);
+        l.setName(TestUtils.getRandomLocationName());
+        l.setPosition(TestUtils.getRandomPosition());
+
+        db.saveLocation(l);
+
+        Location l2 = db.getLocation(1);
+
+        Assert.assertEquals(l.getName(), l2.getName());
+    }
+
+    @Test
+    public void testSaveOrganisationPlace() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("socialNetworks");
+        db.truncateTable("organisationPlaces");
+
+        SocialNetwork sn = TestUtils.createDummySocialNetwork(db);
+
+        OrganisationPlace op = new OrganisationPlace();
+        op.setCity(TestUtils.randomCityName());
+        op.setContentMeta(TestUtils.createRandomDateTime(), TestUtils.createRandomDateTime(), sn);
+        op.setCountry(TestUtils.randomCountry());
+        op.setId(1);
+        op.setIsInId(2);
+        op.setName(TestUtils.getRandomLocationName());
+        op.setOrganisationProfileId(3);
+        op.setPosition(TestUtils.getRandomPosition());
+
+        db.saveOrganisationPlace(op);
+
+        OrganisationPlace second = db.getOrganisationPlace(1);
+
+        Assert.assertEquals(op.getOrganisationProfileId(), second.getOrganisationProfileId());
     }
 }

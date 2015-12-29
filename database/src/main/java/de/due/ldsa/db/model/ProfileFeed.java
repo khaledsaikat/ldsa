@@ -6,10 +6,8 @@ import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
 import de.due.ldsa.db.DbException;
 
-import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -33,21 +31,21 @@ public class ProfileFeed extends SocialNetworkContentImpl
     @Column(name = "rawStoryText")
     String rawStoryText;
     @Column(name = "likerIds")
-    List<Long> likerIds;
+    ArrayList<Long> likerIds;
     @Column(name = "sharerIds")
-    List<Long> sharerIds;
+    ArrayList<Long> sharerIds;
     @Column(name = "hashtags")
-    List<String> hashtags;
+    ArrayList<String> hashtags;
     @Column(name = "links")
-    List<String> links;
+    ArrayList<String> links;
     @Column(name = "locationId")
     int locationId;
     @Column(name = "mediaId")
     int mediaId;
     @Column(name = "taggedUserIds")
-    List<Long> taggedUserIds;
+    ArrayList<Long> taggedUserIds;
     @Column(name = "commentIds")
-    List<Long> commentIds;
+    ArrayList<Long> commentIds;
 
     public int getSocialNetworkId() {
         return socialNetworkId;
@@ -89,35 +87,35 @@ public class ProfileFeed extends SocialNetworkContentImpl
         this.rawStoryText = rawStoryText;
     }
 
-    public List<Long> getLikerIds() {
+    public ArrayList<Long> getLikerIds() {
         return likerIds;
     }
 
-    public void setLikerIds(List<Long> likerIds) {
+    public void setLikerIds(ArrayList<Long> likerIds) {
         this.likerIds = likerIds;
     }
 
-    public List<Long> getSharerIds() {
+    public ArrayList<Long> getSharerIds() {
         return sharerIds;
     }
 
-    public void setSharerIds(List<Long> sharerIds) {
+    public void setSharerIds(ArrayList<Long> sharerIds) {
         this.sharerIds = sharerIds;
     }
 
-    public List<String> getHashtags() {
+    public ArrayList<String> getHashtags() {
         return hashtags;
     }
 
-    public void setHashtags(List<String> hashtags) {
+    public void setHashtags(ArrayList<String> hashtags) {
         this.hashtags = hashtags;
     }
 
-    public List<String> getLinks() {
+    public ArrayList<String> getLinks() {
         return links;
     }
 
-    public void setLinks(List<String> links) {
+    public void setLinks(ArrayList<String> links) {
         this.links = links;
     }
 
@@ -137,19 +135,19 @@ public class ProfileFeed extends SocialNetworkContentImpl
         this.mediaId = mediaId;
     }
 
-    public List<Long> getTaggedUserIds() {
+    public ArrayList<Long> getTaggedUserIds() {
         return taggedUserIds;
     }
 
-    public void setTaggedUserIds(List<Long> taggedUserIds) {
+    public void setTaggedUserIds(ArrayList<Long> taggedUserIds) {
         this.taggedUserIds = taggedUserIds;
     }
 
-    public List<Long> getCommentIds() {
+    public ArrayList<Long> getCommentIds() {
         return commentIds;
     }
 
-    public void setCommentIds(List<Long> commentIds) {
+    public void setCommentIds(ArrayList<Long> commentIds) {
         this.commentIds = commentIds;
     }
 

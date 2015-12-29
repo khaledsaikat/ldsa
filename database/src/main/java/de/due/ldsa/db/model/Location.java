@@ -1,6 +1,5 @@
 package de.due.ldsa.db.model;
 
-import com.datastax.driver.mapping.annotations.Column;
 import de.due.ldsa.db.DbException;
 
 import java.time.OffsetDateTime;
@@ -8,65 +7,64 @@ import java.time.OffsetDateTime;
 /**
  *
  */
-public class Location implements SocialNetworkContent
-{
-    /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
-      If you need access to these fields use the getters and setters from the upper classes.*/
-    @Column(name = "snId")
-    int socialNetworkId;
-    @Column(name = "contentTimestamp")
-    OffsetDateTime contentTimestamp;
-    @Column(name = "crawlingTimestamp")
-    OffsetDateTime crawlingTimestamp;
 
-    public String name;
-    public int timesUsed;
-    public String city;
-    public String country;
-    public Position position;
-    public Location isIn;
+//We turned Location into an interface and had LocationImpl and OrganisationPlace implement it, to get around the
+//limitation (the lack of inheritance) of the Cassandra driver.
+public interface Location extends SocialNetworkContent {
+    //------------------------------------------------------------------------------------------------------------------
+    //Getters and setters
+    //------------------------------------------------------------------------------------------------------------------
+    long getId();
 
-    public String getName() {
-        return name;
-    }
+    void setId(long id);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    String getCity();
 
-    public int getTimesUsed() {
-        return timesUsed;
-    }
+    void setCity(String city);
 
-    public int getSocialNetworkId() {
-        return socialNetworkId;
-    }
+    String getCountry();
 
-    public void setSocialNetworkId(int socialNetworkId) {
-        this.socialNetworkId = socialNetworkId;
-    }
+    void setCountry(String country);
 
-    public void setContentTimestamp(OffsetDateTime contentTimestamp) {
-        this.contentTimestamp = contentTimestamp;
-    }
+    double getPositionLatidue();
 
-    public void setCrawlingTimestamp(OffsetDateTime crawlingTimestamp) {
-        this.crawlingTimestamp = crawlingTimestamp;
-    }
+    void setPositionLatidue(double positionLatidue);
 
-    public OffsetDateTime getContentTimestamp() throws DbException {
-        throw new DbException("not yet implemented.");
-    }
+    double getPositionLongitude();
 
-    public OffsetDateTime getCrawlingTimestamp() throws DbException {
-        throw new DbException("not yet implemented.");
-    }
+    void setPositionLongitude(double positionLongitude);
 
-    public SocialNetwork getSourceNetwork() throws DbException {
-        throw new DbException("not yet implemented.");
-    }
+    String getName();
 
-    public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
-        throw new DbException("not yet implemented.");
-    }
+    void setName(String name);
+
+    int getSocialNetworkId();
+
+    void setSocialNetworkId(int socialNetworkId);
+
+    void setContentTimestamp(OffsetDateTime contentTimestamp);
+
+    void setCrawlingTimestamp(OffsetDateTime crawlingTimestamp);
+
+    long getIsInId();
+
+    void setIsInId(long isInId);
+
+    //------------------------------------------------------------------------------------------------------------------
+    //Complex methods
+    //------------------------------------------------------------------------------------------------------------------
+    int getTimesUsed() throws DbException;
+
+    OffsetDateTime getContentTimestamp() throws DbException;
+
+    OffsetDateTime getCrawlingTimestamp() throws DbException;
+
+    SocialNetwork getSourceNetwork() throws DbException;
+
+    void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException;
+
+    Position getPosition();
+
+    void setPosition(Position p);
+
 }

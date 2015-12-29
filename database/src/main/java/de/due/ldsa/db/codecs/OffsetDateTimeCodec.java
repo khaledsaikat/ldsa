@@ -5,6 +5,7 @@ import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.ProtocolVersion;
 import com.datastax.driver.core.TypeCodec;
 import com.datastax.driver.core.exceptions.InvalidTypeException;
+import de.due.ldsa.db.DbException;
 
 import java.nio.ByteBuffer;
 import java.time.Instant;
@@ -37,14 +38,18 @@ public class OffsetDateTimeCodec extends TypeCodec<OffsetDateTime>
 
     @Override
     public OffsetDateTime parse(String value) throws InvalidTypeException {
-        System.out.println("Parsing " + value);
-        return OffsetDateTime.parse(value);
+        /*System.out.println("Parsing " + value);
+        return OffsetDateTime.parse(value);*/
+        System.out.println("Parse OffsetDateTimeCodec not supported.");
+        throw new DbException("not implemented.");
     }
 
     @Override
     public String format(OffsetDateTime value) throws InvalidTypeException {
-        System.out.println("Formatting...");
-        return value.toString();
+        /*System.out.println("Formatting...");
+        return value.toString();*/
+        System.out.println("Format OffsetDateTimeCodec not supported.");
+        throw new DbException("not implemented.");
     }
 
 

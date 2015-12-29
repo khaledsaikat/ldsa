@@ -5,10 +5,6 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import de.due.ldsa.db.DbException;
 
-import java.awt.Image;
-import java.net.URL;
-import java.util.ArrayList;
-
 import java.nio.ByteBuffer;
 
 /**
