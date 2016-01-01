@@ -1,4 +1,4 @@
 dependencies {
       compile project(':link-data')
-      compile 'com.sachinhandiekar:jInstagram:1.1.5'
+      compile project(':jInstagram-master')
    }
