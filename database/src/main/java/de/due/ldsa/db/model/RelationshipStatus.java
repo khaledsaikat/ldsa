@@ -16,5 +16,11 @@ public enum RelationshipStatus
     SEPARATED,
     DIVORCED,
     WIDOWED,
-    UNKNOWN
+    UNKNOWN;
+
+    private static RelationshipStatus[] allValues = values();
+
+    public static RelationshipStatus fromOrdinal(int n) {
+        return allValues[n];
+    }
 }

@@ -26,4 +26,20 @@ public class Hashtag {
     {
         throw new DbException("not yet implemented");
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Hashtag)) return false;
+
+        Hashtag hashtag = (Hashtag) o;
+
+        return title.equals(hashtag.title);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return title.hashCode();
+    }
 }

@@ -4,6 +4,7 @@ import de.due.ldsa.db.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -17,11 +18,11 @@ public class DatabaseTests
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("socialNetworks");
 
-        SocialNetwork sn = TestUtils.createDummySocialNetwork(db);
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
 
         SocialNetwork result = db.getSocialNetwork(0);
 
-        Assert.assertArrayEquals(sn.getLogo().array(),result.getLogo().array());
+        Assert.assertEquals(sn, result);
     }
 
     @Test
@@ -30,13 +31,13 @@ public class DatabaseTests
         db.truncateTable("socialNetworks");
         db.truncateTable("profileFeeds");
 
-        SocialNetwork sn = TestUtils.createDummySocialNetwork(db);
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
 
         ProfileFeed pf = new ProfileFeed();
         pf.setRawStoryText("bin shoppen :D");
         pf.setProfileId(1);
         pf.setId(1);
-        pf.setContentMeta(TestUtils.createRandomDateTime(),TestUtils.createRandomDateTime(),sn);
+        pf.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
 
         ArrayList<String> hashtags = new ArrayList<>();
         hashtags.add("#kommerz");
@@ -47,7 +48,7 @@ public class DatabaseTests
 
         ProfileFeed pf2 = db.getProfileFeed(1);
 
-        Assert.assertEquals(pf.getHashtags(), pf2.getHashtags());
+        Assert.assertEquals(pf, pf2);
     }
 
     @Test
@@ -56,18 +57,18 @@ public class DatabaseTests
         db.truncateTable("socialNetworks");
         db.truncateTable("media");
 
-        SocialNetwork sn = TestUtils.createDummySocialNetwork(db);
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
 
         Media first = new Media();
-        first.setContentMeta(TestUtils.createRandomDateTime(), TestUtils.createRandomDateTime(), sn);
-        first.setBytes(TestUtils.createRandomMedia());
-        first.setFilename(TestUtils.randomFilename());
+        first.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
+        first.setBytes(TestUtils.getRandomByteArray());
+        first.setFilename(TestUtils.getRandomFilename());
         first.setCrawlingPath("/");
         first.setId(1);
         db.saveMedia(first);
 
         Media second = db.getMedia(1);
-        Assert.assertArrayEquals(first.getBytes(), second.getBytes());
+        Assert.assertEquals(first, second);
     }
 
     @Test
@@ -76,12 +77,12 @@ public class DatabaseTests
         db.truncateTable("socialNetworks");
         db.truncateTable("locations");
 
-        SocialNetwork sn = TestUtils.createDummySocialNetwork(db);
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
 
         LocationImpl l = new LocationImpl();
-        l.setCity(TestUtils.randomCityName());
-        l.setContentMeta(TestUtils.createRandomDateTime(), TestUtils.createRandomDateTime(), sn);
-        l.setCountry(TestUtils.randomCountry());
+        l.setCity(TestUtils.getRandomCityName());
+        l.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
+        l.setCountry(TestUtils.getRandomCountry());
         l.setId(1);
         l.setName(TestUtils.getRandomLocationName());
         l.setPosition(TestUtils.getRandomPosition());
@@ -90,7 +91,7 @@ public class DatabaseTests
 
         Location l2 = db.getLocation(1);
 
-        Assert.assertEquals(l.getName(), l2.getName());
+        Assert.assertEquals(l, l2);
     }
 
     @Test
@@ -99,12 +100,12 @@ public class DatabaseTests
         db.truncateTable("socialNetworks");
         db.truncateTable("organisationPlaces");
 
-        SocialNetwork sn = TestUtils.createDummySocialNetwork(db);
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
 
         OrganisationPlace op = new OrganisationPlace();
-        op.setCity(TestUtils.randomCityName());
-        op.setContentMeta(TestUtils.createRandomDateTime(), TestUtils.createRandomDateTime(), sn);
-        op.setCountry(TestUtils.randomCountry());
+        op.setCity(TestUtils.getRandomCityName());
+        op.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
+        op.setCountry(TestUtils.getRandomCountry());
         op.setId(1);
         op.setIsInId(2);
         op.setName(TestUtils.getRandomLocationName());
@@ -115,6 +116,145 @@ public class DatabaseTests
 
         OrganisationPlace second = db.getOrganisationPlace(1);
 
-        Assert.assertEquals(op.getOrganisationProfileId(), second.getOrganisationProfileId());
+        Assert.assertEquals(op, second);
+    }
+
+    @Test
+    public void testSaveCoopProfile() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("socialNetworks");
+        db.truncateTable("coopProfiles");
+
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
+        CoopProfile first = new CoopProfile();
+        first.setAttendingEventIds(TestUtils.getRandomArrayList());
+        first.setBio("A company that manufactures everything.");
+        first.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
+        first.setDateFounded(TestUtils.getRandomLocalDate());
+        first.setFollowedByIds(TestUtils.getRandomArrayList());
+        first.setFriendIds(TestUtils.getRandomArrayList());
+        first.setFullname("ACME");
+        first.setHometownLocationId(1);
+        first.setId(2);
+        first.setInterestIds(TestUtils.getRandomArrayList());
+        first.setLastUpdateProfileFeedId(3);
+        first.setLinkedOtherSocialNetworkProfileIds(TestUtils.getRandomArrayList());
+        first.setProfileFeedIds(TestUtils.getRandomArrayList());
+        first.setProfilePhotoMediaId(4);
+        first.setProfileURL(new URL("http://127.0.0.1/profile.php?id=5"));
+        first.setSocialNetworkId(0);
+        first.setUserEmail("somebody@somewhere.moe");
+        first.setUsername("somebody");
+        first.setUserWebsite("http://www.somewhere.moe");
+
+        db.saveCoopProfile(first);
+
+        CoopProfile second = db.getCoopProfile(2);
+        Assert.assertEquals(first, second);
+
+    }
+
+    @Test
+    public void testSaveHumanProfile() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("socialNetworks");
+        db.truncateTable("humanProfiles");
+
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
+
+        HumanProfile hp = new HumanProfile();
+        hp.setAttendingEventIds(TestUtils.getRandomArrayList());
+        hp.setBio("Hi. I'm a regular person.");
+        hp.setBirthday(TestUtils.getRandomLocalDate());
+        hp.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
+        hp.setFollowedByIds(TestUtils.getRandomArrayList());
+        hp.setFollowingId(TestUtils.getRandomArrayList());
+        hp.setFriendIds(TestUtils.getRandomArrayList());
+        hp.setFullname(TestUtils.getRandomName());
+        hp.setHometownLocationId(TestUtils.getRandomLong());
+        hp.setId(1);
+        hp.setInterestIds(TestUtils.getRandomArrayList());
+        hp.setLastUpdateProfileFeedId(TestUtils.getRandomLong());
+        hp.setLinkedOtherSocialNetworkProfileIds(TestUtils.getRandomArrayList());
+        hp.setProfileFeedIds(TestUtils.getRandomArrayList());
+        hp.setProfilePhotoMediaId(TestUtils.getRandomLong());
+        hp.setProfileURL(new URL("http://9.0.0.1/what.ever"));
+        hp.setRelationshipPersons(TestUtils.getRandomArrayList());
+        hp.setRelationshipStatus(TestUtils.getRandomRelationshipStatus());
+        hp.setSex(TestUtils.getRandomSex());
+        hp.setUserEmail("some@du.de");
+        hp.setUsername(TestUtils.getRandomUsername());
+        hp.setUserWebsite("http://endoftheinternet.com");
+
+        db.saveHumanProfile(hp);
+
+        HumanProfile second = db.getHumanProfile(1);
+        Assert.assertEquals(hp, second);
+    }
+
+    @Test
+    public void testSaveEvent() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("socialNetworks");
+        db.truncateTable("events");
+
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
+
+        Event first = new Event();
+        first.setAttendingIds(TestUtils.getRandomArrayList());
+        first.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
+        first.setEventText("We meet to play some CAVE games.");
+        first.setHostIds(TestUtils.getRandomArrayList());
+        first.setId(3);
+        first.setInvitedIds(TestUtils.getRandomArrayList());
+        first.setLocationId(2);
+        first.setName("CAVE Matsuri");
+        first.setSocialNetworkId(sn.getId());
+
+        db.saveEvent(first);
+
+        Event second = db.getEvent(3);
+        Assert.assertEquals(first, second);
+    }
+
+    @Test
+    public void testSaveComment() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("socialNetworks");
+        db.truncateTable("comments");
+
+        SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
+
+        Comment first = new Comment();
+        first.setCommenterId(1);
+        first.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
+        first.setHashtagNames(TestUtils.getRandomHashtagArrayList());
+        first.setId(2);
+        first.setLikerIds(TestUtils.getRandomArrayList());
+        first.setMediaId(3);
+        first.setText("I don't know how to comment this.");
+
+        db.saveComment(first);
+
+        Comment c = db.getComment(2);
+        Assert.assertEquals(first, c);
+    }
+
+    @Test
+    public void testSaveInterest() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("interests");
+
+        SocialNetworkInterestImpl first = new SocialNetworkInterestImpl();
+        ArrayList<InterestKind> kinds = new ArrayList<InterestKind>();
+        kinds.add(InterestKind.FILM);
+        kinds.add(InterestKind.PRODUCT);
+        first.setInterestKinds(kinds);
+        first.setId(5);
+
+        db.saveInterest(first);
+
+        SocialNetworkInterestImpl second = db.getInterest(5);
+        Assert.assertEquals(first, second);
     }
 }

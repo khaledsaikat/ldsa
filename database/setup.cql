@@ -94,9 +94,8 @@ CREATE TABLE coopProfiles (
     dateFounded TIMESTAMP
 );
 
-
 CREATE TABLE humanProfiles (
-id BIGINT PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     snId INT,
     contentTimestamp TIMESTAMP,
     crawlingTimestamp TIMESTAMP,
@@ -119,7 +118,7 @@ id BIGINT PRIMARY KEY,
     sex INT,
     birthday TIMESTAMP,
     relationshipStatus INT,
-    relationshipPeopleIds LIST<BIGINT>
+    relationshipPersons LIST<BIGINT>
 );
 
 CREATE TABLE events (
@@ -136,15 +135,19 @@ CREATE TABLE events (
 );
 
 CREATE TABLE comments (
-
     id BIGINT PRIMARY KEY,
     snId INT,
+    contentTimestamp TIMESTAMP,
+    crawlingTimestamp TIMESTAMP,
     text VARCHAR,
     commenter BIGINT,
     mediaId BIGINT,
-    hastagsIds LIST<BIGINT>,
+    hashtagNames LIST<VARCHAR>,
     likerIds LIST<BIGINT>,
-    commentsIds LIST<BIGINT>,
-
+    commentIds LIST<BIGINT>
 );
 
+CREATE TABLE interests (
+    id BIGINT PRIMARY KEY,
+    kinds LIST<INT>
+);

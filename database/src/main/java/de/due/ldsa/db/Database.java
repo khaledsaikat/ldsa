@@ -17,6 +17,16 @@ public interface Database
     Media getMedia(long id);
     void saveLocation(LocationImpl l);
     LocationImpl getLocation(long id);
-    public void saveOrganisationPlace(OrganisationPlace op);
-    public OrganisationPlace getOrganisationPlace(long id);
+    void saveOrganisationPlace(OrganisationPlace op);
+    OrganisationPlace getOrganisationPlace(long id);
+    void saveCoopProfile(CoopProfile cp);
+    CoopProfile getCoopProfile(long id);
+    void saveHumanProfile(HumanProfile hp);
+    HumanProfile getHumanProfile(long id);
+    void saveEvent(Event id);
+    Event getEvent(long id);
+    void saveComment(Comment c);
+    Comment getComment(long id);
+    void saveInterest(SocialNetworkInterestImpl socialNetworkInterest);
+    SocialNetworkInterestImpl getInterest(long id);
 }

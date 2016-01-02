@@ -16,10 +16,7 @@ import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Truncate;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
-import de.due.ldsa.db.codecs.ByteArrayCodec;
-import de.due.ldsa.db.codecs.LongArrayListCodec;
-import de.due.ldsa.db.codecs.OffsetDateTimeCodec;
-import de.due.ldsa.db.codecs.StringArrayListCodec;
+import de.due.ldsa.db.codecs.*;
 import de.due.ldsa.db.model.*;
 
 import java.io.Closeable;
@@ -34,6 +31,11 @@ public class DatabaseImpl implements Database, Closeable
     Mapper<Media> mediaMapper;
     Mapper<LocationImpl> locationMapper;
     Mapper<OrganisationPlace> organisationPlaceMapper;
+    Mapper<CoopProfile> coopProfileMapper;
+    Mapper<HumanProfile> humanProfileMapper;
+    Mapper<Event> eventMapper;
+    Mapper<Comment> commentMapper;
+    Mapper<SocialNetworkInterestImpl> interestMapper;
 
     @Override
     public void close() throws IOException {
@@ -51,6 +53,12 @@ public class DatabaseImpl implements Database, Closeable
         registry.register(new LongArrayListCodec());
         registry.register(new StringArrayListCodec());
         registry.register(new ByteArrayCodec());
+        registry.register(new UrlCodec());
+        registry.register(new LocalDateCodec());
+        registry.register(new RelationshipStatusCodec());
+        registry.register(new SexCodec());
+        registry.register(new InterestKindCodec());
+        registry.register(new InterestKindArrayListCodec());
     }
 
     public static Database getInstance()
@@ -177,6 +185,111 @@ public class DatabaseImpl implements Database, Closeable
         }
 
         OrganisationPlace result = organisationPlaceMapper.get(id);
+        return result;
+    }
+
+    public void saveCoopProfile(CoopProfile cp)
+    {
+        if (coopProfileMapper == null)
+        {
+            coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
+        }
+
+        coopProfileMapper.save(cp);
+    }
+
+    public CoopProfile getCoopProfile(long id)
+    {
+        if (coopProfileMapper == null)
+        {
+            coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
+        }
+
+        CoopProfile result = coopProfileMapper.get(id);
+        return result;
+    }
+
+    public void saveHumanProfile(HumanProfile hp)
+    {
+        if (humanProfileMapper == null)
+        {
+            humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
+        }
+
+        humanProfileMapper.save(hp);
+    }
+
+    public HumanProfile getHumanProfile(long id)
+    {
+        if (humanProfileMapper == null)
+        {
+            humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
+        }
+
+        HumanProfile result = humanProfileMapper.get(id);
+        return result;
+    }
+
+    public void saveEvent(Event id)
+    {
+        if (eventMapper == null)
+        {
+            eventMapper = new MappingManager(session).mapper(Event.class);
+        }
+
+        eventMapper.save(id);
+    }
+
+    public Event getEvent(long id)
+    {
+        if (eventMapper == null)
+        {
+            eventMapper = new MappingManager(session).mapper(Event.class);
+        }
+
+        Event event = eventMapper.get(id);
+        return event;
+    }
+
+    public void saveComment(Comment c)
+    {
+        if (commentMapper == null)
+        {
+            commentMapper = new MappingManager(session).mapper(Comment.class);
+        }
+
+        commentMapper.save(c);
+    }
+
+    public Comment getComment(long id)
+    {
+        if (commentMapper == null)
+        {
+            commentMapper = new MappingManager(session).mapper(Comment.class);
+        }
+
+        Comment comment = commentMapper.get(id);
+        return comment;
+    }
+
+    public void saveInterest(SocialNetworkInterestImpl socialNetworkInterest)
+    {
+        if (interestMapper == null)
+        {
+            interestMapper = new MappingManager(session).mapper(SocialNetworkInterestImpl.class);
+        }
+
+        interestMapper.save(socialNetworkInterest);
+    }
+
+    public SocialNetworkInterestImpl getInterest(long id)
+    {
+        if (interestMapper == null)
+        {
+            interestMapper = new MappingManager(session).mapper(SocialNetworkInterestImpl.class);
+        }
+
+        SocialNetworkInterestImpl result = interestMapper.get(id);
         return result;
     }
 }

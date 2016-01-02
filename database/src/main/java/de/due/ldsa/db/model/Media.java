@@ -6,6 +6,7 @@ import com.datastax.driver.mapping.annotations.Table;
 import de.due.ldsa.db.DbException;
 
 import java.time.OffsetDateTime;
+import java.util.Arrays;
 
 /**
  *
@@ -103,5 +104,35 @@ public class Media extends SocialNetworkContentImpl
 
     public void setCrawlingTimestamp(OffsetDateTime crawlingTimestamp) {
         this.crawlingTimestamp = crawlingTimestamp;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Media)) return false;
+
+        Media media = (Media) o;
+
+        if (id != media.id) return false;
+        if (socialNetworkId != media.socialNetworkId) return false;
+        if (crawlingPath != null ? !crawlingPath.equals(media.crawlingPath) : media.crawlingPath != null) return false;
+        if (!filename.equals(media.filename)) return false;
+        if (!Arrays.equals(bytes, media.bytes)) return false;
+        if (contentTimestamp != null ? !contentTimestamp.equals(media.contentTimestamp) : media.contentTimestamp != null)
+            return false;
+        return !(crawlingTimestamp != null ? !crawlingTimestamp.equals(media.crawlingTimestamp) : media.crawlingTimestamp != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (crawlingPath != null ? crawlingPath.hashCode() : 0);
+        result = 31 * result + filename.hashCode();
+        result = 31 * result + Arrays.hashCode(bytes);
+        result = 31 * result + socialNetworkId;
+        result = 31 * result + (contentTimestamp != null ? contentTimestamp.hashCode() : 0);
+        result = 31 * result + (crawlingTimestamp != null ? crawlingTimestamp.hashCode() : 0);
+        return result;
     }
 }

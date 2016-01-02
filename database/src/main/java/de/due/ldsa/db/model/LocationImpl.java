@@ -171,4 +171,45 @@ public class LocationImpl implements Location {
         this.positionLatidue = p.getLatidue();
         this.positionLongitude = p.getLongitude();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LocationImpl)) return false;
+
+        LocationImpl location = (LocationImpl) o;
+
+        if (socialNetworkId != location.socialNetworkId) return false;
+        if (id != location.id) return false;
+        if (Double.compare(location.positionLatidue, positionLatidue) != 0) return false;
+        if (Double.compare(location.positionLongitude, positionLongitude) != 0) return false;
+        if (isInId != location.isInId) return false;
+        if (contentTimestamp != null ? !contentTimestamp.equals(location.contentTimestamp) : location.contentTimestamp != null)
+            return false;
+        if (crawlingTimestamp != null ? !crawlingTimestamp.equals(location.crawlingTimestamp) : location.crawlingTimestamp != null)
+            return false;
+        if (!name.equals(location.name)) return false;
+        if (city != null ? !city.equals(location.city) : location.city != null) return false;
+        return !(country != null ? !country.equals(location.country) : location.country != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = socialNetworkId;
+        result = 31 * result + (contentTimestamp != null ? contentTimestamp.hashCode() : 0);
+        result = 31 * result + (crawlingTimestamp != null ? crawlingTimestamp.hashCode() : 0);
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        temp = Double.doubleToLongBits(positionLatidue);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(positionLongitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (int) (isInId ^ (isInId >>> 32));
+        return result;
+    }
 }

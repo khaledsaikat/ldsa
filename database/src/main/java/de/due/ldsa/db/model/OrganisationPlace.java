@@ -186,4 +186,47 @@ public class OrganisationPlace implements Location
         this.crawlingTimestamp = crawling;
         this.socialNetworkId = sn.getId();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OrganisationPlace)) return false;
+
+        OrganisationPlace that = (OrganisationPlace) o;
+
+        if (socialNetworkId != that.socialNetworkId) return false;
+        if (id != that.id) return false;
+        if (Double.compare(that.positionLatidue, positionLatidue) != 0) return false;
+        if (Double.compare(that.positionLongitude, positionLongitude) != 0) return false;
+        if (isInId != that.isInId) return false;
+        if (organisationProfileId != that.organisationProfileId) return false;
+        if (contentTimestamp != null ? !contentTimestamp.equals(that.contentTimestamp) : that.contentTimestamp != null)
+            return false;
+        if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null)
+            return false;
+        if (!name.equals(that.name)) return false;
+        if (city != null ? !city.equals(that.city) : that.city != null) return false;
+        return !(country != null ? !country.equals(that.country) : that.country != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = socialNetworkId;
+        result = 31 * result + (contentTimestamp != null ? contentTimestamp.hashCode() : 0);
+        result = 31 * result + (crawlingTimestamp != null ? crawlingTimestamp.hashCode() : 0);
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        temp = Double.doubleToLongBits(positionLatidue);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(positionLongitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (int) (isInId ^ (isInId >>> 32));
+        result = 31 * result + (int) (organisationProfileId ^ (organisationProfileId >>> 32));
+        return result;
+    }
 }

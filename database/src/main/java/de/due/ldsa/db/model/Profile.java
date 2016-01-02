@@ -51,9 +51,9 @@ public abstract class Profile implements SocialNetworkContent
 
     public abstract void setLastUpdateProfileFeedId(long lastUpdateProfileFeedId);
 
-    public abstract Long getHometownLocationId();
+    public abstract long getHometownLocationId();
 
-    public abstract void setHometownLocationId(Long hometownLocationId);
+    public abstract void setHometownLocationId(long hometownLocationId);
 
     public abstract ArrayList<Long> getFollowingId();
 
@@ -88,4 +88,6 @@ public abstract class Profile implements SocialNetworkContent
     {
         throw new DbException("not yet implemented");
     }
+
+
 }

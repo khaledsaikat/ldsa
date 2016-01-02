@@ -3,6 +3,7 @@ package de.due.ldsa.db.model;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import com.datastax.driver.mapping.annotations.Transient;
 import de.due.ldsa.db.DbException;
 
 import java.net.URL;
@@ -49,7 +50,7 @@ public class HumanProfile extends Profile
     @Column(name = "lastUpdateProfileFeedId")
     long lastUpdateProfileFeedId;
     @Column(name = "hometownLocationId")
-    Long hometownLocationId;
+    long hometownLocationId;
     @Column(name = "followedIds")
     ArrayList<Long> followingId;
     @Column(name = "followedByIds")
@@ -67,7 +68,13 @@ public class HumanProfile extends Profile
     Sex sex;
     @Column(name = "birthday")
     LocalDate birthday;
-    Relationship relationship;
+    @Column(name = "relationshipStatus")
+    RelationshipStatus relationshipStatus;
+    @Column(name = "relationshipPersons")
+    ArrayList<Long> relationshipPersons;
+
+    @Transient
+    Relationship rs;
 
     @Override
     public long getId() {
@@ -180,12 +187,12 @@ public class HumanProfile extends Profile
     }
 
     @Override
-    public Long getHometownLocationId() {
+    public long getHometownLocationId() {
         return hometownLocationId;
     }
 
     @Override
-    public void setHometownLocationId(Long hometownLocationId) {
+    public void setHometownLocationId(long hometownLocationId) {
         this.hometownLocationId = hometownLocationId;
     }
 
@@ -265,11 +272,6 @@ public class HumanProfile extends Profile
         this.birthday = birthday;
     }
 
-    public Relationship getRelationship() {
-        return relationship;
-    }
-
-
     public int getSocialNetworkId() {
         return socialNetworkId;
     }
@@ -286,6 +288,22 @@ public class HumanProfile extends Profile
         this.crawlingTimestamp = crawlingTimestamp;
     }
 
+    public RelationshipStatus getRelationshipStatus() {
+        return relationshipStatus;
+    }
+
+    public void setRelationshipStatus(RelationshipStatus relationshipStatus) {
+        this.relationshipStatus = relationshipStatus;
+    }
+
+    public ArrayList<Long> getRelationshipPersons() {
+        return relationshipPersons;
+    }
+
+    public void setRelationshipPersons(ArrayList<Long> relationshipPersons) {
+        this.relationshipPersons = relationshipPersons;
+    }
+
     //------------------------------------------------------------------------------------------------------------------
     // COMPLEX METHODS
     //------------------------------------------------------------------------------------------------------------------
@@ -295,10 +313,6 @@ public class HumanProfile extends Profile
         return (int) ChronoUnit.YEARS.between(today, birthday);
     }
 
-    public void setRelationship(Relationship relationship) {
-        this.relationship = relationship;
-    }
-
     @Override
     public SocialNetwork getSourceNetwork() throws DbException {
         throw new DbException("not yet implemented.");
@@ -306,6 +320,85 @@ public class HumanProfile extends Profile
 
     @Override
     public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+        this.contentTimestamp = content;
+        this.crawlingTimestamp = crawling;
+        this.socialNetworkId = sn.getId();
+    }
+
+    public void setRelationship(RelationshipStatus relationshipStatus, ArrayList<Long> persons) {
         throw new DbException("not yet implemented.");
+    }
+
+    public Relationship getRelationship() {
+        throw new DbException("not yet implemented.");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HumanProfile)) return false;
+
+        HumanProfile that = (HumanProfile) o;
+
+        if (socialNetworkId != that.socialNetworkId) return false;
+        if (id != that.id) return false;
+        if (profilePhotoMediaId != that.profilePhotoMediaId) return false;
+        if (lastUpdateProfileFeedId != that.lastUpdateProfileFeedId) return false;
+        if (hometownLocationId != that.hometownLocationId) return false;
+        if (contentTimestamp != null ? !contentTimestamp.equals(that.contentTimestamp) : that.contentTimestamp != null)
+            return false;
+        if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null)
+            return false;
+        if (!username.equals(that.username)) return false;
+        if (profileURL != null ? !profileURL.equals(that.profileURL) : that.profileURL != null) return false;
+        if (fullname != null ? !fullname.equals(that.fullname) : that.fullname != null) return false;
+        if (bio != null ? !bio.equals(that.bio) : that.bio != null) return false;
+        if (interestIds != null ? !interestIds.equals(that.interestIds) : that.interestIds != null) return false;
+        if (userEmail != null ? !userEmail.equals(that.userEmail) : that.userEmail != null) return false;
+        if (userWebsite != null ? !userWebsite.equals(that.userWebsite) : that.userWebsite != null) return false;
+        if (followingId != null ? !followingId.equals(that.followingId) : that.followingId != null) return false;
+        if (followedByIds != null ? !followedByIds.equals(that.followedByIds) : that.followedByIds != null)
+            return false;
+        if (friendIds != null ? !friendIds.equals(that.friendIds) : that.friendIds != null) return false;
+        if (profileFeedIds != null ? !profileFeedIds.equals(that.profileFeedIds) : that.profileFeedIds != null)
+            return false;
+        if (attendingEventIds != null ? !attendingEventIds.equals(that.attendingEventIds) : that.attendingEventIds != null)
+            return false;
+        if (linkedOtherSocialNetworkProfileIds != null ? !linkedOtherSocialNetworkProfileIds.equals(that.linkedOtherSocialNetworkProfileIds) : that.linkedOtherSocialNetworkProfileIds != null)
+            return false;
+        if (sex != that.sex) return false;
+        if (birthday != null ? !birthday.equals(that.birthday) : that.birthday != null) return false;
+        if (relationshipStatus != that.relationshipStatus) return false;
+        return !(relationshipPersons != null ? !relationshipPersons.equals(that.relationshipPersons) : that.relationshipPersons != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = socialNetworkId;
+        result = 31 * result + (contentTimestamp != null ? contentTimestamp.hashCode() : 0);
+        result = 31 * result + (crawlingTimestamp != null ? crawlingTimestamp.hashCode() : 0);
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + username.hashCode();
+        result = 31 * result + (profileURL != null ? profileURL.hashCode() : 0);
+        result = 31 * result + (fullname != null ? fullname.hashCode() : 0);
+        result = 31 * result + (bio != null ? bio.hashCode() : 0);
+        result = 31 * result + (interestIds != null ? interestIds.hashCode() : 0);
+        result = 31 * result + (userEmail != null ? userEmail.hashCode() : 0);
+        result = 31 * result + (userWebsite != null ? userWebsite.hashCode() : 0);
+        result = 31 * result + (int) (profilePhotoMediaId ^ (profilePhotoMediaId >>> 32));
+        result = 31 * result + (int) (lastUpdateProfileFeedId ^ (lastUpdateProfileFeedId >>> 32));
+        result = 31 * result + (int) (hometownLocationId ^ (hometownLocationId >>> 32));
+        result = 31 * result + (followingId != null ? followingId.hashCode() : 0);
+        result = 31 * result + (followedByIds != null ? followedByIds.hashCode() : 0);
+        result = 31 * result + (friendIds != null ? friendIds.hashCode() : 0);
+        result = 31 * result + (profileFeedIds != null ? profileFeedIds.hashCode() : 0);
+        result = 31 * result + (attendingEventIds != null ? attendingEventIds.hashCode() : 0);
+        result = 31 * result + (linkedOtherSocialNetworkProfileIds != null ? linkedOtherSocialNetworkProfileIds.hashCode() : 0);
+        result = 31 * result + (sex != null ? sex.hashCode() : 0);
+        result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
+        result = 31 * result + (relationshipStatus != null ? relationshipStatus.hashCode() : 0);
+        result = 31 * result + (relationshipPersons != null ? relationshipPersons.hashCode() : 0);
+        return result;
     }
 }

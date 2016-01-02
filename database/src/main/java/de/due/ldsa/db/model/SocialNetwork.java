@@ -5,7 +5,9 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import de.due.ldsa.db.DbException;
 
+import java.net.URL;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  *
@@ -20,10 +22,10 @@ public class SocialNetwork
     private String name;
 
     @Column(name = "homeURL")
-    private String homeURL;
+    private URL homeURL;
 
     @Column(name = "logo")
-    private ByteBuffer logo;
+    private byte[] logo;
 
     public int getId() {
         return id;
@@ -41,22 +43,26 @@ public class SocialNetwork
         this.name = name;
     }
 
-    public String getHomeURL() {
+    public URL getHomeURL() {
         return homeURL;
     }
 
-    public void setHomeURL(String homeURL) {
+    public void setHomeURL(URL homeURL) {
         this.homeURL = homeURL;
     }
 
-    public ByteBuffer getLogo() {
+    public byte[] getLogo() {
         return logo;
     }
 
-    public void setLogo(ByteBuffer logo) {
+    public void setLogo(byte[] logo) {
         this.logo = logo;
     }
 
+
+    //------------------------------------------------------------------------------------------------------------------
+    // Complex methods
+    //------------------------------------------------------------------------------------------------------------------
     public Iterable<Profile> allProfiles()
         throws DbException
     {
@@ -79,5 +85,28 @@ public class SocialNetwork
         throws DbException
     {
         throw new DbException("not yet implemented.");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SocialNetwork)) return false;
+
+        SocialNetwork that = (SocialNetwork) o;
+
+        if (id != that.id) return false;
+        if (!name.equals(that.name)) return false;
+        if (homeURL != null ? !homeURL.equals(that.homeURL) : that.homeURL != null) return false;
+        return Arrays.equals(logo, that.logo);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (homeURL != null ? homeURL.hashCode() : 0);
+        result = 31 * result + Arrays.hashCode(logo);
+        return result;
     }
 }

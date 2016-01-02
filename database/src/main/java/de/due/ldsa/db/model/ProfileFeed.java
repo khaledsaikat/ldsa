@@ -188,4 +188,50 @@ public class ProfileFeed extends SocialNetworkContentImpl
         this.crawlingTimestamp = crawling;
         this.socialNetworkId = sn.getId();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ProfileFeed)) return false;
+
+        ProfileFeed that = (ProfileFeed) o;
+
+        if (socialNetworkId != that.socialNetworkId) return false;
+        if (id != that.id) return false;
+        if (profileId != that.profileId) return false;
+        if (locationId != that.locationId) return false;
+        if (mediaId != that.mediaId) return false;
+        if (contentTimestamp != null ? !contentTimestamp.equals(that.contentTimestamp) : that.contentTimestamp != null)
+            return false;
+        if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null)
+            return false;
+        if (!rawStoryText.equals(that.rawStoryText)) return false;
+        if (likerIds != null ? !likerIds.equals(that.likerIds) : that.likerIds != null) return false;
+        if (sharerIds != null ? !sharerIds.equals(that.sharerIds) : that.sharerIds != null) return false;
+        if (hashtags != null ? !hashtags.equals(that.hashtags) : that.hashtags != null) return false;
+        if (links != null ? !links.equals(that.links) : that.links != null) return false;
+        if (taggedUserIds != null ? !taggedUserIds.equals(that.taggedUserIds) : that.taggedUserIds != null)
+            return false;
+        return !(commentIds != null ? !commentIds.equals(that.commentIds) : that.commentIds != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = socialNetworkId;
+        result = 31 * result + (contentTimestamp != null ? contentTimestamp.hashCode() : 0);
+        result = 31 * result + (crawlingTimestamp != null ? crawlingTimestamp.hashCode() : 0);
+        result = 31 * result + (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (profileId ^ (profileId >>> 32));
+        result = 31 * result + rawStoryText.hashCode();
+        result = 31 * result + (likerIds != null ? likerIds.hashCode() : 0);
+        result = 31 * result + (sharerIds != null ? sharerIds.hashCode() : 0);
+        result = 31 * result + (hashtags != null ? hashtags.hashCode() : 0);
+        result = 31 * result + (links != null ? links.hashCode() : 0);
+        result = 31 * result + locationId;
+        result = 31 * result + mediaId;
+        result = 31 * result + (taggedUserIds != null ? taggedUserIds.hashCode() : 0);
+        result = 31 * result + (commentIds != null ? commentIds.hashCode() : 0);
+        return result;
+    }
 }
