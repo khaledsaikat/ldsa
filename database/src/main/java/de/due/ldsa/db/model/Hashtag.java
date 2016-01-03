@@ -13,12 +13,13 @@ public class Hashtag {
     private String title;
     private ArrayList<SocialNetworkContent> usedAtList;
 
-    public ArrayList<SocialNetworkContent> getUsedAtList() {
-        return usedAtList;
-    }
-
     public String getTitle() {
         return title;
+    }
+
+    public ArrayList<SocialNetworkContent> getUsedAtList()
+            throws DbException {
+        throw new DbException("not yet implemented");
     }
 
     public long getTimesUsed()

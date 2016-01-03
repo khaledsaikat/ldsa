@@ -24,6 +24,7 @@ public class SocialNetwork
     @Column(name = "homeURL")
     private URL homeURL;
 
+    //TODO: Turn logo to image
     @Column(name = "logo")
     private byte[] logo;
 

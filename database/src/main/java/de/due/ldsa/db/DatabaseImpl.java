@@ -274,6 +274,7 @@ public class DatabaseImpl implements Database, Closeable
             commentMapper = new MappingManager(session).mapper(Comment.class);
         }
 
+        c.prepareSave();
         commentMapper.save(c);
     }
 
@@ -339,5 +340,17 @@ public class DatabaseImpl implements Database, Closeable
         long amount2 = rs2.one().getLong(0);
 
         return Math.max(amount1, amount2) + 1;
+    }
+
+    public long getNextMediaId()
+            throws DbException {
+        ResultSet rs1 = session.execute("SELECT MAX(id) FROM media");
+        return rs1.one().getLong(0) + 1;
+    }
+
+    public long getNextCommentId()
+            throws DbException {
+        ResultSet rs1 = session.execute("SELECT MAX(id) FROM comments");
+        return rs1.one().getLong(0) + 1;
     }
 }

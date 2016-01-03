@@ -3,6 +3,7 @@ import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.db.model.*;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
  *
  */
 
+@Category(AllTestsExceptBenchmark.class)
 public class DatabaseTests
 {
     @Test
@@ -159,6 +161,7 @@ public class DatabaseTests
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("socialNetworks");
         db.truncateTable("humanProfiles");
+        db.truncateTable("coopProfiles");
 
         SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
 

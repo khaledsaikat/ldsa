@@ -6,6 +6,7 @@ import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
 import de.due.ldsa.db.DbException;
 
+import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class ProfileFeed extends SocialNetworkContentImpl
     @Column(name = "hashtags")
     ArrayList<String> hashtags;
     @Column(name = "links")
-    ArrayList<String> links;
+    ArrayList<URL> links;
     @Column(name = "locationId")
     int locationId;
     @Column(name = "mediaId")
@@ -111,11 +112,11 @@ public class ProfileFeed extends SocialNetworkContentImpl
         this.hashtags = hashtags;
     }
 
-    public ArrayList<String> getLinks() {
+    public ArrayList<URL> getLinks() {
         return links;
     }
 
-    public void setLinks(ArrayList<String> links) {
+    public void setLinks(ArrayList<URL> links) {
         this.links = links;
     }
 

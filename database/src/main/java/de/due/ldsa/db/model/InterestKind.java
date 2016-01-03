@@ -25,7 +25,8 @@ public enum InterestKind
     PERSON,
     POLITICS,
     RELIGION,
-    EDUCATION;
+    EDUCATION,
+    UNKNOWN;
 
     private static InterestKind[] allValues = values();
     public static InterestKind fromOrdinal(int n)

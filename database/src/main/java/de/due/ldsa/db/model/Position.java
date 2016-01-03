@@ -5,6 +5,7 @@ package de.due.ldsa.db.model;
  */
 public class Position
 {
+    //TODO: add reference to Location
     public Position() {
 
     }

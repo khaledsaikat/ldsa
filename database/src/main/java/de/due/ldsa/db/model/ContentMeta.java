@@ -14,7 +14,7 @@ public class ContentMeta
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ContentMeta)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         ContentMeta that = (ContentMeta) o;
 

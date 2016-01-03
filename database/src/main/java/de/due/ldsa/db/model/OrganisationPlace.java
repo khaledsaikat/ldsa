@@ -153,7 +153,7 @@ public class OrganisationPlace implements Location
     //------------------------------------------------------------------------------------------------------------------
     //  Complex methods
     //------------------------------------------------------------------------------------------------------------------
-    public CoopProfile getOrganisation()
+    public CoopProfile getCoopProfile()
             throws DbException
     {
         throw new DbException("not yet implemented.");

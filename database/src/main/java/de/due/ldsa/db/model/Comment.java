@@ -7,6 +7,7 @@ import com.datastax.driver.mapping.annotations.Transient;
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.db.DbException;
+import de.due.ldsa.db.LinkedWithOtherObjects;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  *
  */
 @Table(keyspace = "ldsa", name = "comments")
-public class Comment implements SocialNetworkContent
+public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
 {
     /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
       If you need access to these fields use the getters and setters from the upper classes.*/
@@ -134,6 +135,11 @@ public class Comment implements SocialNetworkContent
         return mediaData;
     }
 
+    public void setMedia(Media m) {
+        mediaData = m;
+        mediaId = m.getId();
+    }
+
     public String getText() {
         return text;
     }
@@ -147,12 +153,17 @@ public class Comment implements SocialNetworkContent
         if (likerData == null)
         {
             likerData = new ArrayList<Profile>();
-            for(Long l : likerIds)
-            {
-
+            if (likerIds != null) {
+                for (Long l : likerIds) {
+                    if (db.isHuman(l)) {
+                        likerData.add(db.getHumanProfile(l));
+                    } else {
+                        likerData.add(db.getCoopProfile(l));
+                    }
+                }
             }
         }
-        throw new DbException("not yet implemented.");
+        return likerData;
     }
 
     public SocialNetwork getSourceNetwork() throws DbException {
@@ -203,5 +214,39 @@ public class Comment implements SocialNetworkContent
         return result;
     }
 
+    @Transient
+    ArrayList<Comment> commentData;
 
+    public ArrayList<Comment> getComments()
+            throws DbException {
+        Database db = DatabaseImpl.getInstance();
+        if (commentData == null) {
+            commentData = new ArrayList<Comment>();
+            if (commentIds != null) {
+                for (Long l : commentIds) {
+                    commentData.add(db.getComment(l));
+                }
+            }
+        }
+        return commentData;
+    }
+
+    @Override
+    public void prepareSave() {
+        if (likerData != null) {
+            likerIds = new ArrayList<Long>();
+            for (Profile p : likerData) {
+                likerIds.add(p.getId());
+            }
+        }
+        if (mediaData != null) {
+            mediaId = mediaData.getId();
+        }
+        if (commentData != null) {
+            commentIds = new ArrayList<Long>();
+            for (Comment c : commentData) {
+                commentIds.add(c.getId());
+            }
+        }
+    }
 }

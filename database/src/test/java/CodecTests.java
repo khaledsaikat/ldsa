@@ -5,6 +5,7 @@ import de.due.ldsa.db.model.RelationshipStatus;
 import de.due.ldsa.db.model.Sex;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import java.net.URL;
 import java.nio.*;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 /**
  *
  */
+@Category(AllTestsExceptBenchmark.class)
 public class CodecTests {
     @Test
     public void testLongArrayListCodec() throws Exception {

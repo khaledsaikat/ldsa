@@ -134,6 +134,8 @@ public class LocationImpl implements Location {
     //------------------------------------------------------------------------------------------------------------------
     //Complex methods
     //------------------------------------------------------------------------------------------------------------------
+    @Transient
+    int timesUsed;
     @Override
     public int getTimesUsed() throws DbException {
         throw new DbException("not yet implemented.");

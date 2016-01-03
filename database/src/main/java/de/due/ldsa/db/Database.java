@@ -31,4 +31,8 @@ public interface Database
     SocialNetworkInterestImpl getInterest(long id);
     boolean isHuman(long id) throws DbException;
     long getNextProfileId() throws DbException;
+
+    long getNextMediaId() throws DbException;
+
+    long getNextCommentId() throws DbException;
 }
