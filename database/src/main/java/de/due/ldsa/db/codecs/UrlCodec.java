@@ -19,6 +19,10 @@ public class UrlCodec extends TypeCodec<URL> {
 
     @Override
     public ByteBuffer serialize(URL value, ProtocolVersion protocolVersion) throws InvalidTypeException {
+        if (value == null)
+        {
+            return TypeCodec.varchar().serialize("",protocolVersion);
+        }
         return TypeCodec.varchar().serialize(value.toString(), protocolVersion);
     }
 
@@ -29,7 +33,7 @@ public class UrlCodec extends TypeCodec<URL> {
             URL result = new URL(temp);
             return result;
         } catch (MalformedURLException e) {
-            System.out.println("Malformed URL saved in Database: " + temp);
+            System.out.println("Malformed URL saved in Database: " + temp.toString());
             return null;
         }
     }

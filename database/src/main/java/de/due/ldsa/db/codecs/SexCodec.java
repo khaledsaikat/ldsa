@@ -19,12 +19,19 @@ public class SexCodec extends TypeCodec<Sex> {
 
     @Override
     public ByteBuffer serialize(Sex value, ProtocolVersion protocolVersion) throws InvalidTypeException {
+        if ((value != Sex.FEMALE) && (value != Sex.MALE)) {
+            return TypeCodec.cint().serialize(2, protocolVersion);
+        }
         return TypeCodec.cint().serialize(value.ordinal(), protocolVersion);
     }
 
     @Override
     public Sex deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         int m = TypeCodec.cint().deserialize(bytes, protocolVersion);
+        if ((m != 0) && (m != 1)) {
+            System.out.println("The sex codec returned: " + new Integer(m).toString());
+            return null;
+        }
         return Sex.fromOrdinal(m);
     }
 

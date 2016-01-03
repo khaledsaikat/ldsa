@@ -21,6 +21,10 @@ public class LocalDateCodec extends TypeCodec<LocalDate> {
 
     @Override
     public ByteBuffer serialize(LocalDate value, ProtocolVersion protocolVersion) throws InvalidTypeException {
+        if (value == null)
+        {
+            return TypeCodec.timestamp().serialize(null,protocolVersion);
+        }
         Date temp = Date.from(value.atStartOfDay(ZoneId.systemDefault()).toInstant());
         return TypeCodec.timestamp().serialize(temp, protocolVersion);
     }
@@ -28,6 +32,7 @@ public class LocalDateCodec extends TypeCodec<LocalDate> {
     @Override
     public LocalDate deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         Date temp = TypeCodec.timestamp().deserialize(bytes, protocolVersion);
+        if (temp == null) return null;
         LocalDate temp2 = temp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         return temp2;
     }

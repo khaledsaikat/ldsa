@@ -9,9 +9,8 @@ package de.due.ldsa.db;
     Persistence with Cassandra:
     https://docs.datastax.com/en/developer/java-driver/2.1/java-driver/reference/crudOperations.html
  */
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.CodecRegistry;
-import com.datastax.driver.core.Session;
+
+import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Truncate;
 import com.datastax.driver.mapping.Mapper;
@@ -46,7 +45,7 @@ public class DatabaseImpl implements Database, Closeable
     {
         //TODO: don't hardcode "127.0.0.1" - make this loadable from somewhere...
         Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
-        session = cluster.connect();
+        session = cluster.connect("ldsa");
 
         CodecRegistry registry = cluster.getConfiguration().getCodecRegistry();
         registry.register(new OffsetDateTimeCodec());
@@ -188,8 +187,19 @@ public class DatabaseImpl implements Database, Closeable
         return result;
     }
 
+    /**
+     * Writes a Company Profile to the database.
+     *
+     * @param cp The Company Profile you want to persist.
+     */
     public void saveCoopProfile(CoopProfile cp)
-    {
+            throws DbException {
+        if (getHumanProfile(cp.getId()) != null) {
+            //This needs to be done because Human IDs and Company IDs share the same number sequence.
+            throw new DbException("The ID specified in that company profile is already used by a human ID:" +
+                    new Long(cp.getId()).toString());
+        }
+
         if (coopProfileMapper == null)
         {
             coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
@@ -210,7 +220,13 @@ public class DatabaseImpl implements Database, Closeable
     }
 
     public void saveHumanProfile(HumanProfile hp)
-    {
+            throws DbException {
+        if (getCoopProfile(hp.getId()) != null) {
+            //This needs to be done because Human IDs and Company IDs share the same number sequence.
+            throw new DbException("The ID specified in that company profile is already used by a company ID: "
+                    + new Long(hp.getId()).toString());
+        }
+
         if (humanProfileMapper == null)
         {
             humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
@@ -291,5 +307,37 @@ public class DatabaseImpl implements Database, Closeable
 
         SocialNetworkInterestImpl result = interestMapper.get(id);
         return result;
+    }
+
+    public boolean isHuman(long id)
+            throws DbException {
+        HumanProfile hp = getHumanProfile(id);
+        if (hp != null) return true;
+
+        CoopProfile cp = getCoopProfile(id);
+        if (cp != null) return false;
+
+        throw new DbException("The specified ID does not exist:" + new Long(id).toString());
+    }
+
+    /**
+     * Use this to figure out the ID of a new CoopProfile or HumanProfile.
+     *
+     * @return A free ID
+     * @throws DbException
+     */
+    public long getNextProfileId()
+            throws DbException {
+        //We have not found a way to do this in a mapper-way, therefore we absolutely need to use a hand-crafted command
+        //here. The alternative way would be keeping a seperate Table which keeps tracks of the highest IDs in each
+        //table, but we were unsure if this wouldn't be too slow.
+
+        ResultSet rs1 = session.execute("SELECT MAX(id) FROM coopProfiles");
+        long amount1 = rs1.one().getLong(0);
+
+        ResultSet rs2 = session.execute("SELECT MAX(id) FROM humanProfiles");
+        long amount2 = rs2.one().getLong(0);
+
+        return Math.max(amount1, amount2) + 1;
     }
 }

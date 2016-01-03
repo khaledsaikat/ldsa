@@ -4,6 +4,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
+import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.db.DbException;
 
@@ -73,10 +74,6 @@ public class Comment implements SocialNetworkContent
         return this.crawlingTimestamp;
     }
 
-    public String getText() {
-        return text;
-    }
-
     public void setText(String text) {
         this.text = text;
     }
@@ -125,6 +122,39 @@ public class Comment implements SocialNetworkContent
     // Complex methods
     //------------------------------------------------------------------------------------------------------------------
 
+    @Transient
+    Media mediaData;
+    public Media getMedia()
+            throws DbException
+    {
+        if (mediaData == null)
+        {
+            mediaData = DatabaseImpl.getInstance().getMedia(mediaId);
+        }
+        return mediaData;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    @Transient
+    ArrayList<Profile> likerData;
+    public ArrayList<Profile> getLiker()
+            throws DbException
+    {
+        Database db = DatabaseImpl.getInstance();
+        if (likerData == null)
+        {
+            likerData = new ArrayList<Profile>();
+            for(Long l : likerIds)
+            {
+
+            }
+        }
+        throw new DbException("not yet implemented.");
+    }
+
     public SocialNetwork getSourceNetwork() throws DbException {
         return DatabaseImpl.getInstance().getSocialNetwork(socialNetworkId);
     }
@@ -172,4 +202,6 @@ public class Comment implements SocialNetworkContent
         result = 31 * result + (commentIds != null ? commentIds.hashCode() : 0);
         return result;
     }
+
+
 }

@@ -16,14 +16,21 @@ public class RelationshipStatusCodec extends TypeCodec<RelationshipStatus> {
         super(DataType.cint(), RelationshipStatus.class);
     }
 
+    final int invalidNumber = 0xFFFFFFFF;
     @Override
     public ByteBuffer serialize(RelationshipStatus value, ProtocolVersion protocolVersion) throws InvalidTypeException {
+        if (value == null) {
+            return TypeCodec.cint().serialize(invalidNumber, protocolVersion);
+        }
         return TypeCodec.cint().serialize(value.ordinal(), protocolVersion);
     }
 
     @Override
     public RelationshipStatus deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         int m = TypeCodec.cint().deserialize(bytes, protocolVersion);
+        if (m == invalidNumber) {
+            return null;
+        }
         return RelationshipStatus.fromOrdinal(m);
     }
 

@@ -18,6 +18,7 @@ public enum RelationshipStatus
     WIDOWED,
     UNKNOWN;
 
+
     private static RelationshipStatus[] allValues = values();
 
     public static RelationshipStatus fromOrdinal(int n) {

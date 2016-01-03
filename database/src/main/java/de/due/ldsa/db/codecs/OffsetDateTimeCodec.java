@@ -23,6 +23,9 @@ public class OffsetDateTimeCodec extends TypeCodec<OffsetDateTime>
 
     @Override
     public ByteBuffer serialize(OffsetDateTime value, ProtocolVersion protocolVersion) throws InvalidTypeException {
+        if (value == null) {
+            return TypeCodec.timestamp().serialize(null, protocolVersion);
+        }
         Instant temp1 = value.toInstant();
         Date temp2 = Date.from(temp1);
         return TypeCodec.timestamp().serialize(temp2,protocolVersion);
@@ -32,6 +35,7 @@ public class OffsetDateTimeCodec extends TypeCodec<OffsetDateTime>
     public OffsetDateTime deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException
     {
         Date temp1 = TypeCodec.timestamp().deserialize(bytes,protocolVersion);
+        if (temp1 == null) return null;
         Instant temp2 = temp1.toInstant();
         return OffsetDateTime.ofInstant(temp2, ZoneOffset.UTC);
     }

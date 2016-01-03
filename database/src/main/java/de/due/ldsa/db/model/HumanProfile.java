@@ -349,7 +349,7 @@ public class HumanProfile extends Profile
             return false;
         if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null)
             return false;
-        if (!username.equals(that.username)) return false;
+        if (username != null ? !username.equals(that.username) : that.username != null) return false;
         if (profileURL != null ? !profileURL.equals(that.profileURL) : that.profileURL != null) return false;
         if (fullname != null ? !fullname.equals(that.fullname) : that.fullname != null) return false;
         if (bio != null ? !bio.equals(that.bio) : that.bio != null) return false;
@@ -379,7 +379,7 @@ public class HumanProfile extends Profile
         result = 31 * result + (contentTimestamp != null ? contentTimestamp.hashCode() : 0);
         result = 31 * result + (crawlingTimestamp != null ? crawlingTimestamp.hashCode() : 0);
         result = 31 * result + (int) (id ^ (id >>> 32));
-        result = 31 * result + username.hashCode();
+        result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (profileURL != null ? profileURL.hashCode() : 0);
         result = 31 * result + (fullname != null ? fullname.hashCode() : 0);
         result = 31 * result + (bio != null ? bio.hashCode() : 0);
@@ -400,5 +400,35 @@ public class HumanProfile extends Profile
         result = 31 * result + (relationshipStatus != null ? relationshipStatus.hashCode() : 0);
         result = 31 * result + (relationshipPersons != null ? relationshipPersons.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "HumanProfile{" +
+                "socialNetworkId=" + socialNetworkId +
+                ", contentTimestamp=" + contentTimestamp +
+                ", crawlingTimestamp=" + crawlingTimestamp +
+                ", id=" + id +
+                ", username='" + username + '\'' +
+                ", profileURL=" + profileURL +
+                ", fullname='" + fullname + '\'' +
+                ", bio='" + bio + '\'' +
+                ", interestIds=" + interestIds +
+                ", userEmail='" + userEmail + '\'' +
+                ", userWebsite='" + userWebsite + '\'' +
+                ", profilePhotoMediaId=" + profilePhotoMediaId +
+                ", lastUpdateProfileFeedId=" + lastUpdateProfileFeedId +
+                ", hometownLocationId=" + hometownLocationId +
+                ", followingId=" + followingId +
+                ", followedByIds=" + followedByIds +
+                ", friendIds=" + friendIds +
+                ", profileFeedIds=" + profileFeedIds +
+                ", attendingEventIds=" + attendingEventIds +
+                ", linkedOtherSocialNetworkProfileIds=" + linkedOtherSocialNetworkProfileIds +
+                ", sex=" + sex +
+                ", birthday=" + birthday +
+                ", relationshipStatus=" + relationshipStatus +
+                ", relationshipPersons=" + relationshipPersons +
+                '}';
     }
 }

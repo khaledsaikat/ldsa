@@ -257,4 +257,52 @@ public class DatabaseTests
         SocialNetworkInterestImpl second = db.getInterest(5);
         Assert.assertEquals(first, second);
     }
+
+    @Test
+    public void testNullIfNonExistant() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("socialNetworks");
+
+        SocialNetwork sn = db.getSocialNetwork(9001);
+        Assert.assertEquals(sn, null);
+    }
+
+    @Test
+    public void testWriteTenProfiles() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("humanProfiles");
+        db.truncateTable("coopProfiles");
+        for (int i = 0; i < 10; i++) {
+            HumanProfile hp = new HumanProfile();
+            hp.setId(i);
+            db.saveHumanProfile(hp);
+
+            HumanProfile hp2 = db.getHumanProfile(i);
+            if (!hp.equals(hp2)) {
+                Assert.assertEquals(hp, hp2);    //Yes, we know the test has already failed, but we do assertEquals here
+                //anyway, so we can see the differences in IntelliJ ;)
+            }
+        }
+    }
+
+    @Test
+    public void testProfileIdSequenceGenerator() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("humanProfiles");
+        db.truncateTable("coopProfiles");
+
+        long nId = db.getNextProfileId();
+        if (nId != 1) Assert.fail("First ID should be 1 if there is nothing in the database.");
+        HumanProfile hp = new HumanProfile();
+        hp.setId(nId);
+        db.saveHumanProfile(hp);
+
+        nId = db.getNextProfileId();
+        if (nId != 2) Assert.fail("The Profile ID generator failed.");
+        CoopProfile cp = new CoopProfile();
+        cp.setId(nId);
+        db.saveCoopProfile(cp);
+
+        Assert.assertEquals(db.getNextProfileId(), 3);
+    }
 }
