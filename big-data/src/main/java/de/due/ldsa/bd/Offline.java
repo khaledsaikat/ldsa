@@ -1,6 +1,8 @@
 package de.due.ldsa.bd;
 
 import org.apache.spark.api.java.JavaRDD;
+
+import de.due.ldsa.bd.analysis.BinaryClassification;
 import de.due.ldsa.bd.analysis.Top;
 
 /**
@@ -26,11 +28,25 @@ public class Offline extends Base {
 		DataProvider source = new DataProvider();
 		baseRDD = sparkContext.parallelize(source.getListSourceData());
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void runTopWords() {
+		Top.topWords((JavaRDD<String>) baseRDD, 10);
+	}
+	
+	private void runBinaryClassification() {
+		BinaryClassification binaryClassification = new BinaryClassification();
+		binaryClassification.setSparkContext(sparkContext);
+		binaryClassification.setSqlContext(sqlContext);
+		binaryClassification.analysis();
+	}
 
 	/**
 	 * Run analysis.
 	 */
 	public void run() {
-		Top.topWords((JavaRDD<String>) baseRDD, 10);
+		runTopWords();
+		runBinaryClassification();
+		sparkContext.stop();
 	}
 }
