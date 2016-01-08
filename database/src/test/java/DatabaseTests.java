@@ -65,7 +65,7 @@ public class DatabaseTests
         first.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
         first.setBytes(TestUtils.getRandomByteArray());
         first.setFilename(TestUtils.getRandomFilename());
-        first.setCrawlingPath("/");
+        first.setCrawlingPath("/"); // found in the model BWD-37
         first.setId(1);
         db.saveMedia(first);
 
@@ -75,6 +75,7 @@ public class DatabaseTests
 
     @Test
     public void testSaveLocation() throws Exception {
+
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("socialNetworks");
         db.truncateTable("locations");
@@ -171,7 +172,7 @@ public class DatabaseTests
         hp.setBirthday(TestUtils.getRandomLocalDate());
         hp.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
         hp.setFollowedByIds(TestUtils.getRandomArrayList());
-        hp.setFollowingId(TestUtils.getRandomArrayList());
+        hp.setFollowingIds(TestUtils.getRandomArrayList());
         hp.setFriendIds(TestUtils.getRandomArrayList());
         hp.setFullname(TestUtils.getRandomName());
         hp.setHometownLocationId(TestUtils.getRandomLong());
@@ -282,7 +283,7 @@ public class DatabaseTests
 
             HumanProfile hp2 = db.getHumanProfile(i);
             if (!hp.equals(hp2)) {
-                Assert.assertEquals(hp, hp2);    //Yes, we know the test has already failed, but we do assertEquals here
+                Assert.assertEquals(hp, hp2);    //Yes, we know the test should fail, but we do assertEquals here
                 //anyway, so we can see the differences in IntelliJ ;)
             }
         }

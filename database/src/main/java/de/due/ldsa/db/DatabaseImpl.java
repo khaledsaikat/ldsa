@@ -58,6 +58,7 @@ public class DatabaseImpl implements Database, Closeable
         registry.register(new SexCodec());
         registry.register(new InterestKindCodec());
         registry.register(new InterestKindArrayListCodec());
+        registry.register(new UrlArrayListCodec());
     }
 
     public static Database getInstance()
@@ -205,6 +206,7 @@ public class DatabaseImpl implements Database, Closeable
             coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
         }
 
+        cp.prepareSave();
         coopProfileMapper.save(cp);
     }
 
@@ -232,6 +234,7 @@ public class DatabaseImpl implements Database, Closeable
             humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
         }
 
+        hp.prepareSave();
         humanProfileMapper.save(hp);
     }
 
@@ -351,6 +354,24 @@ public class DatabaseImpl implements Database, Closeable
     public long getNextCommentId()
             throws DbException {
         ResultSet rs1 = session.execute("SELECT MAX(id) FROM comments");
+        return rs1.one().getLong(0) + 1;
+    }
+
+    public long getNextInterestId()
+            throws DbException {
+        ResultSet rs1 = session.execute("SELECT MAX(id) FROM interests");
+        return rs1.one().getLong(0) + 1;
+    }
+
+    public long getNextProfileFeedId()
+            throws DbException {
+        ResultSet rs1 = session.execute("SELECT MAX(id) FROM profileFeeds");
+        return rs1.one().getLong(0) + 1;
+    }
+
+    public long getNextLocationId()
+            throws DbException {
+        ResultSet rs1 = session.execute("SELECT MAX(id) FROM locations");
         return rs1.one().getLong(0) + 1;
     }
 }

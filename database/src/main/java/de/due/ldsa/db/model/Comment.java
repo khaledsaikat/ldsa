@@ -216,7 +216,6 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
 
     @Transient
     ArrayList<Comment> commentData;
-
     public ArrayList<Comment> getComments()
             throws DbException {
         Database db = DatabaseImpl.getInstance();
@@ -249,4 +248,5 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
             }
         }
     }
+
 }

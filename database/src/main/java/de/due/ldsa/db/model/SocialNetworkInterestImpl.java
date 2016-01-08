@@ -39,7 +39,11 @@ public class SocialNetworkInterestImpl implements SocialNetworkInterest {
     public void addInterestKind(InterestKind ik)
             throws DbException
     {
-        throw new DbException("not yet implemented");
+        if (interestKinds == null)
+        {
+            interestKinds = new ArrayList<InterestKind>();
+        }
+        interestKinds.add(ik);
     }
 
     @Override

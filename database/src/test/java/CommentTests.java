@@ -57,6 +57,7 @@ public class CommentTests {
         profile3.setId(db.getNextProfileId());
         db.saveHumanProfile(profile3);
 
+        // Test getLiker()
         Comment parent1 = new Comment();
         parent1.setId(db.getNextCommentId());
         parent1.getLiker().add(profile1);
@@ -69,6 +70,7 @@ public class CommentTests {
     }
 
     @Test
+    // You can comment Comments on facebook
     public void testGetSubComments() throws Exception {
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("comments");

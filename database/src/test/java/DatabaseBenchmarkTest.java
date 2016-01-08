@@ -46,7 +46,7 @@ public class DatabaseBenchmarkTest
         }
         session.execute("DROP KEYSPACE IF EXISTS benchmarkTest");
 
-        //Junit tests do pass if the method ends.
+        //Junit-like tests do pass if the method ends.
     }
 
     class BenchmarkThread extends Thread

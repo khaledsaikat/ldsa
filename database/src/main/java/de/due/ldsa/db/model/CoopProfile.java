@@ -48,7 +48,7 @@ public class CoopProfile extends Profile
     @Column(name = "hometownLocationId")
     long hometownLocationId;
     @Column(name = "followedIds")
-    ArrayList<Long> followingId;
+    ArrayList<Long> followingIds;
     @Column(name = "followedByIds")
     ArrayList<Long> followedByIds;
     @Column(name = "friendIds")
@@ -200,13 +200,13 @@ public class CoopProfile extends Profile
     }
 
     @Override
-    public ArrayList<Long> getFollowingId() {
-        return followingId;
+    public ArrayList<Long> getFollowingIds() {
+        return followingIds;
     }
 
     @Override
-    public void setFollowingId(ArrayList<Long> followingId) {
-        this.followingId = followingId;
+    public void setFollowingIds(ArrayList<Long> followingId) {
+        this.followingIds = followingId;
     }
 
     @Override
@@ -329,7 +329,7 @@ public class CoopProfile extends Profile
         if (interestIds != null ? !interestIds.equals(that.interestIds) : that.interestIds != null) return false;
         if (userEmail != null ? !userEmail.equals(that.userEmail) : that.userEmail != null) return false;
         if (userWebsite != null ? !userWebsite.equals(that.userWebsite) : that.userWebsite != null) return false;
-        if (followingId != null ? !followingId.equals(that.followingId) : that.followingId != null) return false;
+        if (followingIds != null ? !followingIds.equals(that.followingIds) : that.followingIds != null) return false;
         if (followedByIds != null ? !followedByIds.equals(that.followedByIds) : that.followedByIds != null)
             return false;
         if (friendIds != null ? !friendIds.equals(that.friendIds) : that.friendIds != null) return false;
@@ -359,7 +359,7 @@ public class CoopProfile extends Profile
         result = 31 * result + (int) (profilePhotoMediaId ^ (profilePhotoMediaId >>> 32));
         result = 31 * result + (int) (lastUpdateProfileFeedId ^ (lastUpdateProfileFeedId >>> 32));
         result = 31 * result + (int) (hometownLocationId ^ (hometownLocationId >>> 32));
-        result = 31 * result + (followingId != null ? followingId.hashCode() : 0);
+        result = 31 * result + (followingIds != null ? followingIds.hashCode() : 0);
         result = 31 * result + (followedByIds != null ? followedByIds.hashCode() : 0);
         result = 31 * result + (friendIds != null ? friendIds.hashCode() : 0);
         result = 31 * result + (profileFeedIds != null ? profileFeedIds.hashCode() : 0);

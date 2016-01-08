@@ -13,4 +13,8 @@ public interface SocialNetworkInterest {
                     throws DbException;
 
     boolean isInterestKind(InterestKind ik);
+
+    public long getId();
+
+    public void setId(long id);
 }

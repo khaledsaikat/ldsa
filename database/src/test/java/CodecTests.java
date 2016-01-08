@@ -131,4 +131,18 @@ public class CodecTests {
         OffsetDateTime second = offsetDateTimeCodec.deserialize(ser,ProtocolVersion.V3);
         Assert.assertEquals(offsetDateTime,second);
     }
+
+    @Test
+    public void testUrlArrayListCodec() throws Exception {
+        ArrayList<URL> data1 = new ArrayList<URL>();
+        data1.add(new URL("http://www.google.de"));
+        data1.add(new URL("http://www.anidb.net"));
+        data1.add(new URL("http://www.facebook.com"));
+
+        UrlArrayListCodec urlArrayListCodec = new UrlArrayListCodec();
+        ByteBuffer ser = urlArrayListCodec.serialize(data1, ProtocolVersion.V3);
+        ArrayList<URL> data2 = urlArrayListCodec.deserialize(ser, ProtocolVersion.V3);
+
+        Assert.assertArrayEquals(data1.toArray(), data2.toArray());
+    }
 }
