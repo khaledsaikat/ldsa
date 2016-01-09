@@ -1,6 +1,3 @@
-/**
- * 
- */
 package de.due.ldsa.bd.analysis;
 
 import org.apache.spark.api.java.JavaRDD;

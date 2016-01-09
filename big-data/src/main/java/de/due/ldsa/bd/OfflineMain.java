@@ -9,7 +9,12 @@ import java.util.List;
  * @author Khaled Hossain
  */
 public class OfflineMain {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
+		/**
+		 * Setting Winutil property is only valid for Windows machine
+		 */
+		Helper.setProperty();
+		
 		List<String> items = Arrays.asList("Hello World1", "Hello World2", "Hello World3");
 		DataProvider source = new DataProvider();
 		source.setSourceData(items);
