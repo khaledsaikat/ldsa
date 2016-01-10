@@ -5,5 +5,4 @@ repositories {
 dependencies {
 	  compile 'com.ning:async-http-client:1.9.31'
       compile project(':link-data')
-      compile project(':jInstagram-master')
    }
