@@ -32,7 +32,7 @@ public class OAuth20ServiceImpl extends OAuthService {
 
     @Override
     public Token getAccessToken(final Token requestToken, final Verifier verifier) {
-        final Response response = createAccessTokenRequest(verifier, new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint(), this)).
+        final Response response = createAccessTokenRequest(verifier, new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint(), this.getConfig())).
                 send();
         return api.getAccessTokenExtractor().extract(response.getBody());
     }
@@ -47,7 +47,7 @@ public class OAuth20ServiceImpl extends OAuthService {
             final ProxyServer proxyServer) {
         final OAuthRequestAsync request = createAccessTokenRequest(verifier, new OAuthRequestAsync(api.getAccessTokenVerb(), api.
                 getAccessTokenEndpoint(),
-                this));
+                this.getConfig()));
         return request.sendAsync(callback, new OAuthRequestAsync.ResponseConverter<Token>() {
             @Override
             public Token convert(final com.ning.http.client.Response response) throws IOException {

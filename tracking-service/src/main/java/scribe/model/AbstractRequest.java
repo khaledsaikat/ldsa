@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import scribe.exceptions.OAuthException;
-import scribe.oauth.OAuthService;
 
 /**
  * The representation of an OAuth HttpRequest.
@@ -28,7 +27,7 @@ public abstract class AbstractRequest {
     private final Map<String, String> headers = new HashMap<>();
     private boolean connectionKeepAlive;
     private boolean followRedirects = true;
-    private OAuthService service;
+    private OAuthConfig config;
 
     private String payload;
     private String charset;
@@ -44,10 +43,10 @@ public abstract class AbstractRequest {
      * @param url resource URL
      * @param service OAuthService
      */
-    public AbstractRequest(final Verb verb, final String url, final OAuthService service) {
+    public AbstractRequest(final Verb verb, final String url, final OAuthConfig config) {
         this.verb = verb;
         this.url = url;
-        this.service = service;
+        this.config = config;
     }
 
     /**
@@ -289,7 +288,7 @@ public abstract class AbstractRequest {
         return followRedirects;
     }
 
-    public OAuthService getService() {
-        return service;
+    public OAuthConfig getConfig() {
+        return config;
     }
 }

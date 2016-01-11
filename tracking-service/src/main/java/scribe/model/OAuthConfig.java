@@ -10,7 +10,11 @@ import java.io.OutputStream;
  */
 public class OAuthConfig {
 
-    private final String apiKey;
+    public OutputStream getDebugStream() {
+		return debugStream;
+	}
+
+	private final String apiKey;
     private final String apiSecret;
     private final String callback;
     private final SignatureType signatureType;

@@ -42,7 +42,7 @@ public class OAuth10aServiceImpl extends OAuthService {
     public Token getRequestToken() {
         final OAuthConfig config = getConfig();
         config.log("obtaining request token from " + api.getRequestTokenEndpoint());
-        final OAuthRequest request = new OAuthRequest(api.getRequestTokenVerb(), api.getRequestTokenEndpoint(), this);
+        final OAuthRequest request = new OAuthRequest(api.getRequestTokenVerb(), api.getRequestTokenEndpoint(), this.getConfig());
 
         config.log("setting oauth_callback to " + config.getCallback());
         request.addOAuthParameter(OAuthConstants.CALLBACK, config.getCallback());
@@ -77,7 +77,7 @@ public class OAuth10aServiceImpl extends OAuthService {
     public Token getAccessToken(final Token requestToken, final Verifier verifier) {
         final OAuthConfig config = getConfig();
         config.log("obtaining access token from " + api.getAccessTokenEndpoint());
-        final OAuthRequest request = new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint(), this);
+        final OAuthRequest request = new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint(), this.getConfig());
         prepareAccessTokenRequest(request, requestToken, verifier);
         final Response response = request.send();
         return api.getAccessTokenExtractor().extract(response.getBody());
@@ -93,7 +93,7 @@ public class OAuth10aServiceImpl extends OAuthService {
             final ProxyServer proxyServer) {
         final OAuthConfig config = getConfig();
         config.log("async obtaining access token from " + api.getAccessTokenEndpoint());
-        final OAuthRequestAsync request = new OAuthRequestAsync(api.getAccessTokenVerb(), api.getAccessTokenEndpoint(), this);
+        final OAuthRequestAsync request = new OAuthRequestAsync(api.getAccessTokenVerb(), api.getAccessTokenEndpoint(), this.getConfig());
         prepareAccessTokenRequest(request, requestToken, verifier);
         return request.sendAsync(callback, new OAuthRequestAsync.ResponseConverter<Token>() {
             @Override
