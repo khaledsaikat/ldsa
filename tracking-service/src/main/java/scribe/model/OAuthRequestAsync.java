@@ -11,10 +11,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import scribe.exceptions.OAuthException;
 import scribe.oauth.OAuthService;
-/*
- * Don't use yet
- * Bugfixes needed
- */
+
 public class OAuthRequestAsync extends AbstractRequest {
 
     public static final ResponseConverter<Response> RESPONSE_CONVERTER = new ResponseConverter<Response>() {
@@ -34,8 +31,8 @@ public class OAuthRequestAsync extends AbstractRequest {
         }
     };
 
-    public OAuthRequestAsync(final Verb verb, final String url, final OAuthConfig config) {
-        super(verb, url, config);
+    public OAuthRequestAsync(final Verb verb, final String url, final OAuthService service) {
+        super(verb, url, service);
     }
 
     public <T> Future<T> sendAsync(final OAuthAsyncRequestCallback<T> callback, final ResponseConverter<T> converter) {
@@ -47,25 +44,26 @@ public class OAuthRequestAsync extends AbstractRequest {
         if (ForceTypeOfHttpRequest.FORCE_SYNC_ONLY_HTTP_REQUESTS == forceTypeOfHttpRequest) {
             throw new OAuthException("Cannot use async operations, only sync");
         }
+        final OAuthService service = getService();
         if (ForceTypeOfHttpRequest.PREFER_SYNC_ONLY_HTTP_REQUESTS == forceTypeOfHttpRequest) {
-            getConfig().log("Cannot use async operations, only sync");
+            service.getConfig().log("Cannot use async operations, only sync");
         }
         final String completeUrl = getCompleteUrl();
         final AsyncHttpClient.BoundRequestBuilder boundRequestBuilder;
         switch (getVerb()) {
             case GET:
-                //boundRequestBuilder = service.getAsyncHttpClient().prepareGet(completeUrl);
+                boundRequestBuilder = service.getAsyncHttpClient().prepareGet(completeUrl);
                 break;
             case POST:
-                //boundRequestBuilder = service.getAsyncHttpClient().preparePost(completeUrl).setBody(getBodyContents());
+                boundRequestBuilder = service.getAsyncHttpClient().preparePost(completeUrl).setBody(getBodyContents());
                 break;
             default:
                 throw new IllegalArgumentException("message build error: unknown verb type");
         }
         if (proxyServer != null) {
-            //boundRequestBuilder.setProxyServer(proxyServer);
+            boundRequestBuilder.setProxyServer(proxyServer);
         }
-        return null; //boundRequestBuilder.execute(new OAuthAsyncCompletionHandler<>(callback, converter));
+        return boundRequestBuilder.execute(new OAuthAsyncCompletionHandler<>(callback, converter));
     }
 
     private static class OAuthAsyncCompletionHandler<T> extends AsyncCompletionHandler<T> {

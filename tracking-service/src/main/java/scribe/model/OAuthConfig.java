@@ -10,10 +10,6 @@ import java.io.OutputStream;
  */
 public class OAuthConfig {
 
-    public OutputStream getDebugStream() {
-		return debugStream;
-	}
-
 	private final String apiKey;
     private final String apiSecret;
     private final String callback;
@@ -74,6 +70,10 @@ public class OAuthConfig {
     public boolean hasGrantType() {
         return grantType != null;
     }
+    
+    public OutputStream getDebugStream() {
+ 		return debugStream;
+ 	}
 
     public Integer getConnectTimeout() {
         return connectTimeout;

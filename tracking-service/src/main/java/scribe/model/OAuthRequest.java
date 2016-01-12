@@ -12,8 +12,8 @@ public class OAuthRequest extends AbstractRequest {
 
     private HttpURLConnection connection;
 
-    public OAuthRequest(Verb verb, String url, OAuthConfig config) {
-        super(verb, url, config);
+    public OAuthRequest(Verb verb, String url, OAuthService service) {
+        super(verb, url, service);
     }
 
     /**
@@ -30,7 +30,7 @@ public class OAuthRequest extends AbstractRequest {
             throw new OAuthException("Cannot use sync operations, only async");
         }
         if (ForceTypeOfHttpRequest.PREFER_ASYNC_ONLY_HTTP_REQUESTS == forceTypeOfHttpRequest) {
-            getConfig().log("Cannot use sync operations, only async");
+            getService().getConfig().log("Cannot use sync operations, only async");
         }
         try {
             createConnection();
@@ -43,7 +43,7 @@ public class OAuthRequest extends AbstractRequest {
     Response doSend() throws IOException {
         final Verb verb = getVerb();
         connection.setRequestMethod(verb.name());
-        final OAuthConfig config = getConfig();
+        final OAuthConfig config = getService().getConfig();
         if (config.getConnectTimeout() != null) {
             connection.setConnectTimeout(config.getConnectTimeout().intValue());
         }
