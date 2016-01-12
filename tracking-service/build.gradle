@@ -4,5 +4,6 @@ repositories {
 
 dependencies {
 	  compile 'com.ning:async-http-client:1.9.31'
+	  compile 'com.cedarsoftware:json-io:4.3.0'
       compile project(':link-data')
    }
