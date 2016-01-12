@@ -3,6 +3,8 @@ import java.io.IOException;
 import Instagram.Instagram;
 import Instagram.InstagramApi;
 import Instagram.InstagramService;
+import de.due.ldsa.ld.LinkDataReceiver;
+import de.due.ldsa.ld.LinkDataReceiverImpl;
 import scribe.builder.ServiceBuilder;
 import scribe.model.Response;
 import scribe.model.Token;
@@ -14,9 +16,11 @@ public class Model {
 	private String authorizationURL;
 	private Token accessToken;
 	private Instagram instagram;
+	private LinkDataReceiver linkDataLayer;
 	
 	public Model(){
 		super();
+		linkDataLayer = new LinkDataReceiverImpl();
 	}
 	
 	public String createService(String clientId, String clientSecret, String callbackUrl, 
@@ -56,7 +60,9 @@ public class Model {
 		Response response;
 		try {
 			response = instagram.getUserInfo();
-			return response.getBody();
+			String responseText = response.getBody();
+			linkDataLayer.setData(responseText);
+			return responseText;
 		} catch (IOException e) {
 			return null;
 		}
