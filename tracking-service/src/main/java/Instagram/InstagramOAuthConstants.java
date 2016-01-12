@@ -1,3 +1,4 @@
+package Instagram;
 public class InstagramOAuthConstants {
 	
 	public static final String INSTAGRAM_OAUTH_URL_BASE = "https://api.instagram.com/oauth";

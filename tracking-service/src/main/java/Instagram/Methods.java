@@ -1,3 +1,4 @@
+package Instagram;
 public final class Methods {
 
 	/**

@@ -1,9 +1,6 @@
-import java.io.OutputStream;
+package Instagram;
 
-import scribe.model.OAuthConfig;
-import scribe.model.SignatureType;
-
-public class InstagramConfig extends OAuthConfig{
+public class InstagramConfig {
 
 	private String baseURI;
 	private String version;
@@ -11,20 +8,9 @@ public class InstagramConfig extends OAuthConfig{
     private boolean connectionKeepAlive = false;
 	private boolean enforceSignedRequest = false;
 	
-	public InstagramConfig(final String key, final String secret){
-		this(key, secret, null, null, null, null, null, null, null);
-	}
 	
-	public InstagramConfig(OAuthConfig config){
-		this(config.getApiKey(),config.getApiSecret(),config.getCallback(),config.getSignatureType(),
-				config.getScope(),config.getDebugStream(), config.getConnectTimeout(),config.getReadTimeout(),
-				config.getGrantType());
-	}
 	
-	public InstagramConfig(final String key, final String secret, final String callback, final SignatureType type,
-            final String scope, final OutputStream stream, final Integer connectTimeout, final Integer readTimeout,
-            final String grantType){
-		super(key, secret, callback, type, scope, stream, connectTimeout, readTimeout, grantType);
+	public InstagramConfig(){
 		baseURI = InstagramConstants.BASE_URI;
 		version = InstagramConstants.VERSION;
 		apiURL = InstagramConstants.API_URL;

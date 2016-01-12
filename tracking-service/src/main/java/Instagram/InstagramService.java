@@ -1,3 +1,4 @@
+package Instagram;
 import scribe.model.OAuthConfig;
 import scribe.model.Token;
 import scribe.oauth.OAuth20ServiceImpl;
@@ -10,7 +11,7 @@ public class InstagramService extends OAuth20ServiceImpl {
 	}
 
 	public Instagram getInstagram(Token accessToken){
-		return new Instagram(accessToken, new InstagramConfig(this.getConfig()));
+		return new Instagram(accessToken, this);
 	}
 
 }

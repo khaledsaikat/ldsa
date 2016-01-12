@@ -1,3 +1,4 @@
+package Instagram;
 import java.io.IOException;
 import java.net.Proxy;
 import java.util.Map;
@@ -12,16 +13,14 @@ import scribe.utils.Preconditions;
 public class Instagram {
 	private Token accessToken;
 	private final InstagramConfig config;
+	private final InstagramService service;
 	private Proxy requestProxy;
 	
-	public Instagram(Token accessToken, InstagramConfig config){
+	public Instagram(Token accessToken, InstagramService service){
 		Preconditions.checkNotNull(accessToken, "accessToken can't be null");
-		Preconditions.checkNotNull(config, "config can't be null");
-		if (config.isEnforceSignedRequest()){
-			Preconditions.checkEmptyString(accessToken.getSecret(), "enforce signed requests need client secret");
-		}
 		this.accessToken = accessToken;
-		this.config = config;
+		this.service = service;
+		config = new InstagramConfig();
 	}
 
 	public Token getAccessToken() {
@@ -44,16 +43,14 @@ public class Instagram {
 		return config;
 	}
 	
-	public Response getUserInfo(String userId) throws IOException {
-		Preconditions.checkEmptyString(userId, "UserId cannot be null or empty");
-		String apiMethod = String.format(Methods.USERS_WITH_ID, userId);
-		return getApiResponse(Verb.GET,apiMethod,null);
+	public Response getUserInfo() throws IOException {
+		return getApiResponse(Verb.GET,Methods.USERS_SELF,null);
 	}
 	
 	protected Response getApiResponse(Verb verb, String methodName, Map<String, String> params) throws IOException {
 		Response response;
 		String apiResourceUrl = config.getApiURL() + methodName;
-		OAuthRequest request = new OAuthRequest(verb, apiResourceUrl, config);
+		OAuthRequest request = new OAuthRequest(verb, apiResourceUrl, this.service);
 		configureConnectionSettings(request, config);
 		//set Request Proxy
 		if (params != null) {
