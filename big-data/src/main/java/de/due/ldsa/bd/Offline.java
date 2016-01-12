@@ -38,7 +38,8 @@ public class Offline extends Base {
 		BinaryClassification binaryClassification = new BinaryClassification();
 		binaryClassification.setSparkContext(sparkContext);
 		binaryClassification.setSqlContext(sqlContext);
-		binaryClassification.analysis();
+		binaryClassification.analysisRandom();
+		binaryClassification.analysisComments();
 	}
 
 	/**

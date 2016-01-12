@@ -11,6 +11,10 @@ import org.apache.spark.ml.feature.Tokenizer;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.SQLContext;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+
 /**
  * Binary classification analysis. We need to provide training data to train the
  * model. Based on trained model, this class can able to predict new binary
@@ -63,12 +67,28 @@ public class BinaryClassification {
 	/**
 	 * Train the model and based on trained model run test data
 	 */
-	public void analysis() {
+	public void analysisRandom() {
 		DataFrame[] splits = getDataFrame().randomSplit(new double[] { 0.9, 0.1 });
 		DataFrame training = splits[0];
 		DataFrame test = splits[1];
 		Pipeline pipeline = getPipeline();
 		PipelineModel model = pipeline.fit(training);
+		DataFrame predictions = model.transform(test);
+		predictions.show();
+	}
+
+	/**
+	 * Analysis comments based on trained model
+	 */
+	public void analysisComments() {
+		DataFrame training = getDataFrame();
+		Pipeline pipeline = getPipeline();
+		PipelineModel model = pipeline.fit(training);
+		List<CommentSample> comments = Lists.newArrayList(new CommentSample("Some sample comments"),
+				new CommentSample(
+						"Thanks for your subscription to Ringtone. Your mobile will be charged £5/month Please confirm by replying YES or NO."),
+				new CommentSample("Other sample comment"));
+		DataFrame test = sqlContext.createDataFrame(sparkContext.parallelize(comments), CommentSample.class);
 		DataFrame predictions = model.transform(test);
 		predictions.show();
 	}
