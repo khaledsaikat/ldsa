@@ -11,28 +11,34 @@ import de.due.ldsa.bd.analysis.Top;
  * 
  * Check CustomReceiver in every x interval for streaming data. Then apply some
  * analysis on it and export results into database.
+ * 
+ * @author Khaled Hossain
  */
 public class Streaming extends Base {
-
 	private JavaStreamingContext streamingContext;
-
 	private JavaReceiverInputDStream<String> baseDStream;
 
+	/**
+	 * Create all necessary context and populate baseDStream.
+	 */
 	public Streaming() {
 		super();
-
 		streamingContext = new JavaStreamingContext(sparkContext, Durations.seconds(Config.interval));
-
 		populateBaseDStream();
 	}
 
+	/**
+	 * Set baseDStream
+	 */
 	private void populateBaseDStream() {
 		baseDStream = streamingContext.receiverStream(new CustomReceiver());
 	}
 
+	/**
+	 * Run analysis.
+	 */
 	public void run() {
 		Top.wordCounts(baseDStream);
-
 		streamingContext.start();
 		streamingContext.awaitTermination();
 	}

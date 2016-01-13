@@ -8,18 +8,20 @@ import org.apache.spark.sql.SQLContext;
  * Base class for creating spark context.
  * 
  * This abstract class has two direct childs: Streaming and Offline
+ * 
+ * @author Khaled Hossain
  */
 public abstract class Base {
+	protected SparkConf conf;
+	protected JavaSparkContext sparkContext;
+	protected SQLContext sqlContext;
 
-    protected SparkConf conf;
-
-    protected JavaSparkContext sparkContext;
-
-    protected SQLContext sqlContext;
-
-    public Base() {
-        conf = new SparkConf().setMaster(Config.master).setAppName(Config.appName);
-        sparkContext = new JavaSparkContext(conf);
-        sqlContext = new SQLContext(sparkContext);
-    }
+	/**
+	 * Initializing conf, sparkContext and sqlContext.
+	 */
+	public Base() {
+		conf = new SparkConf().setMaster(Config.master).setAppName(Config.appName);
+		sparkContext = new JavaSparkContext(conf);
+		sqlContext = new SQLContext(sparkContext);
+	}
 }
