@@ -6,7 +6,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Tests all the fancy methods in Profile
  */
 @Category(AllTestsExceptBenchmark.class)
 public class ProfileTests {

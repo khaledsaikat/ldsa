@@ -4,19 +4,24 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
+import com.sun.xml.internal.ws.api.model.SEIModel;
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.db.DbException;
 import de.due.ldsa.db.LinkedWithOtherObjects;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * If you need to serialize this, please use a serializer that honors transient fields.
  */
 @Table(keyspace = "ldsa", name = "comments")
-public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
+public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Serializable
 {
     /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
       If you need access to these fields use the getters and setters from the upper classes.*/
@@ -79,10 +84,22 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
         this.text = text;
     }
 
+    /**
+     * This method is supposed to be used by the Cassandra mapper. The returned value is not reliable.
+     * Use getCommenter() instead.
+     *
+     * @return The Commenter ID how it was read from the Database
+     */
     public long getCommenterId() {
         return commenterId;
     }
 
+    /**
+     * This method is supposed to be used by the Cassandra mapper. The set value will be overwritten when actually
+     * saving this object. Use setCommenter() instead.
+     *
+     * @param commenterId The Commenter ID to set.
+     */
     public void setCommenterId(long commenterId) {
         this.commenterId = commenterId;
     }
@@ -124,7 +141,7 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
     //------------------------------------------------------------------------------------------------------------------
 
     @Transient
-    Media mediaData;
+    private transient Media mediaData;
     public Media getMedia()
             throws DbException
     {
@@ -145,7 +162,7 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
     }
 
     @Transient
-    ArrayList<Profile> likerData;
+    private transient ArrayList<Profile> likerData;
     public ArrayList<Profile> getLiker()
             throws DbException
     {
@@ -215,7 +232,7 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
     }
 
     @Transient
-    ArrayList<Comment> commentData;
+    private transient ArrayList<Comment> commentData;
     public ArrayList<Comment> getComments()
             throws DbException {
         Database db = DatabaseImpl.getInstance();
@@ -247,6 +264,43 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects
                 commentIds.add(c.getId());
             }
         }
+        if (commenterData != null) {
+            commenterId = commenterData.getId();
+        }
+        if (hashtagsData != null) {
+            hashtagNames = new ArrayList<String>();
+            for (Hashtag h : hashtagsData) {
+                hashtagNames.add(h.getTitle());
+            }
+        }
     }
 
+    @Transient
+    private transient Profile commenterData;
+
+    public Profile getCommenter() throws DbException {
+        if (commenterData == null) {
+            Database ourDb = DatabaseImpl.getInstance();
+            commenterData = ourDb.autoGetProfile(commenterId);
+        }
+        return commenterData;
+    }
+
+    public void setCommenter(Profile p) {
+        commenterId = p.getId();
+        commenterData = p;
+    }
+
+    @Transient
+    private transient ArrayList<Hashtag> hashtagsData;
+
+    public ArrayList<Hashtag> getHashtags() {
+        if (hashtagsData == null) {
+            hashtagsData = new ArrayList<Hashtag>();
+            for (String s : hashtagNames) {
+                hashtagsData.add(new Hashtag(s));
+            }
+        }
+        return hashtagsData;
+    }
 }

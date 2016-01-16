@@ -14,6 +14,11 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 
+/**
+ * Author: Romina (scrobart)
+ * <p>
+ * Used to save an OffsetDateTime into Cassandra. (used in SocialNetworkContent)
+ */
 public class OffsetDateTimeCodec extends TypeCodec<OffsetDateTime>
 {
     public OffsetDateTimeCodec()

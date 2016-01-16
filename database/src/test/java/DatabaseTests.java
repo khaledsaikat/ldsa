@@ -9,9 +9,10 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Tests basic read/write operations in the database.
  */
-
 @Category(AllTestsExceptBenchmark.class)
 public class DatabaseTests
 {
@@ -45,7 +46,7 @@ public class DatabaseTests
         hashtags.add("#kommerz");
         hashtags.add("#geld");
         hashtags.add("#frischeluft");
-        pf.setHashtags(hashtags);
+        pf.setHashtagNames(hashtags);
         db.saveProfileFeed(pf);
 
         ProfileFeed pf2 = db.getProfileFeed(1);
@@ -308,5 +309,19 @@ public class DatabaseTests
         db.saveCoopProfile(cp);
 
         Assert.assertEquals(db.getNextProfileId(), 3);
+    }
+
+    @Test
+    public void testUpdateRow() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("profileFeeds");
+
+        ProfileFeed pf = new ProfileFeed();
+        pf.setId(db.getNextProfileFeedId());
+        pf.setRawStoryText("Bald Prüfung...");
+        db.saveProfileFeed(pf);
+
+        pf.setRawStoryText("Yay, bestanden! :)");
+        db.saveProfileFeed(pf);
     }
 }

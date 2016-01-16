@@ -14,7 +14,9 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Tests if the codecs do their jobs properly.
  */
 @Category(AllTestsExceptBenchmark.class)
 public class CodecTests {

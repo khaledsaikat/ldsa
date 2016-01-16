@@ -4,17 +4,20 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
+import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.db.DbException;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
 
 //We know this should extend LocationImpl, but we can't do that, because the Cassandra driver does not support inheritance.
 @Table(keyspace = "ldsa", name = "organisationPlaces")
-public class OrganisationPlace implements Location
+public class OrganisationPlace implements Location, Serializable
 {
     /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
       If you need access to these fields use the getters and setters from the upper classes.*/
@@ -177,7 +180,7 @@ public class OrganisationPlace implements Location
 
     @Override
     public SocialNetwork getSourceNetwork() throws DbException {
-        throw new DbException("not yet implemented.");
+        return DatabaseImpl.getInstance().getSocialNetwork(socialNetworkId);
     }
 
     @Override

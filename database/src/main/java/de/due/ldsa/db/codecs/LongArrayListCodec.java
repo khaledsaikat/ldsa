@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an ArrayList<Long> into Cassandra. (used to store various IDs)
  */
 public class LongArrayListCodec extends TypeCodec<ArrayList<Long>> {
     public LongArrayListCodec() {

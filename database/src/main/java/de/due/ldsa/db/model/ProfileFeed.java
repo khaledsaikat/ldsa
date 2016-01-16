@@ -4,17 +4,22 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
+import de.due.ldsa.db.Database;
+import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.db.DbException;
+import de.due.ldsa.db.LinkedWithOtherObjects;
 
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * If you need to serialize this, make sure your serializer honors transient fields.
  */
 @Table(keyspace = "ldsa", name = "profileFeeds")
-public class ProfileFeed extends SocialNetworkContentImpl
+public class ProfileFeed extends SocialNetworkContentImpl implements LinkedWithOtherObjects
 {
     /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
       If you need access to these fields use the getters and setters from the upper classes.*/
@@ -36,7 +41,7 @@ public class ProfileFeed extends SocialNetworkContentImpl
     @Column(name = "sharerIds")
     ArrayList<Long> sharerIds;
     @Column(name = "hashtags")
-    ArrayList<String> hashtags;
+    ArrayList<String> hashtagNames;
     @Column(name = "links")
     ArrayList<URL> links;
     @Column(name = "locationId")
@@ -104,12 +109,12 @@ public class ProfileFeed extends SocialNetworkContentImpl
         this.sharerIds = sharerIds;
     }
 
-    public ArrayList<String> getHashtags() {
-        return hashtags;
+    public ArrayList<String> getHashtagNames() {
+        return hashtagNames;
     }
 
-    public void setHashtags(ArrayList<String> hashtags) {
-        this.hashtags = hashtags;
+    public void setHashtagNames(ArrayList<String> hashtagNames) {
+        this.hashtagNames = hashtagNames;
     }
 
     public ArrayList<URL> getLinks() {
@@ -152,20 +157,6 @@ public class ProfileFeed extends SocialNetworkContentImpl
         this.commentIds = commentIds;
     }
 
-    @Transient
-    Profile profile;
-    @Transient
-    ArrayList<Profile> liker;
-    @Transient
-    ArrayList<Profile> shares;
-    @Transient
-    Location location;
-    @Transient
-    Media media;
-    @Transient
-    ArrayList<Profile> taggedUser;
-    @Transient
-    ArrayList<Comment> comments;
 
     @Override
     public OffsetDateTime getContentTimestamp() throws DbException {
@@ -179,7 +170,7 @@ public class ProfileFeed extends SocialNetworkContentImpl
 
     @Override
     public SocialNetwork getSourceNetwork() throws DbException {
-        throw new DbException("not yet implemented.");
+        return DatabaseImpl.getInstance().getSocialNetwork(socialNetworkId);
     }
 
     @Override
@@ -209,7 +200,7 @@ public class ProfileFeed extends SocialNetworkContentImpl
         if (!rawStoryText.equals(that.rawStoryText)) return false;
         if (likerIds != null ? !likerIds.equals(that.likerIds) : that.likerIds != null) return false;
         if (sharerIds != null ? !sharerIds.equals(that.sharerIds) : that.sharerIds != null) return false;
-        if (hashtags != null ? !hashtags.equals(that.hashtags) : that.hashtags != null) return false;
+        if (hashtagNames != null ? !hashtagNames.equals(that.hashtagNames) : that.hashtagNames != null) return false;
         if (links != null ? !links.equals(that.links) : that.links != null) return false;
         if (taggedUserIds != null ? !taggedUserIds.equals(that.taggedUserIds) : that.taggedUserIds != null)
             return false;
@@ -227,7 +218,7 @@ public class ProfileFeed extends SocialNetworkContentImpl
         result = 31 * result + rawStoryText.hashCode();
         result = 31 * result + (likerIds != null ? likerIds.hashCode() : 0);
         result = 31 * result + (sharerIds != null ? sharerIds.hashCode() : 0);
-        result = 31 * result + (hashtags != null ? hashtags.hashCode() : 0);
+        result = 31 * result + (hashtagNames != null ? hashtagNames.hashCode() : 0);
         result = 31 * result + (links != null ? links.hashCode() : 0);
         result = 31 * result + locationId;
         result = 31 * result + mediaId;
@@ -235,4 +226,95 @@ public class ProfileFeed extends SocialNetworkContentImpl
         result = 31 * result + (commentIds != null ? commentIds.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public void prepareSave() {
+        if (profileData != null) {
+            profileId = profileData.getId();
+        }
+        if (likerData != null) {
+            likerIds = new ArrayList<Long>();
+            for (Profile p : likerData) {
+                likerIds.add(p.getId());
+            }
+        }
+        if (sharerData != null) {
+            sharerIds = new ArrayList<Long>();
+            for (Profile p : sharerData) {
+                sharerIds.add(p.getId());
+            }
+        }
+        if (hashtagsData != null) {
+            hashtagNames = new ArrayList<String>();
+            for (Hashtag h : hashtagsData) {
+                hashtagNames.add(h.getTitle());
+            }
+        }
+    }
+
+    @Transient
+    private transient Profile profileData;
+
+    public Profile getProfile()
+            throws DbException {
+        if (profileData == null) {
+            Database db = DatabaseImpl.getInstance();
+            profileData = db.autoGetProfile(profileId);
+        }
+        return profileData;
+    }
+
+    public void setProfile(Profile p) {
+        profileData = p;
+    }
+
+    @Transient
+    private transient ArrayList<Profile> likerData;
+
+    public ArrayList<Profile> getLiker()
+            throws DbException {
+        Database db = DatabaseImpl.getInstance();
+        if (likerData == null) {
+            likerData = new ArrayList<Profile>();
+            if (likerIds != null) {
+                for (Long l : likerIds) {
+                    likerData.add(db.autoGetProfile(l));
+                }
+            }
+        }
+        return likerData;
+    }
+
+    @Transient
+    private transient ArrayList<Profile> sharerData;
+
+    public ArrayList<Profile> getSharers()
+            throws DbException {
+        Database db = DatabaseImpl.getInstance();
+        if (sharerData == null) {
+            sharerData = new ArrayList<Profile>();
+            if (sharerIds != null) {
+                for (Long l : sharerIds) {
+                    sharerData.add(db.autoGetProfile(l));
+                }
+            }
+        }
+        return sharerData;
+    }
+
+    @Transient
+    private transient ArrayList<Hashtag> hashtagsData;
+
+    public ArrayList<Hashtag> getHashtags() {
+        if (hashtagsData == null) {
+            hashtagsData = new ArrayList<Hashtag>();
+            if (hashtagNames != null) {
+                for (String s : hashtagNames) {
+                    hashtagsData.add(new Hashtag(s));
+                }
+            }
+        }
+        return hashtagsData;
+    }
+
 }

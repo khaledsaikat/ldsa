@@ -6,14 +6,18 @@ import de.due.ldsa.db.DbException;
 import de.due.ldsa.db.LinkedWithOtherObjects;
 
 import com.datastax.driver.mapping.annotations.Transient;
+
+import java.io.Serializable;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * If you need to serialize this, or any of it's inheritors, make sure your serializer honors transient fields.
  */
-public abstract class Profile implements SocialNetworkContent, LinkedWithOtherObjects
+public abstract class Profile implements SocialNetworkContent, LinkedWithOtherObjects, Serializable
 {
     public abstract long getId();
 
@@ -94,7 +98,7 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
     }
 
     @Transient
-    private ArrayList<SocialNetworkInterest> interestData;
+    private transient ArrayList<SocialNetworkInterest> interestData;
 
     /**
      * Gets the Interests associated with this profile from the database. If they were already queried, they will be
@@ -119,7 +123,7 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
     }
 
     @Transient
-    private Media profilePhoto;
+    private transient Media profilePhoto;
 
     /**
      * Retrieves the current Profile Photo from the database, or from memory if it was set/read before.
@@ -140,7 +144,7 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
     }
 
     @Transient
-    public ProfileFeed lastUpdateData;
+    public transient ProfileFeed lastUpdateData;
 
     /**
      * Retrieves the last posted update from database. If it was already retrieved, or set, it will be returned from
@@ -162,7 +166,7 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
     }
 
     @Transient
-    private Location homeTown;
+    private transient Location homeTown;
 
     /**
      * Gets the Home Town. If it is not yet in memory, it will be loaded from database.
@@ -183,7 +187,7 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
     }
 
     @Transient
-    private ArrayList<Profile> follows;
+    private transient ArrayList<Profile> follows;
 
     public ArrayList<Profile> getFollows() {
         if (follows == null) {

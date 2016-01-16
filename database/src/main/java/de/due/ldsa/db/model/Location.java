@@ -2,15 +2,17 @@ package de.due.ldsa.db.model;
 
 import de.due.ldsa.db.DbException;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
 
 //We turned Location into an interface and had LocationImpl and OrganisationPlace implement it, to get around the
 //limitation (the lack of inheritance) of the Cassandra driver.
-public interface Location extends SocialNetworkContent {
+public interface Location extends SocialNetworkContent, Serializable {
     //------------------------------------------------------------------------------------------------------------------
     //Getters and setters
     //------------------------------------------------------------------------------------------------------------------

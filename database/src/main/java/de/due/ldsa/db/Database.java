@@ -36,4 +36,8 @@ public interface Database
     long getNextInterestId() throws DbException;
     long getNextProfileFeedId() throws DbException;
     long getNextLocationId() throws DbException;
+
+    public Profile autoGetProfile(long id) throws DbException;
+
+    public void autoSaveProfile(Profile p) throws DbException;
 }

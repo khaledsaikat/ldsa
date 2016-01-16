@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an ArrayList<URL> into Cassandra. (used in ProfileFeed)
  */
 public class UrlArrayListCodec extends TypeCodec<ArrayList<URL>> {
     public UrlArrayListCodec() {

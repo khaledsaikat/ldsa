@@ -5,15 +5,17 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import de.due.ldsa.db.DbException;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
 @Table(keyspace = "ldsa", name = "socialNetworks")
-public class SocialNetwork
+public class SocialNetwork implements Serializable
 {
     @PartitionKey
     private int id;

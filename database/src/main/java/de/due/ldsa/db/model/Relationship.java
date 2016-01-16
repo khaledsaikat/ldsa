@@ -3,7 +3,9 @@ package de.due.ldsa.db.model;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * This is not serializable. Serialize the HumanProfile instead.
  */
 public class Relationship
 {

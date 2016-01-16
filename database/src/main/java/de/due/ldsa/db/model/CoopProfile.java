@@ -5,16 +5,19 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import de.due.ldsa.db.DbException;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
+ *
  *
  */
 @Table(keyspace = "ldsa", name = "coopProfiles")
-public class CoopProfile extends Profile
+public class CoopProfile extends Profile implements Serializable
 {
     /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
       If you need access to these fields use the getters and setters from the upper classes.*/

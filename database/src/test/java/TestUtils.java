@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Various utilities that generate dummy data for the tests.
  */
 class TestUtils
 {
@@ -144,6 +146,7 @@ class TestUtils
     }
 
     public static String getRandomHashtag() {
+        //Googled for trending hashtags to come up with these.
         String[] pool = new String[]{"#DoItLikeDeMaiziere", "#Weihnachten", "#32c3", "#berlin", "#kalt", "#germany",
                 "#follow", "#instapic", "#deutschland", "#wether", "#enjoy", "#love", "#tourist", "#goodlife", "#traveling",
                 "#blond", "#blonde", "#berlinermauer", "#trip", "#sightseeing", "#winter", "#travel", "#christmastime",
@@ -167,4 +170,21 @@ class TestUtils
 
         return values[rng.nextInt(values.length)];
     }
+
+    public static String getRandomCompanyName() {
+        String[] poolA = new String[]{"Methan", "Akane", "Neptune", "Tangent", "Telia", "Bob's", "Bernd", "Bubbles"};
+        String[] poolB = new String[]{"Industries", "Records", "International", "Pizza", "Computers", "Burgers", "Data"};
+        String[] poolC = new String[]{"KG", "UG", "GbR", "GmbH", "OHG", "AG", "e.V.", "GmbH & Co. KG", "Limited"};
+
+        return String.format("%s %s %s", poolA[rng.nextInt(poolA.length)], poolB[rng.nextInt(poolB.length)], poolC[rng.nextInt(poolC.length)]);
+    }
+
+    public static String getRandomComment() {
+        String[] poolA = new String[]{"total", "voll", "übelst", "", ""};
+        String[] poolB = new String[]{"witzig", "doof", "cool", "geil", "nice", "mies", "nett"};
+
+        return String.format("%s %s", poolA[rng.nextInt(poolA.length)], poolB[rng.nextInt(poolB.length)]);
+    }
+
+
 }

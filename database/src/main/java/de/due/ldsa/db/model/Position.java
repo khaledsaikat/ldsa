@@ -1,9 +1,12 @@
 package de.due.ldsa.db.model;
 
+import java.io.Serializable;
+
 /**
+ * Author: Romina (scrobart)
  *
  */
-public class Position
+public class Position implements Serializable
 {
     //TODO: add reference to Location
     public Position() {

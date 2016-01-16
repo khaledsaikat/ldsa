@@ -10,7 +10,9 @@ import de.due.ldsa.db.model.Sex;
 import java.nio.ByteBuffer;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an Sex into Cassandra. (used in HumanProfile)
  */
 public class SexCodec extends TypeCodec<Sex> {
     public SexCodec() {

@@ -3,16 +3,19 @@ package de.due.ldsa.db.model;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.db.DbException;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
 @Table(keyspace = "ldsa", name = "events")
-public class Event extends SocialNetworkContentImpl
+public class Event extends SocialNetworkContentImpl implements Serializable
 {
     /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
       If you need access to these fields use the getters and setters from the upper classes.*/
@@ -125,7 +128,7 @@ public class Event extends SocialNetworkContentImpl
     // COMPLEX METHODS
     //------------------------------------------------------------------------------------------------------------------
     public SocialNetwork getSourceNetwork() throws DbException {
-        throw new DbException("not yet implemented.");
+        return DatabaseImpl.getInstance().getSocialNetwork(socialNetworkId);
     }
 
     public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {

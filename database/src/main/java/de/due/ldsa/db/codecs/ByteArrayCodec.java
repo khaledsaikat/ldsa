@@ -9,7 +9,9 @@ import de.due.ldsa.db.DbException;
 import java.nio.ByteBuffer;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Needed to save a byte Array into Cassandra. (used in Media)
  */
 public class ByteArrayCodec extends TypeCodec<byte[]> {
     public ByteArrayCodec() {

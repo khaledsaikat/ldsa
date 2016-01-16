@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an ArrayList<String> into Cassandra. (used in ProfileFeed for the Hashtags)
  */
 public class StringArrayListCodec extends TypeCodec<ArrayList<String>> {
     public StringArrayListCodec() {

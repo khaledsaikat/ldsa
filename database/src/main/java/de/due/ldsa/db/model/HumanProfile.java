@@ -6,6 +6,7 @@ import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
 import de.due.ldsa.db.DbException;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
@@ -15,11 +16,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
+ * Author: Romina (scrobart)
  *
+ *  If you need to serialize this, please use a serializer that honors transient fields.
  */
 @Table(keyspace = "ldsa", name = "humanProfiles")
-public class HumanProfile extends Profile
+public class HumanProfile extends Profile implements Serializable
 {
+
     /*This needs to be put right here, because Datastax' Cassandra mapper does not support inheritance.
       If you need access to these fields use the getters and setters from the upper classes.*/
     @Column(name = "snId")
@@ -74,7 +78,7 @@ public class HumanProfile extends Profile
     ArrayList<Long> relationshipPersons;
 
     @Transient
-    Relationship rs;
+    transient Relationship rs;
 
     @Override
     public long getId() {

@@ -12,7 +12,9 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an LocalDate  into Cassandra. (used in HumanProfile)
  */
 public class LocalDateCodec extends TypeCodec<LocalDate> {
     public LocalDateCodec() {

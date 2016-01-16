@@ -10,7 +10,9 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an URL into Cassandra. (used in Profile)
  */
 public class UrlCodec extends TypeCodec<URL> {
     public UrlCodec() {

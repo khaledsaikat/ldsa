@@ -1,11 +1,13 @@
 package de.due.ldsa.db.model;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
-public class ContentMeta
+public class ContentMeta implements Serializable
 {
     OffsetDateTime contentTimestamp;
     OffsetDateTime crawlingTimestamp;

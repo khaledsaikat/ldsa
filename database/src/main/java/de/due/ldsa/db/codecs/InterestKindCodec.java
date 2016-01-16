@@ -10,7 +10,9 @@ import de.due.ldsa.db.model.Sex;
 import java.nio.ByteBuffer;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an InterestKind into Cassandra. (required for SocialNetworkInterest)
  */
 public class InterestKindCodec extends TypeCodec<InterestKind> {
     public InterestKindCodec() {

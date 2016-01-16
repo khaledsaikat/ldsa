@@ -21,6 +21,9 @@ import de.due.ldsa.db.model.*;
 import java.io.Closeable;
 import java.io.IOException;
 
+/**
+ * Author: Romina (scrobart)
+ */
 public class DatabaseImpl implements Database, Closeable
 {
     static DatabaseImpl singleton;
@@ -110,6 +113,7 @@ public class DatabaseImpl implements Database, Closeable
             profileFeedMapper = new MappingManager(session).mapper(ProfileFeed.class);
         }
 
+        pf.prepareSave();
         profileFeedMapper.save(pf);
 
     }
@@ -369,9 +373,58 @@ public class DatabaseImpl implements Database, Closeable
         return rs1.one().getLong(0) + 1;
     }
 
+    /**
+     * Use this to figure out an empty ID for either an regular Location or an OrganisationPlace.
+     * Location and Organisation place share the same Number Sequence.
+     *
+     * @return An ID
+     * @throws DbException Thrown if querying the ID from the Database fails.
+     */
     public long getNextLocationId()
             throws DbException {
         ResultSet rs1 = session.execute("SELECT MAX(id) FROM locations");
-        return rs1.one().getLong(0) + 1;
+        long amount1 = rs1.one().getLong(0);
+
+
+        ResultSet rs2 = session.execute("SELECT MAX(id) FROM organisationPlaces");
+        long amount2 = rs2.one().getLong(0);
+
+        return Math.max(amount1, amount2) + 1;
+    }
+
+    /**
+     * Automagicially determines wheter a profile belongs to a human or a corporate entity, and returns its profile.
+     *
+     * @param id The ID of the profile you want to get.
+     * @return Either a CoopProfile or a HumanProfile
+     */
+    public Profile autoGetProfile(long id)
+            throws DbException {
+        if (isHuman(id)) {
+            return getHumanProfile(id);
+        } else {
+            return getCoopProfile(id);
+        }
+    }
+
+    public void autoSaveProfile(Profile p)
+            throws DbException {
+        if (p instanceof HumanProfile) {
+            saveHumanProfile((HumanProfile) p);
+        } else if (p instanceof CoopProfile) {
+            saveCoopProfile((CoopProfile) p);
+        } else {
+            throw new DbException("You supplied neither a HumanProfile nor a CoopProfile.");
+        }
+    }
+
+    public boolean isOrganisationPlace(long id) {
+        OrganisationPlace op = getOrganisationPlace(id);
+        if (op != null) return true;
+
+        Location l = getLocation(id);
+        if (l != null) return false;
+
+        throw new DbException("The specified ID is neither a Location nor an OrganisationPlace:" + new Long(id).toString());
     }
 }

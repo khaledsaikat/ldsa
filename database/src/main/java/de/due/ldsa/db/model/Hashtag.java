@@ -2,13 +2,21 @@ package de.due.ldsa.db.model;
 
 import de.due.ldsa.db.DbException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Not Serializable. To get this object, fetch it from a comment or feed.
  */
 public class Hashtag {
+    public Hashtag() {
+    }
 
+    public Hashtag(String name) {
+        this.title = name;
+    }
 
     private String title;
     private ArrayList<SocialNetworkContent> usedAtList;

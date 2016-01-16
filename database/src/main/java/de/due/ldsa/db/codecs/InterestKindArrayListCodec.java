@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an ArrayList<InterestKind> into Cassandra. (used in SocialNetworkInterest)
  */
 public class InterestKindArrayListCodec extends TypeCodec<ArrayList<InterestKind>> {
     public InterestKindArrayListCodec() {

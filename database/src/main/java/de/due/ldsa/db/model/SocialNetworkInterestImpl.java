@@ -4,13 +4,16 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import de.due.ldsa.db.DbException;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
 @Table(keyspace = "ldsa", name = "interests")
-public class SocialNetworkInterestImpl implements SocialNetworkInterest {
+public class SocialNetworkInterestImpl implements SocialNetworkInterest, Serializable {
     @PartitionKey
     long id;
     @Column(name = "kinds")

@@ -7,14 +7,16 @@ import org.junit.Test;
 import java.util.Random;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Measures how many insert operations are possible on a Cassandra database using a random number generator.
  */
 public class DatabaseBenchmarkTest
 {
     /*
         Test Results:
-        About 300-400 insert operations/second are possible on the ES server from a home internet connection.
-        About 200-300 insert operations/second are possible on my local computer.
+        About 300-400 insert operations/second are possible on the ES server from my home internet connection.
+        About 200-300 insert operations/second are possible on my home computer. (Intel Core i7-3517U @ 1,9 GHz, 4GB RAM, Windows 8.1)
      */
     @Test
     public void DatabaseBenchmark() throws Exception

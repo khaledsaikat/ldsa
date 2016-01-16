@@ -8,7 +8,9 @@ import org.junit.experimental.categories.Category;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Tests all the fancy methods for Comment
  */
 @Category(AllTestsExceptBenchmark.class)
 public class CommentTests {
@@ -100,5 +102,62 @@ public class CommentTests {
 
         Comment parent2 = db.getComment(parent1.getId());
         Assert.assertArrayEquals(parent1.getComments().toArray(), parent2.getComments().toArray());
+    }
+
+    @Test
+    public void testGetCommenter() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("coopProfiles");
+        db.truncateTable("humanProfiles");
+        db.truncateTable("comments");
+
+        CoopProfile cp = new CoopProfile();
+        cp.setFullname(TestUtils.getRandomCompanyName());
+        cp.setId(db.getNextProfileId());
+        db.autoSaveProfile(cp);
+
+        HumanProfile hp = new HumanProfile();
+        hp.setFullname(TestUtils.getRandomName());
+        hp.setId(db.getNextProfileId());
+        db.autoSaveProfile(hp);
+
+        Comment masterA = new Comment();
+        masterA.setText(TestUtils.getRandomComment());
+        masterA.setCommenter(cp);
+        masterA.setId(db.getNextCommentId());
+        db.saveComment(masterA);
+
+        Comment masterB = new Comment();
+        masterB.setText(TestUtils.getRandomComment());
+        masterB.setCommenter(hp);
+        masterB.setId(db.getNextCommentId());
+        db.saveComment(masterB);
+
+        Comment slaveA = db.getComment(masterA.getId());
+        Comment slaveB = db.getComment(masterB.getId());
+
+        if (!slaveA.equals(masterA)) {
+            Assert.fail("The first comment was either not written or read correctly.");
+        }
+        if (!slaveB.equals(masterB)) {
+            Assert.fail("The second comment was either not written or read correctly.");
+        }
+
+        //Remember: JUnit considers the test as passed, if the method body reached it's end.
+    }
+
+    @Test
+    public void testHashtagSaving() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("comments");
+
+        Comment master = new Comment();
+        master.setId(db.getNextCommentId());
+        master.setText(TestUtils.getRandomComment());
+        master.setHashtagNames(TestUtils.getRandomHashtagArrayList());
+        db.saveComment(master);
+
+        Comment slave = db.getComment(master.getId());
+        Assert.assertArrayEquals(master.getHashtags().toArray(), slave.getHashtags().toArray());
     }
 }

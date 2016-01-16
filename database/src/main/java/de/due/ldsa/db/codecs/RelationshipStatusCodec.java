@@ -9,7 +9,9 @@ import de.due.ldsa.db.model.RelationshipStatus;
 import java.nio.ByteBuffer;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Used to save an RelationshipStatus into Cassandra. (used in Relationship)
  */
 public class RelationshipStatusCodec extends TypeCodec<RelationshipStatus> {
     public RelationshipStatusCodec() {
