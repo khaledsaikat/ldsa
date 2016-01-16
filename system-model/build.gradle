@@ -1,0 +1,5 @@
+dependencies {
+	compile 'com.datastax.cassandra:cassandra-driver-core:3.0.0-beta1'
+    compile 'com.datastax.cassandra:cassandra-driver-mapping:3.0.0-beta1'
+    compile 'com.google.code.gson:gson:2.5'
+}
