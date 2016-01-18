@@ -56,4 +56,8 @@ public class Parameter implements Comparable<Parameter> {
 
         return keyDiff == 0 ? value.compareTo(parameter.getValue()) : keyDiff;
     }
+
+	public static String getUtf() {
+		return UTF;
+	}
 }
