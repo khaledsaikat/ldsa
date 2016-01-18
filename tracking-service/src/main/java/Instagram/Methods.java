@@ -2,76 +2,59 @@ package Instagram;
 public final class Methods {
 
 	/**
-	 * Remove a comment either on the authenticated user's media or authored by
-	 * the authenticated user.
-	 *
-	 * Required scope: comments
-	 *
-	 * DELETE /media/{id}/comments/{id}
-	 */
-	public static final String DELETE_MEDIA_COMMENTS = "/media/%s/comments/%s";
-
-	/**
-	 * Get most recent media from a geography subscription that you created.
-	 * Note: you can only access Geographies that were explicitly created by
-	 * your OAuth client.
-	 */
-    @Deprecated
-	public static final String GEOGRAPHIES_RECENT_MEDIA_BY_ID = "/geographies/%s/media/recent";
-
-	/**
 	 * Get a list of users who have liked this media.
 	 *
-	 * Required scope : likes
+	 * Required scope : basic, public_content
 	 */
 	public static final String LIKES_BY_MEDIA_ID = "/media/%s/likes";
 
 	/**
 	 * Get information about a location.
+	 * Required scope: public_content
 	 */
 	public static final String LOCATIONS_BY_ID = "/locations/%s";
 
 	/**
 	 * Get a list of recent media objects from a given location.
+	 * Required scope: public_content
 	 */
 	public static final String LOCATIONS_RECENT_MEDIA_BY_ID = "/locations/%s/media/recent";
 
 	/**
 	 * Search for a location by geographic coordinate.
+	 * Required scope: public_content
 	 */
 	public static final String LOCATIONS_SEARCH = "/locations/search";
 
 	/**
 	 * Get information about a media object.
+	 * Required scope: basic, public_content
 	 */
 	public static final String MEDIA_BY_ID = "/media/%s";
 
     /**
      * Get information about a media object.
+     * Required scope: basic, public_content
      */
     public static final String MEDIA_BY_SHORTCODE = "/media/shortcode/%s";
 
 	/**
 	 * Get a full list of comments on a media.
 	 *
-	 * Required scope: comments
+	 * Required scope: basic, public_content
 	 */
 	public static final String MEDIA_COMMENTS = "/media/%s/comments";
 
 	/**
-	 * Get a list of what media is most popular at the moment.
-	 */
-    @Deprecated
-	public static final String MEDIA_POPULAR = "/media/popular";
-
-	/**
 	 * Search for media in a given area.
+	 * Required scope: public_content
 	 */
 	public static final String MEDIA_SEARCH = "/media/search";
 
 
 	/**
 	 * Get information about a tag object.
+	 * Required scope: public_content
 	 */
 	public static final String TAGS_BY_NAME = "/tags/%s";
 
@@ -80,60 +63,69 @@ public final class Methods {
 	 * when the media was tagged with this tag, rather than the order it was
 	 * posted. Use the max_tag_id and min_tag_id parameters in the pagination
 	 * response to paginate through these objects.
+	 * 
+	 * Required scope: public_content
 	 */
 	public static final String TAGS_RECENT_MEDIA = "/tags/%s/media/recent";
 
 	/**
 	 * Search for tags by name - results are ordered first as an exact match,
 	 * then by popularity.
+	 * 
+	 * Required scope: public_content
 	 */
 	public static final String TAGS_SEARCH = "/tags/search";
 
 	/**
 	 * Get the list of users this user is followed by.
 	 *
-	 * Required scope: relationships
+	 * Required scope: follower_list
 	 */
-	public static final String USERS_ID_FOLLOWED_BY = "/users/%s/followed-by";
+	public static final String USERS_FOLLOWED_BY = "/users/self/followed-by";
 
 	/**
 	 * Get the list of users this user follows.
 	 *
-	 * Required scope: relationships
+	 * Required scope: follower_list
 	 */
-	public static final String USERS_ID_FOLLOWS = "/users/%s/follows";
+	public static final String USERS_FOLLOWS = "/users/self/follows";
+	
+	/**
+	 * Get the list of users  who have requested this user's permission to follow.
+	 *
+	 * Required scope: follower_list
+	 */
+	public static final String USERS_REQUESTED_BY = "/users/self/requested-by";
 
 	/**
 	 * Get information about the current user's relationship
 	 * (follow/following/etc) to another user.
 	 *
-	 * Required scope: relationships
+	 * Required scope: follower_list
 	 */
 	public static final String USERS_ID_RELATIONSHIP = "/users/%s/relationship";
 
 	/**
 	 * Get the most recent media published by a user.
+	 * Required scope: public_content
 	 */
 	public static final String USERS_RECENT_MEDIA = "/users/%s/media/recent";
 
 	/**
 	 * Search for a user by name.
+	 * Required scope: public_content
 	 */
 	public static final String USERS_SEARCH = "/users/search";
 
 	/**
 	 * Get basic information about a user (self).
+	 * Required scope: basic
 	 */
 	public static final String USERS_SELF = "/users/self";
 
-	/**
-	 * See the authenticated user's feed.
-	 */
-    @Deprecated
-	public static final String USERS_SELF_FEED = "/users/self/feed";
-
-    /*
+    /**
      * Get the most recent media published by the owner of the access_token.
+     * Required scope: basic
      */
     public static final String USERS_SELF_RECENT_MEDIA = "/users/self/media/recent";
 
@@ -143,6 +135,7 @@ public final class Methods {
 	 * media is returned as long as the authenticated user has permission to
 	 * view that media. Liked media lists are only available for the currently
 	 * authenticated user.
+	 * Required scope: public_content
 	 */
 	public static final String USERS_SELF_LIKED_MEDIA = "/users/self/media/liked";
 
@@ -155,18 +148,7 @@ public final class Methods {
 
 	/**
 	 * Get basic information about a user.
+	 * Required scope: public_content
 	 */
 	public static final String USERS_WITH_ID = "/users/%s";
-
-    /**
-     * Given a short link, returns information about the media associated with
-     * that link.
-     */
-    public static final String OEMBED_INFORMATION = "/oembed?url=%s";
-    
-    /**
-     * CRUD Real-time  subscriptions
-     */
-    public static final String SUBSCRIPTIONS = "/subscriptions";
-
 }
