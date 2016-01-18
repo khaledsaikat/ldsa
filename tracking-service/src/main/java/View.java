@@ -12,10 +12,14 @@ import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
 
+/**
+ * GUI of the tracking service
+ * 
+ * @author Vincent Nelius
+ * @version 1.0
+ */
+
 public class View extends JFrame {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private Container contentPane;
 	private Container inputPane;

@@ -1,4 +1,13 @@
 package Instagram;
+
+/**
+ * contains all URLs of the Instagram endpoints
+ * 
+ * @author Vincent Nelius
+ * @version 1.0
+ *
+ */
+
 public final class Methods {
 
 	/**
