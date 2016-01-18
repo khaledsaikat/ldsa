@@ -59,7 +59,7 @@ public class Model {
 	public String requestUserData(){
 		Response response;
 		try {
-			response = instagram.getUserInfo();
+			response = instagram.getCurrentUserInfo();
 			String responseText = response.getBody();
 			linkDataLayer.setData(responseText);
 			return responseText;
