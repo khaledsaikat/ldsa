@@ -13,6 +13,13 @@ import scribe.model.Verb;
 import scribe.oauth.OAuthService;
 import scribe.utils.Preconditions;
 
+/**
+ * Extends the default OAuth 2.0 implementation to suit instagram 
+ * 
+ * @author Vincent Nelius
+ * @version 1.0
+ */
+
 public class InstagramApi extends DefaultApi20 {
 
 	@Override
@@ -30,7 +37,6 @@ public class InstagramApi extends DefaultApi20 {
 		Preconditions.checkValidUrl(config.getCallback(),
 				"Must provide a valid url as callback. Instagram does not support OOB");
 
-		// Append scope if present
 		if (config.hasScope()) {
 			return String.format(InstagramOAuthConstants.SCOPED_AUTHORIZE_URL, config.getApiKey(),
 					formURLEncode(config.getCallback()), formURLEncode(config.getScope()));

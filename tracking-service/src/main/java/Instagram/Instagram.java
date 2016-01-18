@@ -13,6 +13,16 @@ import scribe.model.Token;
 import scribe.model.Verb;
 import scribe.utils.Preconditions;
 
+/**
+ * Instagram Service Class
+ * <br> contains accessToken and connection settings
+ * <br> provides methods to make actual requests to the Instagram endpoints
+ * 
+ * 
+ * @author Vincent Nelius, Sachin Handiekar
+ * @version 1.0
+ */
+
 public class Instagram {
 	private Token accessToken;
 	private final InstagramConfig config;
@@ -25,26 +35,6 @@ public class Instagram {
 		this.service = service;
 		config = new InstagramConfig();
 	}
-
-	public Token getAccessToken() {
-		return accessToken;
-	}
-
-	public void setAccessToken(Token accessToken) {
-		this.accessToken = accessToken;
-	}
-
-	public Proxy getRequestProxy() {
-		return requestProxy;
-	}
-
-	public void setRequestProxy(Proxy requestProxy) {
-		this.requestProxy = requestProxy;
-	}
-
-	public InstagramConfig getConfig() {
-		return config;
-	}
 	
 	public Response getUserInfo(String userId) throws IOException {
 		Preconditions.checkEmptyString(userId, "UserId cannot be null or empty");
@@ -56,12 +46,12 @@ public class Instagram {
 		return getApiResponse(Verb.GET,Methods.USERS_SELF,null);
 	}
 	
-	public Response getUserRecentMedia() throws IOException {
+	public Response getCurrentUserRecentMedia() throws IOException {
 		return getApiResponse(Verb.GET, Methods.USERS_SELF_RECENT_MEDIA, null);
 	}
 	
 	
-	public Response getUserRecentMedia(int count, String minId, String maxId) throws IOException {
+	public Response getCurrentUserRecentMedia(int count, String minId, String maxId) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		if (maxId != null)
 			params.put(InstagramQueryParam.MAX_ID, maxId);
@@ -94,7 +84,7 @@ public class Instagram {
 		return getApiResponse(Verb.GET, apiMethod, params);
 	}
 	
-	public Response getUserLikeMediaFeed(long maxLikeId, int count) throws IOException {
+	public Response getCurrentUserLikeMediaFeed(long maxLikeId, int count) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		if (maxLikeId > 0)
 			params.put(InstagramQueryParam.MAX_LIKE_ID, String.valueOf(maxLikeId));
@@ -112,19 +102,19 @@ public class Instagram {
 		return getApiResponse(Verb.GET, Methods.USERS_SEARCH, params);
 	}
 	
-	public Response getUserFollowsList() throws IOException{
+	public Response getObjectsCurrentUserFollows() throws IOException{
 		return getApiResponse(Verb.GET, Methods.USERS_FOLLOWS, null);
 	}
 	
-	public Response getUserFollowedByList() throws IOException {
+	public Response getObjectsCurrentUserFollowedBy() throws IOException {
 		return getApiResponse(Verb.GET, Methods.USERS_FOLLOWED_BY, null);
 	}
 	
-	public Response getUserRequestedByList() throws IOException {
+	public Response getCurrentUserFollowerRequests() throws IOException {
 		return getApiResponse(Verb.GET, Methods.USERS_REQUESTED_BY, null);
 	}
 	
-	public Response getUserRelationship(String userId) throws IOException {
+	public Response getCurrentUserRelationshipTo(String userId) throws IOException {
 		Preconditions.checkEmptyString(userId, "userId cannot be null or empty");
 		String apiMethod = String.format(Methods.USERS_ID_RELATIONSHIP, userId);
 		return getApiResponse(Verb.GET, apiMethod, null);
@@ -142,7 +132,7 @@ public class Instagram {
 		return getApiResponse(Verb.GET, apiMethod, null);
 	}
 	
-	public Response searchMedia(double latitude, double longitude, int distance) throws IOException {
+	public Response searchMediaByLocation(double latitude, double longitude, int distance) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(InstagramQueryParam.LATITUDE, Double.toString(latitude));
 		params.put(InstagramQueryParam.LONGITUDE, Double.toString(longitude));
@@ -156,7 +146,7 @@ public class Instagram {
 		return getApiResponse(Verb.GET, apiMethod, null);
 	}
 	
-	public Response getUserLikes(String mediaId) throws IOException {
+	public Response getUsersLikingMedia(String mediaId) throws IOException {
 		String apiMethod = String.format(Methods.LIKES_BY_MEDIA_ID, mediaId);
 		return getApiResponse(Verb.GET, apiMethod, null);
 	}
@@ -166,7 +156,7 @@ public class Instagram {
 		return getApiResponse(Verb.GET, apiMethod, null);
 	}
 	
-	public Response getRecentMediaTags(String tagName, Long count, String minTagId, String maxTagId) throws IOException {
+	public Response getRecentMediaByTag(String tagName, Long count, String minTagId, String maxTagId) throws IOException {
 		Map<String, String> params = new HashMap<String, String>();
 		if (count != null && count > 0)
 			params.put(InstagramQueryParam.COUNT, String.valueOf(count));
@@ -231,7 +221,7 @@ public class Instagram {
 		OAuthRequest request = new OAuthRequest(verb, apiResourceUrl, this.service);
 		configureConnectionSettings(request, config);
 		//set Request Proxy
-		if (params != null) {
+		if (params != null && !params.isEmpty()) {
 			for (Map.Entry<String, String> entry : params.entrySet()) {
 				if (verb == Verb.GET){
 					request.addQuerystringParameter(entry.getKey(), entry.getValue());
@@ -258,5 +248,23 @@ public class Instagram {
 		request.setConnectionKeepAlive(config.isConnectionKeepAlive());
 	}
 	
-	
+	public Token getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(Token accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	public Proxy getRequestProxy() {
+		return requestProxy;
+	}
+
+	public void setRequestProxy(Proxy requestProxy) {
+		this.requestProxy = requestProxy;
+	}
+
+	public InstagramConfig getConfig() {
+		return config;
+	}
 }

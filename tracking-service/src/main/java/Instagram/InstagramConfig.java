@@ -1,5 +1,13 @@
 package Instagram;
 
+/**
+ * Contains instagram specific api settings in addition to the OAuthConfig
+ * 
+ * @author Vincent Nelius
+ * @version 1.0
+ *
+ */
+
 public class InstagramConfig {
 
 	private String baseURI;

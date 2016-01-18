@@ -3,6 +3,14 @@ import java.awt.event.ActionListener;
 
 import com.cedarsoftware.util.io.JsonWriter;
 
+/**
+ * connects model and view
+ * 
+ * @author Vincent Nelius
+ * @version 1.0
+ *
+ */
+
 public class Presenter implements ActionListener {
 	private Model model;
 	private View view;
@@ -10,6 +18,7 @@ public class Presenter implements ActionListener {
 	public Presenter(){
 		super();
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == view.buildServiceButton){
@@ -32,15 +41,11 @@ public class Presenter implements ActionListener {
 				view.getInstagramButton.setEnabled(true);
 			}
 		} else if (e.getSource() == view.getInstagramButton) {
-			boolean succeeded = model.createInstagram();
-			if(!succeeded){
-				view.showMessage("Cannot create Instagram Instance", "Something went wrong");
-			} else {
-				view.requestUserDataButton.setEnabled(true);
-			}
+			model.createInstagram();
+			view.requestUserDataButton.setEnabled(true);
 		} else if (e.getSource() == view.requestUserDataButton) {
 			String jsonResponse;
-			jsonResponse = model.requestUserData();
+			jsonResponse = model.requestBasicUserData();
 			String niceJsonResponse = JsonWriter.formatJson(jsonResponse);
 			view.setOutputUserData(niceJsonResponse);
 		}
