@@ -1,4 +1,11 @@
-
+/**
+ * Mainclass creates Model, View, Presenter 
+ * and links model and view to the presenter
+ * 
+ * @author Vincent Nelius
+ * @version 1.0
+ *
+ */
 public class Main {
 
 	public static void main(String[] args) {

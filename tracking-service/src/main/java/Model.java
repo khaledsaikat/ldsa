@@ -10,6 +10,14 @@ import scribe.model.Response;
 import scribe.model.Token;
 import scribe.oauth.OAuthService;
 
+/**
+ * Contains InstagramService and provides methods 
+ * to delegate Requests to the InstagramService
+ * 
+ * @author Vincent Nelius
+ * @version 1.0
+ */
+
 public class Model {
 	private OAuthService oauthService;
 	private InstagramService instagramService;
@@ -23,6 +31,7 @@ public class Model {
 		linkDataLayer = new LinkDataReceiverImpl();
 	}
 	
+
 	public String createService(String clientId, String clientSecret, String callbackUrl, 
 			String scope, Integer connectTimeout, Integer readTimeout ){
 		authorizationURL = null;
@@ -46,17 +55,17 @@ public class Model {
 		return authorizationURL;
 	}
 	
+	
 	public boolean createAccessToken(String accessToken){
 		this.accessToken = new Token(accessToken,"");
 		return true;
 	}
 	
-	public boolean createInstagram(){
+	public void createInstagram(){
 		instagram = new Instagram(this.accessToken, instagramService);
-		return true;
 	}
 	
-	public String requestUserData(){
+	public String requestBasicUserData(){
 		Response response;
 		try {
 			response = instagram.getCurrentUserInfo();
