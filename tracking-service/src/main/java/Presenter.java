@@ -34,11 +34,6 @@ public class Presenter implements ActionListener {
 				view.showMessage("Cannot create AccessToken", "Something went wrong");
 				return;
 			}
-			succeeded = model.createInstagram();
-			if(!succeeded){
-				view.showMessage("Cannot create Instagram Instance", "Something went wrong");
-				return;
-			}
 			model.createInstagram();
 			String jsonResponse;
 			jsonResponse = model.requestBasicUserData();
