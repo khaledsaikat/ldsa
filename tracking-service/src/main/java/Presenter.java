@@ -34,18 +34,12 @@ public class Presenter implements ActionListener {
 				view.showMessage("Cannot create AccessToken", "Something went wrong");
 				return;
 			}
-<<<<<<< Updated upstream
-		} else if (e.getSource() == view.getInstagramButton) {
-			boolean succeeded = model.createInstagram();
+			succeeded = model.createInstagram();
 			if(!succeeded){
 				view.showMessage("Cannot create Instagram Instance", "Something went wrong");
-			} else {
-				view.requestUserDataButton.setEnabled(true);
+				return;
 			}
-		} else if (e.getSource() == view.requestUserDataButton) {
-=======
 			model.createInstagram();
->>>>>>> Stashed changes
 			String jsonResponse;
 			jsonResponse = model.requestUserData();
 			String niceJsonResponse = JsonWriter.formatJson(jsonResponse);
