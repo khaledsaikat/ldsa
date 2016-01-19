@@ -12,25 +12,20 @@ public class Presenter implements ActionListener {
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == view.buildServiceButton){
+		if (e.getSource() == view.requestButton){
 			String authorizationUrl;
-			authorizationUrl = model.createService(view.getInputClientId(), view.getInputClientSecret(), 
-					view.getInputCallbackURL(), view.getInputScope(), 
-					view.getInputConnectTimeout(), view.getInputReadTimeout());
+			authorizationUrl = model.createService(TestConfig.CLIENT_ID, TestConfig.CLIENT_SECRET, TestConfig.CALLBACK_URL, TestConfig.SCOPE, TestConfig.CONNECT_TIMEOUT, TestConfig.READ_TIMEOUT);
 			if (authorizationUrl == null){
 				view.showMessage("Cannot create Instagram Service", "Something went wrong");
-			} else {
-				view.accessTokenButton.setEnabled(true);
-				view.setOutputAuthorizationURL(authorizationUrl);
+				return;
 			}
-		} else if (e.getSource() == view.accessTokenButton) {
-			String accessToken = view.getInputAccessToken();
+			String accessToken = TestConfig.ACCESS_TOKEN;
 			boolean succeeded = model.createAccessToken(accessToken);
 			if (!succeeded){
 				view.showMessage("Cannot create AccessToken", "Something went wrong");
-			} else {
-				view.getInstagramButton.setEnabled(true);
+				return;
 			}
+<<<<<<< Updated upstream
 		} else if (e.getSource() == view.getInstagramButton) {
 			boolean succeeded = model.createInstagram();
 			if(!succeeded){
@@ -39,6 +34,9 @@ public class Presenter implements ActionListener {
 				view.requestUserDataButton.setEnabled(true);
 			}
 		} else if (e.getSource() == view.requestUserDataButton) {
+=======
+			model.createInstagram();
+>>>>>>> Stashed changes
 			String jsonResponse;
 			jsonResponse = model.requestUserData();
 			String niceJsonResponse = JsonWriter.formatJson(jsonResponse);
