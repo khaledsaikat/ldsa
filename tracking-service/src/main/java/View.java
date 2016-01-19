@@ -14,8 +14,6 @@ import javax.swing.JTextPane;
 
 import net.miginfocom.swing.MigLayout;
 
-<<<<<<< Updated upstream
-=======
 /**
  * GUI of the tracking service
  * 
@@ -23,7 +21,6 @@ import net.miginfocom.swing.MigLayout;
  * @version 1.0
  */
 
->>>>>>> Stashed changes
 public class View extends JFrame {
 	/**
 	 * 

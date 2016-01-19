@@ -3,6 +3,14 @@ import java.awt.event.ActionListener;
 
 import com.cedarsoftware.util.io.JsonWriter;
 
+/**
+ * connects model and view
+ * 
+ * @author Vincent Nelius
+ * @version 1.0
+ *
+ */
+
 public class Presenter implements ActionListener {
 	private Model model;
 	private View view;
@@ -10,6 +18,7 @@ public class Presenter implements ActionListener {
 	public Presenter(){
 		super();
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == view.requestButton){
