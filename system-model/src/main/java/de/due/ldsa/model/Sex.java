@@ -1,9 +1,12 @@
 package de.due.ldsa.model;
 
+import java.io.Serializable;
+
 /**
+ * Author: Romina (scrobart)
  *
  */
-public enum Sex
+public enum Sex implements Serializable
 {
     FEMALE,
     MALE,

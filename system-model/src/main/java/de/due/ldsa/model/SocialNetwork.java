@@ -3,7 +3,6 @@ package de.due.ldsa.model;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import com.google.gson.Gson;
 
 import de.due.ldsa.exception.DbException;
 
@@ -13,6 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
 @Table(keyspace = "ldsa", name = "socialNetworks")
@@ -29,6 +29,13 @@ public class SocialNetwork implements Serializable {
 	// TODO: Turn logo to image
 	@Column(name = "logo")
 	private byte[] logo;
+
+	public SocialNetwork(int socialNetworkId) {
+		this.id = socialNetworkId;
+	}
+
+	public SocialNetwork() {
+	}
 
 	public int getId() {
 		return id;
@@ -108,9 +115,4 @@ public class SocialNetwork implements Serializable {
 		result = 31 * result + Arrays.hashCode(logo);
 		return result;
 	}
-
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
-	}	
 }

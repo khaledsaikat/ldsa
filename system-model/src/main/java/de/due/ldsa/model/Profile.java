@@ -1,11 +1,8 @@
 package de.due.ldsa.model;
 
-import de.due.ldsa.db.Database;
-import de.due.ldsa.db.DatabaseImpl;
-import de.due.ldsa.exception.DbException;
-
 import com.datastax.driver.mapping.annotations.Transient;
-import com.google.gson.Gson;
+
+import de.due.ldsa.exception.DbException;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -13,7 +10,10 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * If you need to serialize this, or any of it's inheritors, make sure your
+ * serializer honors transient fields.
  */
 public abstract class Profile implements SocialNetworkContent, LinkedWithOtherObjects, Serializable {
 	public abstract long getId();
@@ -93,7 +93,7 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 	}
 
 	@Transient
-	private ArrayList<SocialNetworkInterest> interestData;
+	private transient ArrayList<SocialNetworkInterest> interestData;
 
 	/**
 	 * Gets the Interests associated with this profile from the database. If
@@ -105,21 +105,11 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 	 *             containing the IDs.
 	 */
 	public ArrayList<SocialNetworkInterest> getInterests() throws DbException {
-		if (interestData == null) {
-			interestData = new ArrayList<SocialNetworkInterest>();
-			Database db = DatabaseImpl.getInstance();
-			ArrayList<Long> ids = getInterestIds();
-			if (ids != null) {
-				for (Long l : ids) {
-					interestData.add(db.getInterest(l));
-				}
-			}
-		}
 		return interestData;
 	}
 
 	@Transient
-	private Media profilePhoto;
+	private transient Media profilePhoto;
 
 	/**
 	 * Retrieves the current Profile Photo from the database, or from memory if
@@ -130,10 +120,6 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 	 *             Thrown, if the ID is not set, or it does not exist.
 	 */
 	public Media getProfilePhoto() throws DbException {
-		if (profilePhoto == null) {
-			Database db = DatabaseImpl.getInstance();
-			profilePhoto = db.getMedia(getProfilePhotoMediaId());
-		}
 		return profilePhoto;
 	}
 
@@ -142,7 +128,7 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 	}
 
 	@Transient
-	public ProfileFeed lastUpdateData;
+	public transient ProfileFeed lastUpdateData;
 
 	/**
 	 * Retrieves the last posted update from database. If it was already
@@ -153,9 +139,6 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 	 *             Thrown if the ID is not set correctly.
 	 */
 	public ProfileFeed getLastUpdate() throws DbException {
-		if (lastUpdateData == null) {
-			lastUpdateData = DatabaseImpl.getInstance().getProfileFeed(getLastUpdateProfileFeedId());
-		}
 		return lastUpdateData;
 	}
 
@@ -164,7 +147,7 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 	}
 
 	@Transient
-	private Location homeTown;
+	private transient Location homeTown;
 
 	/**
 	 * Gets the Home Town. If it is not yet in memory, it will be loaded from
@@ -175,9 +158,6 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 	 *             Thrown if the Hometown Location ID is not correctly set.
 	 */
 	public Location getHomeTown() throws DbException {
-		if (homeTown == null) {
-			homeTown = DatabaseImpl.getInstance().getLocation(getHometownLocationId());
-		}
 		return homeTown;
 	}
 
@@ -186,23 +166,9 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 	}
 
 	@Transient
-	private ArrayList<Profile> follows;
+	private transient ArrayList<Profile> follows;
 
 	public ArrayList<Profile> getFollows() {
-		if (follows == null) {
-			follows = new ArrayList<Profile>();
-			ArrayList<Long> followingIds = getFollowingIds();
-			if (followingIds != null) {
-				Database db = DatabaseImpl.getInstance();
-				for (Long id : followingIds) {
-					if (db.isHuman(id)) {
-						follows.add(db.getHumanProfile(id));
-					} else {
-						follows.add(db.getCoopProfile(id));
-					}
-				}
-			}
-		}
 		return follows;
 	}
 
@@ -229,10 +195,5 @@ public abstract class Profile implements SocialNetworkContent, LinkedWithOtherOb
 				getFollowingIds().add(p.getId());
 			}
 		}
-	}
-
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
 	}
 }

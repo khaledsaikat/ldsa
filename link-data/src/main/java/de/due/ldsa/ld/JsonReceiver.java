@@ -7,7 +7,7 @@ import org.codehaus.jettison.json.JSONObject;
  * 
  * @author Jan Kowollik
  */
-public interface LinkDataReceiver2 {
+public interface JsonReceiver {
 
 	/**Parses a JsonObject using the supplied parser and then carries out
 	 * all supplied actions on the parsing result.

@@ -1,11 +1,15 @@
 package de.due.ldsa.model;
 
+
+import java.io.Serializable;
+
 import de.due.ldsa.exception.DbException;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
-public interface SocialNetworkInterest {
+public interface SocialNetworkInterest extends Serializable {
     void addInterestKind(InterestKind ik)
             throws DbException;
 
@@ -14,7 +18,7 @@ public interface SocialNetworkInterest {
 
     boolean isInterestKind(InterestKind ik);
 
-    public long getId();
+    long getId();
 
-    public void setId(long id);
+    void setId(long id);
 }

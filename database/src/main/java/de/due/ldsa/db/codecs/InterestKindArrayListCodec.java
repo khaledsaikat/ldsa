@@ -6,7 +6,7 @@ import com.datastax.driver.core.TypeCodec;
 import com.datastax.driver.core.exceptions.InvalidTypeException;
 import com.google.common.reflect.TypeToken;
 import de.due.ldsa.db.DbException;
-import de.due.ldsa.db.model.InterestKind;
+import de.due.ldsa.model.InterestKind;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

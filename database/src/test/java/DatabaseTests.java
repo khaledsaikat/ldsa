@@ -1,6 +1,6 @@
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
-import de.due.ldsa.db.model.*;
+import de.due.ldsa.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

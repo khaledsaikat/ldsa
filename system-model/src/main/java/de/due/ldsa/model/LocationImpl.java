@@ -4,7 +4,6 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
-import com.google.gson.Gson;
 
 import de.due.ldsa.exception.DbException;
 
@@ -12,7 +11,10 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * If you need to serialize this, please use a serializer that honors transient
+ * fields.
  */
 @Table(keyspace = "ldsa", name = "locations")
 public class LocationImpl implements Location, Serializable {
@@ -141,10 +143,13 @@ public class LocationImpl implements Location, Serializable {
 	// Complex methods
 	// ------------------------------------------------------------------------------------------------------------------
 	@Transient
-	int timesUsed;
+	transient Integer timesUsed;
 
 	@Override
 	public int getTimesUsed() throws DbException {
+		if (timesUsed != null) {
+			return timesUsed;
+		}
 		throw new DbException("not yet implemented.");
 	}
 
@@ -160,7 +165,7 @@ public class LocationImpl implements Location, Serializable {
 
 	@Override
 	public SocialNetwork getSourceNetwork() throws DbException {
-		throw new DbException("not yet implemented.");
+		return new SocialNetwork(socialNetworkId);
 	}
 
 	@Override
@@ -231,10 +236,5 @@ public class LocationImpl implements Location, Serializable {
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		result = 31 * result + (int) (isInId ^ (isInId >>> 32));
 		return result;
-	}
-
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
 	}
 }

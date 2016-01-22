@@ -3,14 +3,20 @@ package de.due.ldsa.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
-
 import de.due.ldsa.exception.DbException;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * Not Serializable. To get this object, fetch it from a comment or feed.
  */
-public class Hashtag implements Serializable {
+public class Hashtag {
+	public Hashtag() {
+	}
+
+	public Hashtag(String name) {
+		this.title = name;
+	}
 
 	private String title;
 	private ArrayList<SocialNetworkContent> usedAtList;
@@ -43,10 +49,5 @@ public class Hashtag implements Serializable {
 	@Override
 	public int hashCode() {
 		return title.hashCode();
-	}
-
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
 	}
 }

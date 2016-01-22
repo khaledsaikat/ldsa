@@ -1,9 +1,9 @@
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
-import de.due.ldsa.db.model.CoopProfile;
-import de.due.ldsa.db.model.Hashtag;
-import de.due.ldsa.db.model.HumanProfile;
-import de.due.ldsa.db.model.ProfileFeed;
+import de.due.ldsa.model.CoopProfile;
+import de.due.ldsa.model.Hashtag;
+import de.due.ldsa.model.HumanProfile;
+import de.due.ldsa.model.ProfileFeed;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

@@ -2,9 +2,8 @@ package de.due.ldsa.model;
 
 import java.io.Serializable;
 
-import com.google.gson.Gson;
-
 /**
+ * Author: Romina (scrobart)
  *
  */
 public class Position implements Serializable
@@ -59,10 +58,5 @@ public class Position implements Serializable
         temp = Double.doubleToLongBits(longitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
-    }
-    
-    public String getJsonString(){
-    	Gson gson = new Gson();
-    	return gson.toJson(this);
     }
 }

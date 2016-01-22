@@ -4,10 +4,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
-import com.google.gson.Gson;
 
-import de.due.ldsa.db.Database;
-import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.exception.DbException;
 
 import java.io.Serializable;
@@ -15,7 +12,10 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * If you need to serialize this, please use a serializer that honors transient
+ * fields.
  */
 @Table(keyspace = "ldsa", name = "comments")
 public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Serializable {
@@ -83,10 +83,24 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Se
 		this.text = text;
 	}
 
+	/**
+	 * This method is supposed to be used by the Cassandra mapper. The returned
+	 * value is not reliable. Use getCommenter() instead.
+	 *
+	 * @return The Commenter ID how it was read from the Database
+	 */
 	public long getCommenterId() {
 		return commenterId;
 	}
 
+	/**
+	 * This method is supposed to be used by the Cassandra mapper. The set value
+	 * will be overwritten when actually saving this object. Use setCommenter()
+	 * instead.
+	 *
+	 * @param commenterId
+	 *            The Commenter ID to set.
+	 */
 	public void setCommenterId(long commenterId) {
 		this.commenterId = commenterId;
 	}
@@ -128,12 +142,9 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Se
 	// ------------------------------------------------------------------------------------------------------------------
 
 	@Transient
-	Media mediaData;
+	private transient Media mediaData;
 
 	public Media getMedia() throws DbException {
-		if (mediaData == null) {
-			mediaData = DatabaseImpl.getInstance().getMedia(mediaId);
-		}
 		return mediaData;
 	}
 
@@ -147,27 +158,14 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Se
 	}
 
 	@Transient
-	ArrayList<Profile> likerData;
+	private transient ArrayList<Profile> likerData;
 
 	public ArrayList<Profile> getLiker() throws DbException {
-		Database db = DatabaseImpl.getInstance();
-		if (likerData == null) {
-			likerData = new ArrayList<Profile>();
-			if (likerIds != null) {
-				for (Long l : likerIds) {
-					if (db.isHuman(l)) {
-						likerData.add(db.getHumanProfile(l));
-					} else {
-						likerData.add(db.getCoopProfile(l));
-					}
-				}
-			}
-		}
 		return likerData;
 	}
 
 	public SocialNetwork getSourceNetwork() throws DbException {
-		return DatabaseImpl.getInstance().getSocialNetwork(socialNetworkId);
+		return new SocialNetwork(socialNetworkId);
 	}
 
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
@@ -225,18 +223,9 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Se
 	}
 
 	@Transient
-	ArrayList<Comment> commentData;
+	private transient ArrayList<Comment> commentData;
 
 	public ArrayList<Comment> getComments() throws DbException {
-		Database db = DatabaseImpl.getInstance();
-		if (commentData == null) {
-			commentData = new ArrayList<Comment>();
-			if (commentIds != null) {
-				for (Long l : commentIds) {
-					commentData.add(db.getComment(l));
-				}
-			}
-		}
 		return commentData;
 	}
 
@@ -257,10 +246,39 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Se
 				commentIds.add(c.getId());
 			}
 		}
+		if (commenterData != null) {
+			commenterId = commenterData.getId();
+		}
+		if (hashtagsData != null) {
+			hashtagNames = new ArrayList<String>();
+			for (Hashtag h : hashtagsData) {
+				hashtagNames.add(h.getTitle());
+			}
+		}
 	}
 
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
+	@Transient
+	private transient Profile commenterData;
+
+	public Profile getCommenter() throws DbException {
+		return commenterData;
+	}
+
+	public void setCommenter(Profile p) {
+		commenterId = p.getId();
+		commenterData = p;
+	}
+
+	@Transient
+	private transient ArrayList<Hashtag> hashtagsData;
+
+	public ArrayList<Hashtag> getHashtags() {
+		if (hashtagsData == null) {
+			hashtagsData = new ArrayList<Hashtag>();
+			for (String s : hashtagNames) {
+				hashtagsData.add(new Hashtag(s));
+			}
+		}
+		return hashtagsData;
 	}
 }

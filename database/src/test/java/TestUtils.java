@@ -1,5 +1,5 @@
 import de.due.ldsa.db.Database;
-import de.due.ldsa.db.model.*;
+import de.due.ldsa.model.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;

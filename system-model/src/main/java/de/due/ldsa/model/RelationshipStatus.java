@@ -1,9 +1,12 @@
 package de.due.ldsa.model;
 
+import java.io.Serializable;
+
 /**
+ * Author: Romina (scrobart)
  *
  */
-public enum RelationshipStatus
+public enum RelationshipStatus implements Serializable
 {
     SINGLE,
     TAKEN,

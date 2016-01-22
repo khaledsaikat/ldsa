@@ -3,7 +3,6 @@ package de.due.ldsa.model;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import com.google.gson.Gson;
 
 import de.due.ldsa.exception.DbException;
 
@@ -14,6 +13,8 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
+ *
  *
  */
 @Table(keyspace = "ldsa", name = "coopProfiles")
@@ -385,10 +386,5 @@ public class CoopProfile extends Profile implements Serializable {
 				+ (linkedOtherSocialNetworkProfileIds != null ? linkedOtherSocialNetworkProfileIds.hashCode() : 0);
 		result = 31 * result + (dateFounded != null ? dateFounded.hashCode() : 0);
 		return result;
-	}
-
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
 	}
 }

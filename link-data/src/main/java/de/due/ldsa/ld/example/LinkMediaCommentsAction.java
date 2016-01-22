@@ -2,7 +2,7 @@ package de.due.ldsa.ld.example;
 
 import java.util.ArrayList;
 
-import de.due.ldsa.db.model.Comment;
+import de.due.ldsa.model.Comment;
 import de.due.ldsa.ld.Action;
 
 /**A {@link LinkMediaCommentsAction} adds a media id to

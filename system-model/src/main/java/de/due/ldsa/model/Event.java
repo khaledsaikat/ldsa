@@ -3,7 +3,6 @@ package de.due.ldsa.model;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import com.google.gson.Gson;
 
 import de.due.ldsa.exception.DbException;
 
@@ -12,6 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
 @Table(keyspace = "ldsa", name = "events")
@@ -129,7 +129,7 @@ public class Event extends SocialNetworkContentImpl implements Serializable {
 	// COMPLEX METHODS
 	// ------------------------------------------------------------------------------------------------------------------
 	public SocialNetwork getSourceNetwork() throws DbException {
-		throw new DbException("not yet implemented.");
+		return new SocialNetwork(socialNetworkId);
 	}
 
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
@@ -184,10 +184,5 @@ public class Event extends SocialNetworkContentImpl implements Serializable {
 		result = 31 * result + (attendingIds != null ? attendingIds.hashCode() : 0);
 		result = 31 * result + (eventText != null ? eventText.hashCode() : 0);
 		return result;
-	}
-
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
 	}
 }

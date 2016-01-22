@@ -2,5 +2,5 @@ dependencies {
     // Cassandra
     compile 'com.datastax.cassandra:cassandra-driver-core:3.0.0-beta1'
     compile 'com.datastax.cassandra:cassandra-driver-mapping:3.0.0-beta1'
-
+	compile project(':system-model')
 }

@@ -4,20 +4,21 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
-import com.google.gson.Gson;
 
 import de.due.ldsa.exception.DbException;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * If you need to serialize this, make sure your serializer honors transient
+ * fields.
  */
 @Table(keyspace = "ldsa", name = "profileFeeds")
-public class ProfileFeed extends SocialNetworkContentImpl implements Serializable {
+public class ProfileFeed extends SocialNetworkContentImpl implements LinkedWithOtherObjects {
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the
@@ -41,7 +42,7 @@ public class ProfileFeed extends SocialNetworkContentImpl implements Serializabl
 	@Column(name = "sharerIds")
 	ArrayList<Long> sharerIds;
 	@Column(name = "hashtags")
-	ArrayList<String> hashtags;
+	ArrayList<String> hashtagNames;
 	@Column(name = "links")
 	ArrayList<URL> links;
 	@Column(name = "locationId")
@@ -109,12 +110,12 @@ public class ProfileFeed extends SocialNetworkContentImpl implements Serializabl
 		this.sharerIds = sharerIds;
 	}
 
-	public ArrayList<String> getHashtags() {
-		return hashtags;
+	public ArrayList<String> getHashtagNames() {
+		return hashtagNames;
 	}
 
-	public void setHashtags(ArrayList<String> hashtags) {
-		this.hashtags = hashtags;
+	public void setHashtagNames(ArrayList<String> hashtagNames) {
+		this.hashtagNames = hashtagNames;
 	}
 
 	public ArrayList<URL> getLinks() {
@@ -157,21 +158,6 @@ public class ProfileFeed extends SocialNetworkContentImpl implements Serializabl
 		this.commentIds = commentIds;
 	}
 
-	@Transient
-	Profile profile;
-	@Transient
-	ArrayList<Profile> liker;
-	@Transient
-	ArrayList<Profile> shares;
-	@Transient
-	Location location;
-	@Transient
-	Media media;
-	@Transient
-	ArrayList<Profile> taggedUser;
-	@Transient
-	ArrayList<Comment> comments;
-
 	@Override
 	public OffsetDateTime getContentTimestamp() throws DbException {
 		return contentTimestamp;
@@ -184,7 +170,7 @@ public class ProfileFeed extends SocialNetworkContentImpl implements Serializabl
 
 	@Override
 	public SocialNetwork getSourceNetwork() throws DbException {
-		throw new DbException("not yet implemented.");
+		return new SocialNetwork(socialNetworkId);
 	}
 
 	@Override
@@ -224,7 +210,7 @@ public class ProfileFeed extends SocialNetworkContentImpl implements Serializabl
 			return false;
 		if (sharerIds != null ? !sharerIds.equals(that.sharerIds) : that.sharerIds != null)
 			return false;
-		if (hashtags != null ? !hashtags.equals(that.hashtags) : that.hashtags != null)
+		if (hashtagNames != null ? !hashtagNames.equals(that.hashtagNames) : that.hashtagNames != null)
 			return false;
 		if (links != null ? !links.equals(that.links) : that.links != null)
 			return false;
@@ -244,7 +230,7 @@ public class ProfileFeed extends SocialNetworkContentImpl implements Serializabl
 		result = 31 * result + rawStoryText.hashCode();
 		result = 31 * result + (likerIds != null ? likerIds.hashCode() : 0);
 		result = 31 * result + (sharerIds != null ? sharerIds.hashCode() : 0);
-		result = 31 * result + (hashtags != null ? hashtags.hashCode() : 0);
+		result = 31 * result + (hashtagNames != null ? hashtagNames.hashCode() : 0);
 		result = 31 * result + (links != null ? links.hashCode() : 0);
 		result = 31 * result + locationId;
 		result = 31 * result + mediaId;
@@ -253,8 +239,69 @@ public class ProfileFeed extends SocialNetworkContentImpl implements Serializabl
 		return result;
 	}
 
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
+	@Override
+	public void prepareSave() {
+		if (profileData != null) {
+			profileId = profileData.getId();
+		}
+		if (likerData != null) {
+			likerIds = new ArrayList<Long>();
+			for (Profile p : likerData) {
+				likerIds.add(p.getId());
+			}
+		}
+		if (sharerData != null) {
+			sharerIds = new ArrayList<Long>();
+			for (Profile p : sharerData) {
+				sharerIds.add(p.getId());
+			}
+		}
+		if (hashtagsData != null) {
+			hashtagNames = new ArrayList<String>();
+			for (Hashtag h : hashtagsData) {
+				hashtagNames.add(h.getTitle());
+			}
+		}
 	}
+
+	@Transient
+	private transient Profile profileData;
+
+	public Profile getProfile() throws DbException {
+		return profileData;
+	}
+
+	public void setProfile(Profile p) {
+		profileData = p;
+	}
+
+	@Transient
+	private transient ArrayList<Profile> likerData;
+
+	public ArrayList<Profile> getLiker() throws DbException {
+		return likerData;
+	}
+
+	@Transient
+	private transient ArrayList<Profile> sharerData;
+
+	public ArrayList<Profile> getSharers() throws DbException {
+		return sharerData;
+	}
+
+	@Transient
+	private transient ArrayList<Hashtag> hashtagsData;
+
+	public ArrayList<Hashtag> getHashtags() {
+		if (hashtagsData == null) {
+			hashtagsData = new ArrayList<Hashtag>();
+			if (hashtagNames != null) {
+				for (String s : hashtagNames) {
+					hashtagsData.add(new Hashtag(s));
+				}
+			}
+		}
+		return hashtagsData;
+	}
+
 }

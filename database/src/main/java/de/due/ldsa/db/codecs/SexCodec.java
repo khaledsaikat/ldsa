@@ -4,8 +4,8 @@ import com.datastax.driver.core.DataType;
 import com.datastax.driver.core.ProtocolVersion;
 import com.datastax.driver.core.TypeCodec;
 import com.datastax.driver.core.exceptions.InvalidTypeException;
-import de.due.ldsa.db.model.RelationshipStatus;
-import de.due.ldsa.db.model.Sex;
+import de.due.ldsa.model.RelationshipStatus;
+import de.due.ldsa.model.Sex;
 
 import java.nio.ByteBuffer;
 

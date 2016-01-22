@@ -1,4 +1,6 @@
 dependencies {
     compile project(':database')
     compile project(':big-data')
+    compile project(':system-model')
+    compile 'com.google.code.gson:gson:2.5'
 }

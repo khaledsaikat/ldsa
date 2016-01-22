@@ -1,15 +1,17 @@
 package de.due.ldsa.model;
 
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 import de.due.ldsa.exception.DbException;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
-public abstract class SocialNetworkContentImpl implements SocialNetworkContent
+public abstract class SocialNetworkContentImpl implements SocialNetworkContent, Serializable
 {
     @Override
     public abstract OffsetDateTime getContentTimestamp() throws DbException;

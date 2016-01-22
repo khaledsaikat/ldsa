@@ -1,4 +1,4 @@
-package de.due.ldsa.db.model;
+package de.due.ldsa.model;
 
 /**
  * Created by  Romina

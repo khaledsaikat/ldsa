@@ -4,7 +4,6 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
-import com.google.gson.Gson;
 
 import de.due.ldsa.exception.DbException;
 
@@ -12,6 +11,7 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 
 /**
+ * Author: Romina (scrobart)
  *
  */
 
@@ -181,7 +181,7 @@ public class OrganisationPlace implements Location, Serializable {
 
 	@Override
 	public SocialNetwork getSourceNetwork() throws DbException {
-		throw new DbException("not yet implemented.");
+		return new SocialNetwork(socialNetworkId);
 	}
 
 	@Override
@@ -243,10 +243,5 @@ public class OrganisationPlace implements Location, Serializable {
 		result = 31 * result + (int) (isInId ^ (isInId >>> 32));
 		result = 31 * result + (int) (organisationProfileId ^ (organisationProfileId >>> 32));
 		return result;
-	}
-
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
 	}
 }

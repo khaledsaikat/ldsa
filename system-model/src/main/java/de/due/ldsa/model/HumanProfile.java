@@ -4,7 +4,6 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
-import com.google.gson.Gson;
 
 import de.due.ldsa.exception.DbException;
 
@@ -18,10 +17,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /**
+ * Author: Romina (scrobart)
  *
+ * If you need to serialize this, please use a serializer that honors transient
+ * fields.
  */
 @Table(keyspace = "ldsa", name = "humanProfiles")
 public class HumanProfile extends Profile implements Serializable {
+
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the
@@ -79,7 +82,7 @@ public class HumanProfile extends Profile implements Serializable {
 	ArrayList<Long> relationshipPersons;
 
 	@Transient
-	Relationship rs;
+	transient Relationship rs;
 
 	@Override
 	public long getId() {
@@ -444,10 +447,5 @@ public class HumanProfile extends Profile implements Serializable {
 				+ profileFeedIds + ", attendingEventIds=" + attendingEventIds + ", linkedOtherSocialNetworkProfileIds="
 				+ linkedOtherSocialNetworkProfileIds + ", sex=" + sex + ", birthday=" + birthday
 				+ ", relationshipStatus=" + relationshipStatus + ", relationshipPersons=" + relationshipPersons + '}';
-	}
-
-	public String getJsonString() {
-		Gson gson = new Gson();
-		return gson.toJson(this);
 	}
 }

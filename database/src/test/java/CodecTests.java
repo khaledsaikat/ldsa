@@ -1,8 +1,8 @@
 import com.datastax.driver.core.ProtocolVersion;
 import de.due.ldsa.db.codecs.*;
-import de.due.ldsa.db.model.InterestKind;
-import de.due.ldsa.db.model.RelationshipStatus;
-import de.due.ldsa.db.model.Sex;
+import de.due.ldsa.model.InterestKind;
+import de.due.ldsa.model.RelationshipStatus;
+import de.due.ldsa.model.Sex;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;

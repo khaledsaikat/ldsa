@@ -1,7 +1,7 @@
 package de.due.ldsa.ld;
 
 import de.due.ldsa.db.DatabaseImpl;
-import de.due.ldsa.db.model.Profile;
+import de.due.ldsa.model.Profile;
 
 /**Stores Objects of certain supported types in the Database.
  * 
