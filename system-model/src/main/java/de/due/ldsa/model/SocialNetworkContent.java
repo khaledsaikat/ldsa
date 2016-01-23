@@ -20,8 +20,6 @@ public interface SocialNetworkContent extends Serializable {
 
 	OffsetDateTime getCrawlingTimestamp() throws DbException;
 
-	SocialNetwork getSourceNetwork() throws DbException;
-
 	void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException;
 
 	void setId(long id);

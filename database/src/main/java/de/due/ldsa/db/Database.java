@@ -1,5 +1,6 @@
 package de.due.ldsa.db;
 
+import java.util.Iterator;
 import java.util.List;
 
 import de.due.ldsa.model.*;
@@ -78,4 +79,8 @@ public interface Database {
 	List<Media> getAllMedia() throws DbException;
 
 	void saveHashtag(Hashtag hashtag)throws DbException;
+
+	Iterable<HumanProfile> getAllHumanProfilesAsIterable();
+
+	Iterable<Comment> getAllCommentsAsIterable();
 }

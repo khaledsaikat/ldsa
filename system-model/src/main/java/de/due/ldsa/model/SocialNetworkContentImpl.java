@@ -20,9 +20,6 @@ public abstract class SocialNetworkContentImpl implements SocialNetworkContent, 
     public abstract OffsetDateTime getCrawlingTimestamp() throws DbException;
 
     @Override
-    public abstract SocialNetwork getSourceNetwork() throws DbException;
-
-    @Override
     public abstract void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn)
             throws DbException;
 

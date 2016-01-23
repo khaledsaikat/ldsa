@@ -180,11 +180,6 @@ public class OrganisationPlace implements Location, Serializable {
 	}
 
 	@Override
-	public SocialNetwork getSourceNetwork() throws DbException {
-		return new SocialNetwork(socialNetworkId);
-	}
-
-	@Override
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;

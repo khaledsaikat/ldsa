@@ -280,6 +280,8 @@ public class DatabaseTests
         for (int i = 0; i < 10; i++) {
             HumanProfile hp = new HumanProfile();
             hp.setId(i);
+            hp.setSex(TestUtils.getRandomSex());
+            hp.setFullname(TestUtils.getRandomName());
             db.saveHumanProfile(hp);
 
             HumanProfile hp2 = db.getHumanProfile(i);

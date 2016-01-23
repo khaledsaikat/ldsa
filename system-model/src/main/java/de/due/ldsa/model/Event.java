@@ -128,9 +128,6 @@ public class Event extends SocialNetworkContentImpl implements Serializable {
 	// ------------------------------------------------------------------------------------------------------------------
 	// COMPLEX METHODS
 	// ------------------------------------------------------------------------------------------------------------------
-	public SocialNetwork getSourceNetwork() throws DbException {
-		return new SocialNetwork(socialNetworkId);
-	}
 
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
 		this.contentTimestamp = content;

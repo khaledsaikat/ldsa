@@ -62,8 +62,6 @@ public interface Location extends SocialNetworkContent, Serializable {
 
 	OffsetDateTime getCrawlingTimestamp() throws DbException;
 
-	SocialNetwork getSourceNetwork() throws DbException;
-
 	void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException;
 
 	Position getPosition();

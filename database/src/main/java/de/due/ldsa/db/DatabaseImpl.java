@@ -15,11 +15,16 @@ import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Truncate;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import com.datastax.driver.mapping.Result;
+import de.due.ldsa.db.accessors.CommentAccessor;
+import de.due.ldsa.db.accessors.HumanProfileAccessor;
 import de.due.ldsa.db.codecs.*;
 import de.due.ldsa.model.*;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -73,7 +78,7 @@ public class DatabaseImpl implements Database, Closeable {
 
 	/**
 	 * This method is intended for testing purposes. You probably do not want to
-	 * call this, because it deletes ALL the contents of a table.
+	 * call this AT ALL, because it deletes ALL the contents of a table.
 	 * 
 	 * @param tName
 	 *            The name of the table you want to delete
@@ -105,7 +110,6 @@ public class DatabaseImpl implements Database, Closeable {
 			profileFeedMapper = new MappingManager(session).mapper(ProfileFeed.class);
 		}
 
-		pf.prepareSave();
 		profileFeedMapper.save(pf);
 
 	}
@@ -188,7 +192,6 @@ public class DatabaseImpl implements Database, Closeable {
 			coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
 		}
 
-		cp.prepareSave();
 		coopProfileMapper.save(cp);
 	}
 
@@ -213,7 +216,6 @@ public class DatabaseImpl implements Database, Closeable {
 			humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
 		}
 
-		hp.prepareSave();
 		humanProfileMapper.save(hp);
 	}
 
@@ -248,7 +250,6 @@ public class DatabaseImpl implements Database, Closeable {
 			commentMapper = new MappingManager(session).mapper(Comment.class);
 		}
 
-		c.prepareSave();
 		commentMapper.save(c);
 	}
 
@@ -390,45 +391,107 @@ public class DatabaseImpl implements Database, Closeable {
 				"The specified ID is neither a Location nor an OrganisationPlace:" + new Long(id).toString());
 	}
 
+
+	public Iterable<HumanProfile> getAllHumanProfilesAsIterable() {
+		MappingManager manager = new MappingManager(session);
+		HumanProfileAccessor humanProfileAccessor = manager.createAccessor(HumanProfileAccessor.class);
+		Result<HumanProfile> humanprofiles = humanProfileAccessor.getAll();
+
+		return new Iterable<HumanProfile>() {
+			@Override
+			public Iterator<HumanProfile> iterator() {
+				return humanprofiles.iterator();
+			}
+		};
+	}
+
+	/**
+	 * @return An ArrayList containing all the human profiles
+	 * @throws DbException
+	 * @deprecated Please use the Iterable instead! Lists will get troublesome in terms of memory, if the database grows larger.
+	 */
+	@Deprecated
 	@Override
 	public List<HumanProfile> getAllHumanProfiles() throws DbException {
-		// TODO Auto-generated method stub
-		return null;
+		// Please change your methods, so we can use Iterators! Lists _WILL_ get troublesome if the database grows
+		// larger.
+		ArrayList<HumanProfile> result = new ArrayList<HumanProfile>();
+		for (HumanProfile hp : getAllHumanProfilesAsIterable()) {
+			result.add(hp);
+		}
+		return result;
 	}
 
+	public Iterable<Comment> getAllCommentsAsIterable() {
+		MappingManager manager = new MappingManager(session);
+		CommentAccessor commentAccessor = manager.createAccessor(CommentAccessor.class);
+		Result<Comment> comments = commentAccessor.getAll();
+
+		return new Iterable<Comment>() {
+			@Override
+			public Iterator<Comment> iterator() {
+				return comments.iterator();
+			}
+		};
+	}
+
+	/**
+	 * @deprecated Lists might become troublesome if the database grows very large. Please use the Iterable instead.
+	 * @return An ArrayList containing all the comments.
+	 * @throws DbException
+	 */
 	@Override
+	@Deprecated
 	public List<Comment> getAllComments() throws DbException {
-		// TODO Auto-generated method stub
-		return null;
+		// Please change your methods, so we can use Iterators! Lists _WILL_ get troublesome if the database grows
+		// larger.
+		ArrayList<Comment> result = new ArrayList<Comment>();
+		for (Comment hp : getAllCommentsAsIterable()) {
+			result.add(hp);
+		}
+		return result;
 	}
 
 	@Override
+	@Deprecated
 	public List<Hashtag> getAllHashtags() throws DbException {
+		// TODO: change the Hashtags in such a way that this can work.
 		// TODO Auto-generated method stub
+		// Please change your methods, so we can use Iterators! Lists _WILL_ get troublesome if the database grows
+		// larger.
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public List<Location> getAllLocations() throws DbException {
 		// TODO Auto-generated method stub
+		// Please change your methods, so we can use Iterators! Lists _WILL_ get troublesome if the database grows
+		// larger.
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public List<ProfileFeed> getAllProfileFeeds() throws DbException {
 		// TODO Auto-generated method stub
+		// Please change your methods, so we can use Iterators! Lists _WILL_ get troublesome if the database grows
+		// larger.
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public List<Media> getAllMedia() throws DbException {
 		// TODO Auto-generated method stub
+		// Please change your methods, so we can use Iterators! Lists _WILL_ get troublesome if the database grows
+		// larger.
 		return null;
 	}
 
 	@Override
 	public void saveHashtag(Hashtag hashtag) throws DbException {
 		// TODO Auto-generated method stub
-
+		return;
 	}
 }
