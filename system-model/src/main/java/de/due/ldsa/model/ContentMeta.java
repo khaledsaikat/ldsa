@@ -9,9 +9,9 @@ import java.time.OffsetDateTime;
  */
 public class ContentMeta implements Serializable
 {
-    OffsetDateTime contentTimestamp;
-    OffsetDateTime crawlingTimestamp;
-    SocialNetwork sourceNetwork;
+    private OffsetDateTime contentTimestamp;
+    private OffsetDateTime crawlingTimestamp;
+    private int sourceNetworkId;
 
     @Override
     public boolean equals(Object o) {
@@ -20,11 +20,10 @@ public class ContentMeta implements Serializable
 
         ContentMeta that = (ContentMeta) o;
 
+        if (sourceNetworkId != that.sourceNetworkId) return false;
         if (contentTimestamp != null ? !contentTimestamp.equals(that.contentTimestamp) : that.contentTimestamp != null)
             return false;
-        if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null)
-            return false;
-        return !(sourceNetwork != null ? !sourceNetwork.equals(that.sourceNetwork) : that.sourceNetwork != null);
+        return !(crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null);
 
     }
 
@@ -32,7 +31,31 @@ public class ContentMeta implements Serializable
     public int hashCode() {
         int result = contentTimestamp != null ? contentTimestamp.hashCode() : 0;
         result = 31 * result + (crawlingTimestamp != null ? crawlingTimestamp.hashCode() : 0);
-        result = 31 * result + (sourceNetwork != null ? sourceNetwork.hashCode() : 0);
+        result = 31 * result + sourceNetworkId;
         return result;
+    }
+
+    public OffsetDateTime getContentTimestamp() {
+        return contentTimestamp;
+    }
+
+    public void setContentTimestamp(OffsetDateTime contentTimestamp) {
+        this.contentTimestamp = contentTimestamp;
+    }
+
+    public OffsetDateTime getCrawlingTimestamp() {
+        return crawlingTimestamp;
+    }
+
+    public void setCrawlingTimestamp(OffsetDateTime crawlingTimestamp) {
+        this.crawlingTimestamp = crawlingTimestamp;
+    }
+
+    public int getSourceNetworkId() {
+        return sourceNetworkId;
+    }
+
+    public void setSourceNetworkId(int sourceNetworkId) {
+        this.sourceNetworkId = sourceNetworkId;
     }
 }

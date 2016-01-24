@@ -18,7 +18,7 @@ import java.time.OffsetDateTime;
 // We know this should extend LocationImpl, but we can't do that, because the
 // Cassandra driver does not support inheritance.
 @Table(keyspace = "ldsa", name = "organisationPlaces")
-public class OrganisationPlace implements Location, Serializable {
+public class OrganisationPlace extends SocialNetworkContentImpl implements Location, Serializable {
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the

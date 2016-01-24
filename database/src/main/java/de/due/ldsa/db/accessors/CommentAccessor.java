@@ -12,4 +12,7 @@ import de.due.ldsa.model.Comment;
 public interface CommentAccessor {
     @Query("SELECT * FROM ldsa.comments")
     public Result<Comment> getAll();
+
+    @Query("SELECT * FROM ldsa.comments WHERE snId = :id")
+    Result<Comment> getAllFromSocialNetwork(int snId);
 }

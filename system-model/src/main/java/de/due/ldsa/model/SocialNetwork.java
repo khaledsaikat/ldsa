@@ -12,8 +12,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
- * Author: Romina (scrobart)
- *
+ * @author Romina (scrobart)
  */
 @Table(keyspace = "ldsa", name = "socialNetworks")
 public class SocialNetwork implements Serializable {

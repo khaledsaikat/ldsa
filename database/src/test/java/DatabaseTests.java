@@ -282,6 +282,7 @@ public class DatabaseTests
             hp.setId(i);
             hp.setSex(TestUtils.getRandomSex());
             hp.setFullname(TestUtils.getRandomName());
+            hp.setProfileURL(new URL(String.format("http://127.0.0.1/whatever.php?id=%s", Integer.toString(i))));
             db.saveHumanProfile(hp);
 
             HumanProfile hp2 = db.getHumanProfile(i);

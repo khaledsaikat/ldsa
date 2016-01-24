@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * fields.
  */
 @Table(keyspace = "ldsa", name = "comments")
-public class Comment implements SocialNetworkContent, Serializable {
+public class Comment extends SocialNetworkContentImpl implements Serializable {
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the
@@ -198,5 +198,6 @@ public class Comment implements SocialNetworkContent, Serializable {
 		result = 31 * result + (commentIds != null ? commentIds.hashCode() : 0);
 		return result;
 	}
+
 
 }

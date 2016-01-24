@@ -22,7 +22,22 @@ public interface SocialNetworkContent extends Serializable {
 
 	void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException;
 
+	int getSocialNetworkId();
+
+	ContentMeta getContentMeta();
+
+	/**
+	 * Sets the ID this object will have in the database.
+	 *
+	 * @param id The ID this object has in the database.
+	 */
 	void setId(long id);
 
+	/**
+	 * Returns the ID this object has in the Database.
+	 * @return The ID this object has in the Database.
+	 */
 	long getId();
+
+	void changeTimezones(ZoneOffset zo);
 }

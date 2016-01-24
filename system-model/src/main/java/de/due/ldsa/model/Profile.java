@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * If you need to serialize this, or any of it's inheritors, make sure your
  * serializer honors transient fields.
  */
-public abstract class Profile implements SocialNetworkContent, Serializable {
+public abstract class Profile extends SocialNetworkContentImpl implements Serializable {
 	public abstract long getId();
 
 	public abstract void setId(long ID);
