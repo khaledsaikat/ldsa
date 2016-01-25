@@ -19,6 +19,9 @@ import de.due.ldsa.ld.Parser;
  */
 public class InstagramMediaMediaIdCommentsParser implements Parser<ArrayList<Comment>>{
 
+	public static final InstagramMediaMediaIdCommentsParser INSTANCE = new
+			InstagramMediaMediaIdCommentsParser();
+	
 	@Override
 	public ArrayList<Comment> parse(JSONObject json) throws JSONException {
 		JSONArray jsonArray = json.getJSONArray("data");
