@@ -6,9 +6,10 @@ import com.datastax.driver.mapping.annotations.Column;
 import de.due.ldsa.exception.DbException;
 
 /**
- * Author: Romina (scrobart)
- *
- * To get this object, fetch it from a comment or feed.
+ * Hashtag for social data. To get this object, fetch it from a comment or feed.
+ * 
+ * @author: Romina (scrobart)
+ * 
  */
 public class Hashtag implements Serializable {
 	@Column(name = "title")
