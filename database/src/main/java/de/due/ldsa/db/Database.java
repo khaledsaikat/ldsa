@@ -1,5 +1,6 @@
 package de.due.ldsa.db;
 
+import java.util.Iterator;
 import java.util.List;
 
 import de.due.ldsa.model.*;
@@ -61,9 +62,9 @@ public interface Database {
 
 	long getNextLocationId() throws DbException;
 
-	public Profile autoGetProfile(long id) throws DbException;
+	Profile autoGetProfile(long id) throws DbException;
 
-	public void autoSaveProfile(Profile p) throws DbException;
+	void autoSaveProfile(Profile p) throws DbException;
 
 	List<HumanProfile> getAllHumanProfiles() throws DbException;
 
@@ -78,4 +79,23 @@ public interface Database {
 	List<Media> getAllMedia() throws DbException;
 
 	void saveHashtag(Hashtag hashtag)throws DbException;
+
+	Iterable<HumanProfile> getAllHumanProfilesAsIterable();
+
+	Iterable<Comment> getAllCommentsAsIterable();
+
+	Iterable<Location> getAllLocationsAsIterable();
+
+	Iterable<? extends ProfileFeed> getAllProfileFeedsAsIterable();
+
+	Iterable<? extends Media> getAllMediaAsIterable();
+
+	boolean isOrganisationPlace(long id);
+
+	Iterable<Profile> getAllProfilesFromSocialNetwork(int snId);
+	Iterable<ProfileFeed> getAllProfileFeedsFromSocialNetwork(int snId);
+	Iterable<Media> getAllMediaFromSocialNetwork(int snId);
+	Iterable<? extends SocialNetworkContent> getAllContentFromSocialNetwork(int snId);
+
+	long getNextEventId();
 }

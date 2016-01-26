@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * fields.
  */
 @Table(keyspace = "ldsa", name = "profileFeeds")
-public class ProfileFeed extends SocialNetworkContentImpl implements LinkedWithOtherObjects {
+public class ProfileFeed extends SocialNetworkContentImpl {
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the
@@ -168,10 +168,6 @@ public class ProfileFeed extends SocialNetworkContentImpl implements LinkedWithO
 		return crawlingTimestamp;
 	}
 
-	@Override
-	public SocialNetwork getSourceNetwork() throws DbException {
-		return new SocialNetwork(socialNetworkId);
-	}
 
 	@Override
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
@@ -237,71 +233,6 @@ public class ProfileFeed extends SocialNetworkContentImpl implements LinkedWithO
 		result = 31 * result + (taggedUserIds != null ? taggedUserIds.hashCode() : 0);
 		result = 31 * result + (commentIds != null ? commentIds.hashCode() : 0);
 		return result;
-	}
-
-	@Override
-	public void prepareSave() {
-		if (profileData != null) {
-			profileId = profileData.getId();
-		}
-		if (likerData != null) {
-			likerIds = new ArrayList<Long>();
-			for (Profile p : likerData) {
-				likerIds.add(p.getId());
-			}
-		}
-		if (sharerData != null) {
-			sharerIds = new ArrayList<Long>();
-			for (Profile p : sharerData) {
-				sharerIds.add(p.getId());
-			}
-		}
-		if (hashtagsData != null) {
-			hashtagNames = new ArrayList<String>();
-			for (Hashtag h : hashtagsData) {
-				hashtagNames.add(h.getTitle());
-			}
-		}
-	}
-
-	@Transient
-	private transient Profile profileData;
-
-	public Profile getProfile() throws DbException {
-		return profileData;
-	}
-
-	public void setProfile(Profile p) {
-		profileData = p;
-	}
-
-	@Transient
-	private transient ArrayList<Profile> likerData;
-
-	public ArrayList<Profile> getLiker() throws DbException {
-		return likerData;
-	}
-
-	@Transient
-	private transient ArrayList<Profile> sharerData;
-
-	public ArrayList<Profile> getSharers() throws DbException {
-		return sharerData;
-	}
-
-	@Transient
-	private transient ArrayList<Hashtag> hashtagsData;
-
-	public ArrayList<Hashtag> getHashtags() {
-		if (hashtagsData == null) {
-			hashtagsData = new ArrayList<Hashtag>();
-			if (hashtagNames != null) {
-				for (String s : hashtagNames) {
-					hashtagsData.add(new Hashtag(s));
-				}
-			}
-		}
-		return hashtagsData;
 	}
 
 }

@@ -4,7 +4,6 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 import de.due.ldsa.model.HumanProfile;
-import de.due.ldsa.model.Media;
 import de.due.ldsa.model.Profile;
 import de.due.ldsa.ld.Parser;
 
@@ -16,16 +15,22 @@ import de.due.ldsa.ld.Parser;
  */
 public class InstagramUsersSelfParser implements Parser<Profile>{
 
+	public static final InstagramUsersSelfParser INSTANCE = new 
+			InstagramUsersSelfParser();
+	
 	@Override
 	public Profile parse(JSONObject json) throws JSONException {
 		Profile profile = new HumanProfile();
-		profile.setId(json.getLong("username"));
+		json = json.getJSONObject("data");
+		profile.setId(json.getLong("id"));
+		profile.setUsername(json.getString("username"));
 		profile.setFullname(json.getString("full_name"));
 		profile.setBio(json.getString("bio"));
 		profile.setUserWebsite(json.getString("website"));
-		Media profilePhoto = new Media();
+		/*Media profilePhoto = new Media();
 		profilePhoto.setCrawlingPath(json.getString("profile_picture"));
-		profile.setProfilePhoto(profilePhoto);
+		profile.setProfilePhoto(profilePhoto);*/
+		// We don't have the media id in this json response.
 		return profile;
 	}
 	

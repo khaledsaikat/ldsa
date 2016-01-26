@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * fields.
  */
 @Table(keyspace = "ldsa", name = "comments")
-public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Serializable {
+public class Comment extends SocialNetworkContentImpl implements Serializable {
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the
@@ -137,36 +137,13 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Se
 		this.hashtagNames = hashtagNames;
 	}
 
-	// ------------------------------------------------------------------------------------------------------------------
-	// Complex methods
-	// ------------------------------------------------------------------------------------------------------------------
-
-	@Transient
-	private transient Media mediaData;
-
-	public Media getMedia() throws DbException {
-		return mediaData;
-	}
-
-	public void setMedia(Media m) {
-		mediaData = m;
-		mediaId = m.getId();
-	}
-
 	public String getText() {
 		return text;
 	}
 
-	@Transient
-	private transient ArrayList<Profile> likerData;
-
-	public ArrayList<Profile> getLiker() throws DbException {
-		return likerData;
-	}
-
-	public SocialNetwork getSourceNetwork() throws DbException {
-		return new SocialNetwork(socialNetworkId);
-	}
+	// ------------------------------------------------------------------------------------------------------------------
+	// Complex methods
+	// ------------------------------------------------------------------------------------------------------------------
 
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
 		this.contentTimestamp = content;
@@ -222,63 +199,5 @@ public class Comment implements SocialNetworkContent, LinkedWithOtherObjects, Se
 		return result;
 	}
 
-	@Transient
-	private transient ArrayList<Comment> commentData;
 
-	public ArrayList<Comment> getComments() throws DbException {
-		return commentData;
-	}
-
-	@Override
-	public void prepareSave() {
-		if (likerData != null) {
-			likerIds = new ArrayList<Long>();
-			for (Profile p : likerData) {
-				likerIds.add(p.getId());
-			}
-		}
-		if (mediaData != null) {
-			mediaId = mediaData.getId();
-		}
-		if (commentData != null) {
-			commentIds = new ArrayList<Long>();
-			for (Comment c : commentData) {
-				commentIds.add(c.getId());
-			}
-		}
-		if (commenterData != null) {
-			commenterId = commenterData.getId();
-		}
-		if (hashtagsData != null) {
-			hashtagNames = new ArrayList<String>();
-			for (Hashtag h : hashtagsData) {
-				hashtagNames.add(h.getTitle());
-			}
-		}
-	}
-
-	@Transient
-	private transient Profile commenterData;
-
-	public Profile getCommenter() throws DbException {
-		return commenterData;
-	}
-
-	public void setCommenter(Profile p) {
-		commenterId = p.getId();
-		commenterData = p;
-	}
-
-	@Transient
-	private transient ArrayList<Hashtag> hashtagsData;
-
-	public ArrayList<Hashtag> getHashtags() {
-		if (hashtagsData == null) {
-			hashtagsData = new ArrayList<Hashtag>();
-			for (String s : hashtagNames) {
-				hashtagsData.add(new Hashtag(s));
-			}
-		}
-		return hashtagsData;
-	}
 }

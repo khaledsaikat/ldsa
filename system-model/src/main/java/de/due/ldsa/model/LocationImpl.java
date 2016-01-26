@@ -17,7 +17,7 @@ import java.time.OffsetDateTime;
  * fields.
  */
 @Table(keyspace = "ldsa", name = "locations")
-public class LocationImpl implements Location, Serializable {
+public class LocationImpl extends SocialNetworkContentImpl implements Location, Serializable {
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the
@@ -164,11 +164,6 @@ public class LocationImpl implements Location, Serializable {
 	}
 
 	@Override
-	public SocialNetwork getSourceNetwork() throws DbException {
-		return new SocialNetwork(socialNetworkId);
-	}
-
-	@Override
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
@@ -237,4 +232,6 @@ public class LocationImpl implements Location, Serializable {
 		result = 31 * result + (int) (isInId ^ (isInId >>> 32));
 		return result;
 	}
+
+
 }

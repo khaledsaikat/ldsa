@@ -151,3 +151,15 @@ CREATE TABLE interests (
     id BIGINT PRIMARY KEY,
     kinds LIST<INT>
 );
+
+// Cassandra is unable to use non-primary key columns in a WHERE query (WHY???), therefore we have to create a bunch of
+// indexes right here.
+
+CREATE INDEX humanProfile_socialNetwork ON humanprofiles (snid);
+CREATE INDEX coopProfile_socialNetwork ON coopprofiles (snid);
+CREATE INDEX profileFeed_socialNetwork ON profilefeeds (snid);
+CREATE INDEX media_socialNetwork ON media (snid);
+CREATE INDEX comment_socialNetwork ON comments (snid);
+CREATE INDEX location_socialNetwork ON locations (snid);
+CREATE INDEX organisationPlace_socialNetwork ON organisationplaces (snid);
+CREATE INDEX event_socialNetwork ON events (snid);
