@@ -7,6 +7,8 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import de.due.ldsa.bd.DataProvider;
+import de.due.ldsa.bd.DataSource;
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.ld.exceptions.UndefinedFetchMethodException;
@@ -47,6 +49,8 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 
 	private boolean saveToDatabase;
 
+	private DataSource dataSource;
+
 	/**
 	 * private constructor to prevent create instances
 	 * 
@@ -61,6 +65,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		databaseService = DatabaseImpl.getInstance();
 		streamsProviderService = StreamsProviderService.getInstance();
 		saveToDatabase = false;
+		dataSource = new DataProvider();
 	}
 
 	public static LinkDataReceiverImpl getInstance() {
@@ -84,6 +89,8 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 			}
 
 		}
+		
+		dataSource.setSourceData(humanProfilesSteam);
 	}
 
 	@Override
@@ -97,6 +104,8 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveLocation((LocationImpl) location);
 			}
 		}
+		
+		dataSource.setSourceData(locationsSteam);
 	}
 
 	@Override
@@ -111,6 +120,8 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveProfileFeed(profileFeed);
 			}
 		}
+		
+		dataSource.setSourceData(profileFeedsStream);
 	}
 
 	@Override
@@ -124,6 +135,8 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveHashtag(hashtag);
 			}
 		}
+		
+		dataSource.setSourceData(hashtagsStream);
 	}
 
 	@Override
@@ -137,7 +150,8 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveComment(comment);
 			}
 		}
-
+		
+		dataSource.setSourceData(commentsStream);
 	}
 
 	@Override
@@ -151,6 +165,8 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveMedia(media);
 			}
 		}
+		
+		dataSource.setSourceData(mediaStream);
 
 	}
 
