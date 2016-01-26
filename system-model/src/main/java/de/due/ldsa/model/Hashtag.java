@@ -2,15 +2,20 @@ package de.due.ldsa.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import com.datastax.driver.mapping.annotations.Column;
 import de.due.ldsa.exception.DbException;
 
 /**
  * Author: Romina (scrobart)
  *
- * Not Serializable. To get this object, fetch it from a comment or feed.
+ * To get this object, fetch it from a comment or feed.
  */
-public class Hashtag {
+public class Hashtag implements Serializable {
+	@Column(name = "title")
+	private String title;
+	@Column(name = "usedAtList")
+	private ArrayList<SocialNetworkContent> usedAtList;
+
 	public Hashtag() {
 	}
 
@@ -18,19 +23,8 @@ public class Hashtag {
 		this.title = name;
 	}
 
-	private String title;
-	private ArrayList<SocialNetworkContent> usedAtList;
-
 	public String getTitle() {
 		return title;
-	}
-
-	public ArrayList<SocialNetworkContent> getUsedAtList() throws DbException {
-		throw new DbException("not yet implemented");
-	}
-
-	public long getTimesUsed() throws DbException {
-		throw new DbException("not yet implemented");
 	}
 
 	@Override
@@ -50,4 +44,13 @@ public class Hashtag {
 	public int hashCode() {
 		return title.hashCode();
 	}
+
+	public ArrayList<SocialNetworkContent> getUsedAtList() throws DbException {
+		return usedAtList;
+	}
+
+	public void setUsedAtList(ArrayList<SocialNetworkContent> usedAtList) {
+		this.usedAtList = usedAtList;
+	}
+
 }
