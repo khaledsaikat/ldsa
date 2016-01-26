@@ -27,6 +27,7 @@ public class InstagramMediaMediaIdCommentsParserTest {
 		assertEquals(1, commentList.size());
 		assertEquals(420, commentList.get(0).getId());
 		assertEquals("Really amazing photo!", commentList.get(0).getText());
+		assertEquals(1574083, commentList.get(0).getCommenterId());
 	}
 
 }

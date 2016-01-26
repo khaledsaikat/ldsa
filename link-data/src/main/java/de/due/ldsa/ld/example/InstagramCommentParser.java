@@ -23,6 +23,7 @@ public class InstagramCommentParser implements Parser<Comment> {
 		Comment comment = new Comment();
 		comment.setText(json.getString("text"));
 		comment.setId(json.getLong("id"));
+		comment.setCommenterId(json.getJSONObject("from").getLong("id"));
 		
 		return comment;
 	}
