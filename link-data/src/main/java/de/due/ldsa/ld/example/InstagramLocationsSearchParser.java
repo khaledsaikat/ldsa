@@ -10,7 +10,7 @@ import org.codehaus.jettison.json.JSONObject;
 import de.due.ldsa.ld.Parser;
 import de.due.ldsa.model.Location;
 
-/**Creates a List of Locations from an Instagram Api /locations/search response.
+/**Creates a List of Locations from an Instagram API /locations/search response.
  * 
  * @author Jan Kowollik
  *
@@ -26,7 +26,7 @@ public class InstagramLocationsSearchParser implements Parser<List<Location>>{
 		ArrayList<Location> locationList = new ArrayList<>(jsonArray.length());
 		for (int i = 0; i < jsonArray.length(); i++) {
 			JSONObject locationJson = jsonArray.getJSONObject(i);
-			Location location = InstagramLocationsLocationIdParser.parseLocation(locationJson);
+			Location location = InstagramObjectParser.parseLocation(locationJson);
 			locationList.add(location);
 		}
 		

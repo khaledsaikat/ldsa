@@ -27,7 +27,7 @@ public class InstagramMediaMediaIdCommentsParser implements Parser<ArrayList<Com
 		JSONArray jsonArray = json.getJSONArray("data");
 		ArrayList<Comment> commentList = new ArrayList<>(jsonArray.length());
 		for (int i = 0; i < jsonArray.length(); i++) {
-			commentList.add(InstagramCommentParser.INSTANCE.parse(
+			commentList.add(InstagramObjectParser.parseComment(
 					jsonArray.getJSONObject(i)));
 		}
 		
