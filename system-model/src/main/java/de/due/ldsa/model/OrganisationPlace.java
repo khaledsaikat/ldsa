@@ -5,10 +5,12 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
 
+import de.due.ldsa.ModelUtils;
 import de.due.ldsa.exception.DbException;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 
 /**
  * Author: Romina (scrobart)
@@ -47,6 +49,9 @@ public class OrganisationPlace extends SocialNetworkContentImpl implements Locat
 	public long isInId;
 	@Column(name = "organisationProfileId")
 	public long organisationProfileId;
+
+	@Column(name = "interestKinds")
+	ArrayList<InterestKind> interestKinds;
 
 	@Override
 	public int getSocialNetworkId() {
@@ -156,6 +161,14 @@ public class OrganisationPlace extends SocialNetworkContentImpl implements Locat
 		this.organisationProfileId = organisationProfileId;
 	}
 
+	public ArrayList<InterestKind> getInterestKinds() {
+		return interestKinds;
+	}
+
+	public void setInterestKinds(ArrayList<InterestKind> interestKinds) {
+		this.interestKinds = interestKinds;
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------
 	// Complex methods
 	// ------------------------------------------------------------------------------------------------------------------
@@ -238,5 +251,34 @@ public class OrganisationPlace extends SocialNetworkContentImpl implements Locat
 		result = 31 * result + (int) (isInId ^ (isInId >>> 32));
 		result = 31 * result + (int) (organisationProfileId ^ (organisationProfileId >>> 32));
 		return result;
+	}
+
+	@Override
+	public void addInterestKind(InterestKind ik) {
+		if (interestKinds == null) {
+			interestKinds = new ArrayList<>();
+		}
+		ModelUtils.addInterestKind(interestKinds, ik);
+	}
+
+	@Override
+	public void removeInterestKind(InterestKind ik) {
+		if (interestKinds == null) {
+			interestKinds = new ArrayList<>();
+		}
+		ModelUtils.removeInterestKind(interestKinds, ik);
+	}
+
+	@Override
+	public boolean isInterestKind(InterestKind ik) {
+		if (interestKinds == null) {
+			interestKinds = new ArrayList<>();
+		}
+		return interestKinds.contains(ik);
+	}
+
+	@Override
+	public boolean checkValidInterestKinds() {
+		return ModelUtils.checkValidInterestKinds(interestKinds);
 	}
 }

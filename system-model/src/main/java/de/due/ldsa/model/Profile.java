@@ -60,9 +60,9 @@ public abstract class Profile extends SocialNetworkContentImpl implements Serial
 
 	public abstract void setHometownLocationId(long hometownLocationId);
 
-	public abstract ArrayList<Long> getFollowingIds();
+	public abstract ArrayList<Long> getFollowsIds();
 
-	public abstract void setFollowingIds(ArrayList<Long> followingIds);
+	public abstract void setFollowsIds(ArrayList<Long> followingIds);
 
 	public abstract ArrayList<Long> getFollowedByIds();
 

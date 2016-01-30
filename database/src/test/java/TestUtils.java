@@ -158,10 +158,18 @@ class TestUtils
 
     public static ArrayList<String> getRandomHashtagArrayList() {
         int m = rng.nextInt(6) + 1;
+        int d = 0;
         ArrayList<String> result = new ArrayList<>();
         for (int i = 0; i < m; i++) {
-            result.add(getRandomHashtag());
+            String addMe = getRandomHashtag();
+            if (!result.contains(addMe))
+                result.add(addMe);
+            else
+            {
+                d++;
+            }
         }
+
         return result;
     }
 

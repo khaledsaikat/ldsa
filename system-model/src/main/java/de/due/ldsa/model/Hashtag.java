@@ -2,7 +2,12 @@ package de.due.ldsa.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+
 import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
+import com.datastax.driver.mapping.annotations.Transient;
 import de.due.ldsa.exception.DbException;
 
 /**
@@ -11,11 +16,13 @@ import de.due.ldsa.exception.DbException;
  * @author: Romina (scrobart)
  * 
  */
+@Table(keyspace = "ldsa", name = "hashtags")
 public class Hashtag implements Serializable {
 	@Column(name = "title")
+	@PartitionKey
 	private String title;
-	@Column(name = "usedAtList")
-	private ArrayList<SocialNetworkContent> usedAtList;
+	@Transient
+	private transient List<SocialNetworkContent> usedAtList;
 
 	public Hashtag() {
 	}
@@ -26,6 +33,10 @@ public class Hashtag implements Serializable {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	@Override
@@ -46,12 +57,23 @@ public class Hashtag implements Serializable {
 		return title.hashCode();
 	}
 
-	public ArrayList<SocialNetworkContent> getUsedAtList() throws DbException {
+	public List<SocialNetworkContent> getUsedAtList() throws DbException {
 		return usedAtList;
 	}
 
-	public void setUsedAtList(ArrayList<SocialNetworkContent> usedAtList) {
+	/**
+	 * Sets the "Used-at" List. The Database is supposed to call this.
+	 *
+	 * @param usedAtList A list of all contents that somehow refer to this hashtag.
+	 */
+	public void setUsedAtList(List<SocialNetworkContent> usedAtList) {
 		this.usedAtList = usedAtList;
 	}
 
+	public long getTimesUsed() throws DbException {
+		if (usedAtList == null) {
+			throw new DbException("Please use setUsedAtList before calling getTimesUsed");
+		}
+		return usedAtList.size();
+	}
 }

@@ -41,7 +41,7 @@ public class DatabaseImpl implements Database, Closeable {
 	private Mapper<HumanProfile> humanProfileMapper;
 	private Mapper<Event> eventMapper;
 	private Mapper<Comment> commentMapper;
-	private Mapper<SocialNetworkInterestImpl> interestMapper;
+	private Mapper<Hashtag> hashtagMapper;
 
 	@Override
 	public void close() throws IOException {
@@ -49,6 +49,13 @@ public class DatabaseImpl implements Database, Closeable {
 	}
 
 	private DatabaseImpl() {
+		reconnect();
+	}
+
+	/**
+	 * Call this function, if the connection died for some reason, and you need to establish it again.
+	 */
+	public void reconnect() {
 		// TODO: don't hardcode "127.0.0.1" - make this loadable from somewhere...
 		Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
 		session = cluster.connect("ldsa");
@@ -65,7 +72,19 @@ public class DatabaseImpl implements Database, Closeable {
 		registry.register(new InterestKindCodec());
 		registry.register(new InterestKindArrayListCodec());
 		registry.register(new UrlArrayListCodec());
+
+		socialNetworkMapper = null;
+		profileFeedMapper = null;
+		mediaMapper = null;
+		locationMapper = null;
+		organisationPlaceMapper = null;
+		coopProfileMapper = null;
+		humanProfileMapper = null;
+		eventMapper = null;
+		commentMapper = null;
+		hashtagMapper = null;
 	}
+
 
 	public static Database getInstance() {
 		if (singleton == null) {
@@ -250,22 +269,6 @@ public class DatabaseImpl implements Database, Closeable {
 		return commentMapper.get(id);
 	}
 
-	public void saveInterest(SocialNetworkInterestImpl socialNetworkInterest) {
-		if (interestMapper == null) {
-			interestMapper = new MappingManager(session).mapper(SocialNetworkInterestImpl.class);
-		}
-
-		interestMapper.save(socialNetworkInterest);
-	}
-
-	public SocialNetworkInterestImpl getInterest(long id) {
-		if (interestMapper == null) {
-			interestMapper = new MappingManager(session).mapper(SocialNetworkInterestImpl.class);
-		}
-
-		return interestMapper.get(id);
-	}
-
 	public boolean isHuman(long id) throws DbException {
 		HumanProfile hp = getHumanProfile(id);
 		if (hp != null)
@@ -285,19 +288,9 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException
 	 */
 	public long getNextProfileId() throws DbException {
-		// We have not found a way to do this in a mapper-way, therefore we
-		// absolutely need to use a hand-crafted command
-		// here. The alternative way would be keeping a seperate Table which
-		// keeps tracks of the highest IDs in each
-		// table, but we were unsure if this wouldn't be too slow.
-
-		ResultSet rs1 = session.execute("SELECT MAX(id) FROM coopProfiles");
-		long amount1 = rs1.one().getLong(0);
-
-		ResultSet rs2 = session.execute("SELECT MAX(id) FROM humanProfiles");
-		long amount2 = rs2.one().getLong(0);
-
-		return Math.max(amount1, amount2) + 1;
+		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
+		//SocialNetworkInterest.
+		return getNextSocialNetworkInterestId();
 	}
 
 	public long getNextMediaId() throws DbException {
@@ -330,13 +323,9 @@ public class DatabaseImpl implements Database, Closeable {
 	 *             Thrown if querying the ID from the Database fails.
 	 */
 	public long getNextLocationId() throws DbException {
-		ResultSet rs1 = session.execute("SELECT MAX(id) FROM locations");
-		long amount1 = rs1.one().getLong(0);
-
-		ResultSet rs2 = session.execute("SELECT MAX(id) FROM organisationPlaces");
-		long amount2 = rs2.one().getLong(0);
-
-		return Math.max(amount1, amount2) + 1;
+		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
+		//SocialNetworkInterest.
+		return getNextSocialNetworkInterestId();
 	}
 
 	/**
@@ -379,37 +368,18 @@ public class DatabaseImpl implements Database, Closeable {
 	}
 
 
-	public Iterable<HumanProfile> getAllHumanProfilesAsIterable() {
-		MappingManager manager = new MappingManager(session);
-		HumanProfileAccessor humanProfileAccessor = manager.createAccessor(HumanProfileAccessor.class);
-		Result<HumanProfile> humanprofiles = humanProfileAccessor.getAll();
-
-		return () -> humanprofiles.iterator();
-	}
-
 	/**
 	 * @return An ArrayList containing all the human profiles
 	 * @throws DbException
 	 * @deprecated Please use the Iterable instead! Lists will get troublesome in terms of memory, if the database grows larger.
 	 */
-	@Deprecated
 	@Override
 	public List<HumanProfile> getAllHumanProfiles() throws DbException {
-		// Please change your methods, so we can use Iterables! Lists _WILL_ get troublesome if the database grows
-		// larger.
-		ArrayList<HumanProfile> result = new ArrayList<>();
-		for (HumanProfile hp : getAllHumanProfilesAsIterable()) {
-			result.add(hp);
-		}
-		return result;
-	}
-
-	public Iterable<Comment> getAllCommentsAsIterable() {
 		MappingManager manager = new MappingManager(session);
-		CommentAccessor commentAccessor = manager.createAccessor(CommentAccessor.class);
-		Result<Comment> comments = commentAccessor.getAll();
+		HumanProfileAccessor humanProfileAccessor = manager.createAccessor(HumanProfileAccessor.class);
+		Result<HumanProfile> humanprofiles = humanProfileAccessor.getAll();
 
-		return () -> comments.iterator();
+		return humanprofiles.all();
 	}
 
 	/**
@@ -418,29 +388,12 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException
 	 */
 	@Override
-	@Deprecated
 	public List<Comment> getAllComments() throws DbException {
-		// Please change your methods, so we can use Iterables! Lists _WILL_ get troublesome if the database grows
-		// larger.
-		ArrayList<Comment> result = new ArrayList<Comment>();
-		for (Comment hp : getAllCommentsAsIterable()) {
-			result.add(hp);
-		}
-		return result;
-	}
-
-	public Iterable<Location> getAllLocationsAsIterable() {
 		MappingManager manager = new MappingManager(session);
-		LocationAccessor locationAccessor = manager.createAccessor(LocationAccessor.class);
-		Result<LocationImpl> locations = locationAccessor.getAll();
+		CommentAccessor commentAccessor = manager.createAccessor(CommentAccessor.class);
+		Result<Comment> comments = commentAccessor.getAll();
 
-		OrganisationPlaceAccessor organisationPlaceAccessor = manager.createAccessor(OrganisationPlaceAccessor.class);
-		Result<OrganisationPlace> organisationPlaces = organisationPlaceAccessor.getAll();
-
-		Iterator<? extends Location> result;
-		result = new IteratorMerger<>(new Iterator[]{locations.iterator(), organisationPlaces.iterator()});
-
-		return () -> (Iterator<Location>) result;
+		return comments.all();
 	}
 
 	/**
@@ -448,26 +401,20 @@ public class DatabaseImpl implements Database, Closeable {
 	 *
 	 * @return An ArrayList containing all the Locations and OrganisationPlaces in the Database
 	 * @throws DbException Thrown, if something goes wrong when querying the Database
-	 * @deprecated Please use getAllLocationsAsIterable instead.
 	 */
 	@Override
-	@Deprecated
 	public List<Location> getAllLocations() throws DbException {
-		// Please change your methods, so we can use Iterables! Lists _WILL_ get troublesome if the database grows
-		// larger.
-		ArrayList<Location> result = new ArrayList<>();
-		for (Location l : getAllLocationsAsIterable()) {
-			result.add(l);
-		}
+		MappingManager manager = new MappingManager(session);
+		LocationAccessor locationAccessor = manager.createAccessor(LocationAccessor.class);
+		Result<LocationImpl> locations = locationAccessor.getAll();
+
+		OrganisationPlaceAccessor organisationPlaceAccessor = manager.createAccessor(OrganisationPlaceAccessor.class);
+		Result<OrganisationPlace> organisationPlaces = organisationPlaceAccessor.getAll();
+
+		List<Location> result = new ArrayList<>();
+		result.addAll(locations.all());
+		result.addAll(organisationPlaces.all());
 		return result;
-	}
-
-	public Iterable<ProfileFeed> getAllProfileFeedsAsIterable() throws DbException {
-		MappingManager mappingManager = new MappingManager(session);
-		ProfileFeedAccessor profileFeedAccessor = mappingManager.createAccessor(ProfileFeedAccessor.class);
-		Result<ProfileFeed> profileFeeds = profileFeedAccessor.getAll();
-
-		return () -> profileFeeds.iterator();
 	}
 
 	/**
@@ -476,23 +423,12 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown, if something goes wrong when querying the database.
 	 */
 	@Override
-	@Deprecated
 	public List<ProfileFeed> getAllProfileFeeds() throws DbException {
-		// Please change your methods, so we can use Iterables! Lists _WILL_ get troublesome if the database grows
-		// larger.
-		ArrayList<ProfileFeed> result = new ArrayList<ProfileFeed>();
-		for (ProfileFeed pf : getAllProfileFeedsAsIterable()) {
-			result.add(pf);
-		}
-		return result;
-	}
-
-	public Iterable<Media> getAllMediaAsIterable() throws DbException {
 		MappingManager mappingManager = new MappingManager(session);
-		MediaAccessor mediaAccessor = mappingManager.createAccessor(MediaAccessor.class);
-		Result<Media> mediaResult = mediaAccessor.getAll();
+		ProfileFeedAccessor profileFeedAccessor = mappingManager.createAccessor(ProfileFeedAccessor.class);
+		Result<ProfileFeed> profileFeeds = profileFeedAccessor.getAll();
 
-		return () -> mediaResult.iterator();
+		return profileFeeds.all();
 	}
 
 	/**
@@ -503,57 +439,41 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown if something with the Database goes wrong.
 	 */
 	@Override
-	@Deprecated
 	public List<Media> getAllMedia() throws DbException {
-		// Please change your methods, so we can use Iterables! Lists _WILL_ get troublesome if the database grows
-		// larger.
-		ArrayList<Media> result = new ArrayList<Media>();
-		for (Media m : getAllMediaAsIterable()) {
-			result.add(m);
-		}
-		return result;
+		MappingManager mappingManager = new MappingManager(session);
+		MediaAccessor mediaAccessor = mappingManager.createAccessor(MediaAccessor.class);
+		Result<Media> mediaResult = mediaAccessor.getAll();
+
+		return mediaResult.all();
 	}
 
-	@Override
-	public Iterable<Profile> getAllProfilesFromSocialNetwork(int snId) {
+	public List<Profile> getAllProfilesFromSocialNetwork(int snId) {
 		MappingManager mappingManager = new MappingManager(session);
 		HumanProfileAccessor humanProfileAccessor = mappingManager.createAccessor(HumanProfileAccessor.class);
 		CoopProfileAccessor coopProfileAccessor = mappingManager.createAccessor(CoopProfileAccessor.class);
 		Result<HumanProfile> humanProfiles = humanProfileAccessor.getAllFromSocialNetwork(snId);
 		Result<CoopProfile> coopProfiles = coopProfileAccessor.getAllFromSocialNetwork(snId);
 
-		Iterator<? extends Profile> result;
-		result = new IteratorMerger<>(new Iterator[]{humanProfiles.iterator(), coopProfiles.iterator()});
-
-		return () -> (Iterator<Profile>) result;
+		ArrayList<Profile> result = new ArrayList<Profile>();
+		result.addAll(humanProfiles.all());
+		result.addAll(coopProfiles.all());
+		return result;
 	}
 
-	@Override
-	public Iterable<ProfileFeed> getAllProfileFeedsFromSocialNetwork(int snId) {
+	public List<ProfileFeed> getAllProfileFeedsFromSocialNetwork(int snId) {
 		MappingManager mappingManager = new MappingManager(session);
 		ProfileFeedAccessor profileFeedAccessor = mappingManager.createAccessor(ProfileFeedAccessor.class);
 		Result<ProfileFeed> profileFeeds = profileFeedAccessor.getAllFromSocialNetwork(snId);
 
-		return new Iterable<ProfileFeed>() {
-			@Override
-			public Iterator<ProfileFeed> iterator() {
-				return profileFeeds.iterator();
-			}
-		};
+		return profileFeeds.all();
 	}
 
-	@Override
-	public Iterable<Media> getAllMediaFromSocialNetwork(int snId) {
+	public List<Media> getAllMediaFromSocialNetwork(int snId) {
 		MappingManager mappingManager = new MappingManager(session);
 		MediaAccessor mediaAccessor = mappingManager.createAccessor(MediaAccessor.class);
 		Result<Media> mediaResult = mediaAccessor.getAllFromSocialNetwork(snId);
 
-		return new Iterable<Media>() {
-			@Override
-			public Iterator<Media> iterator() {
-				return mediaResult.iterator();
-			}
-		};
+		return mediaResult.all();
 	}
 
 	/**
@@ -563,8 +483,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return An Iterable iterating over all the content.
 	 * @implNote For more information about the Accessors and Results check this: https://docs.datastax.com/en/developer/java-driver/2.1/common/drivers/reference/accessorAnnotatedInterfaces.html
 	 */
-	@Override
-	public Iterable<? extends SocialNetworkContent> getAllContentFromSocialNetwork(int snId) {
+	public List<SocialNetworkContent> getAllContentFromSocialNetwork(int snId) throws DbException
+	{
 		MappingManager mappingManager = new MappingManager(session);
 		CommentAccessor commentAccessor = mappingManager.createAccessor(CommentAccessor.class);
 		MediaAccessor mediaAccessor = mappingManager.createAccessor(MediaAccessor.class);
@@ -584,37 +504,94 @@ public class DatabaseImpl implements Database, Closeable {
 		Result<LocationImpl> locations = locationAccessor.getAllFromSocialNetwork(snId);
 		Result<Event> events = eventAccessor.getAllFromSocialNetwork(snId);
 
-		Iterator<? extends SocialNetworkContent> result;
-		result = new IteratorMerger<SocialNetworkContent>(new Iterator[]{
-				comments.iterator(), medias.iterator(), profileFeeds.iterator(), humanProfiles.iterator(),
-				coopProfiles.iterator(), organisationPlaces.iterator(), locations.iterator(), events.iterator()});
+		ArrayList<SocialNetworkContent> result = new ArrayList<>();
+		result.addAll(comments.all());
+		result.addAll(medias.all());
+		result.addAll(profileFeeds.all());
+		result.addAll(humanProfiles.all());
+		result.addAll(coopProfiles.all());
+		result.addAll(organisationPlaces.all());
+		result.addAll(locations.all());
+		result.addAll(events.all());
 
-
-		return new Iterable<SocialNetworkContent>() {
-			@Override
-			public Iterator<SocialNetworkContent> iterator() {
-				return (Iterator<SocialNetworkContent>) result;
-			}
-		};
+		return result;
 	}
 
 	public long getNextEventId() {
-		ResultSet rs1 = session.execute("SELECT MAX(id) FROM events");
-		return rs1.one().getLong(0) + 1;
+		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
+		//SocialNetworkInterest.
+		return getNextSocialNetworkInterestId();
 	}
 
 	@Override
 	public void saveHashtag(Hashtag hashtag) throws DbException {
-		// TODO Auto-generated method stub
+		if (hashtagMapper == null) {
+			hashtagMapper = new MappingManager(session).mapper(Hashtag.class);
+		}
+		hashtagMapper.save(hashtag);
 	}
 
 	@Override
 	@Deprecated
 	public List<Hashtag> getAllHashtags() throws DbException {
-		// TODO: change the Hashtags in such a way that this can work.
-		// TODO Auto-generated method stub
-		// Please change your methods, so we can use Iterators! Lists _WILL_ get troublesome if the database grows
-		// larger.
+
 		return null;
+	}
+
+	public List<SocialNetworkContent> getHashtagUsedAtList(Hashtag hashtag) throws DbException
+	{
+		List<SocialNetworkContent> result = getHashtagUsedAtList(hashtag.getTitle());
+		hashtag.setUsedAtList(result);
+		return result;
+	}
+
+	public List<SocialNetworkContent> getHashtagUsedAtList(String hashtag) throws DbException
+	{
+		MappingManager mappingManager = new MappingManager(session);
+		HashtagAccessor hashtagAccessor = mappingManager.createAccessor(HashtagAccessor.class);
+		Result<Comment> commentResult = hashtagAccessor.getCommentsUsedIn(hashtag);
+		Result<ProfileFeed> profileFeedResult = hashtagAccessor.getProfileFeedsUsedIn(hashtag);
+
+		ArrayList<SocialNetworkContent> result = new ArrayList<>();
+		result.addAll(commentResult.all());
+		result.addAll(profileFeedResult.all());
+		return result;
+	}
+
+	public long getHashtagTimesUsed(Hashtag hashtag) throws DbException
+	{
+		return getHashtagUsedAtList(hashtag).size();
+	}
+
+	/**
+	 * Use this to figure out an empty ID for either an HumanProfile, an CoopProfile, an OrganisationPlace, an Location
+	 * or an Event.
+	 * @return An ID as Long
+	 * @throws DbException Thrown, if something goes wrong while querying the database.
+     */
+	public long getNextSocialNetworkInterestId() throws DbException
+	{
+		// We have not found a way to do this in a mapper-way, therefore we
+		// absolutely need to use a hand-crafted command
+		// here. The alternative way would be keeping a seperate Table which
+		// keeps tracks of the highest IDs in each
+		// table, but we were unsure if this wouldn't be too slow.
+
+		ResultSet rs1 = session.execute("SELECT MAX(id) FROM coopProfiles");
+		long amount1 = rs1.one().getLong(0);
+
+		ResultSet rs2 = session.execute("SELECT MAX(id) FROM humanProfiles");
+		long amount2 = rs2.one().getLong(0);
+
+		ResultSet rs3 = session.execute("SELECT MAX(id) FROM locations");
+		long amount3 = rs3.one().getLong(0);
+
+		ResultSet rs4 = session.execute("SELECT MAX(id) FROM organisationPlaces");
+		long amount4 = rs4.one().getLong(0);
+
+		ResultSet rs5 = session.execute("SELECT MAX(id) FROM events");
+		long amount5 = rs5.one().getLong(0);
+
+		return Math.max(amount1, Math.max(amount2,Math.max(amount3,Math.max(amount4,amount5)))) + 1;
 	}
 }

@@ -4,6 +4,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
+import de.due.ldsa.ModelUtils;
 import de.due.ldsa.exception.DbException;
 
 import java.io.Serializable;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  *
  */
 @Table(keyspace = "ldsa", name = "coopProfiles")
-public class CoopProfile extends Profile implements Serializable {
+public class CoopProfile extends Profile implements Serializable, SocialNetworkInterest {
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the
@@ -54,7 +55,7 @@ public class CoopProfile extends Profile implements Serializable {
 	@Column(name = "hometownLocationId")
 	long hometownLocationId;
 	@Column(name = "followedIds")
-	ArrayList<Long> followingIds;
+	ArrayList<Long> followsIds;
 	@Column(name = "followedByIds")
 	ArrayList<Long> followedByIds;
 	@Column(name = "friendIds")
@@ -65,6 +66,9 @@ public class CoopProfile extends Profile implements Serializable {
 	ArrayList<Long> attendingEventIds;
 	@Column(name = "linkedOtherProfileIds")
 	ArrayList<Long> linkedOtherSocialNetworkProfileIds;
+
+	@Column(name = "interestKinds")
+	ArrayList<InterestKind> interestKinds;
 
 	@Column(name = "dateFounded")
 	LocalDate dateFounded;
@@ -206,13 +210,13 @@ public class CoopProfile extends Profile implements Serializable {
 	}
 
 	@Override
-	public ArrayList<Long> getFollowingIds() {
-		return followingIds;
+	public ArrayList<Long> getFollowsIds() {
+		return followsIds;
 	}
 
 	@Override
-	public void setFollowingIds(ArrayList<Long> followingId) {
-		this.followingIds = followingId;
+	public void setFollowsIds(ArrayList<Long> followingId) {
+		this.followsIds = followingId;
 	}
 
 	@Override
@@ -273,6 +277,14 @@ public class CoopProfile extends Profile implements Serializable {
 		this.dateFounded = dateFounded;
 	}
 
+	public ArrayList<InterestKind> getInterestKinds() {
+		return interestKinds;
+	}
+
+	public void setInterestKinds(ArrayList<InterestKind> interestKinds) {
+		this.interestKinds = interestKinds;
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------
 	// COMPLEX METHODS
 	// ------------------------------------------------------------------------------------------------------------------
@@ -301,56 +313,38 @@ public class CoopProfile extends Profile implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof CoopProfile))
-			return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
 		CoopProfile that = (CoopProfile) o;
 
-		if (socialNetworkId != that.socialNetworkId)
-			return false;
-		if (id != that.id)
-			return false;
-		if (profilePhotoMediaId != that.profilePhotoMediaId)
-			return false;
-		if (lastUpdateProfileFeedId != that.lastUpdateProfileFeedId)
-			return false;
-		if (hometownLocationId != that.hometownLocationId)
-			return false;
+		if (socialNetworkId != that.socialNetworkId) return false;
+		if (id != that.id) return false;
+		if (profilePhotoMediaId != that.profilePhotoMediaId) return false;
+		if (lastUpdateProfileFeedId != that.lastUpdateProfileFeedId) return false;
+		if (hometownLocationId != that.hometownLocationId) return false;
 		if (contentTimestamp != null ? !contentTimestamp.equals(that.contentTimestamp) : that.contentTimestamp != null)
 			return false;
-		if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp)
-				: that.crawlingTimestamp != null)
+		if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null)
 			return false;
-		if (username != null ? !username.equals(that.username) : that.username != null)
-			return false;
-		if (profileURL != null ? !profileURL.equals(that.profileURL) : that.profileURL != null)
-			return false;
-		if (fullname != null ? !fullname.equals(that.fullname) : that.fullname != null)
-			return false;
-		if (bio != null ? !bio.equals(that.bio) : that.bio != null)
-			return false;
-		if (interestIds != null ? !interestIds.equals(that.interestIds) : that.interestIds != null)
-			return false;
-		if (userEmail != null ? !userEmail.equals(that.userEmail) : that.userEmail != null)
-			return false;
-		if (userWebsite != null ? !userWebsite.equals(that.userWebsite) : that.userWebsite != null)
-			return false;
-		if (followingIds != null ? !followingIds.equals(that.followingIds) : that.followingIds != null)
-			return false;
+		if (username != null ? !username.equals(that.username) : that.username != null) return false;
+		if (profileURL != null ? !profileURL.equals(that.profileURL) : that.profileURL != null) return false;
+		if (fullname != null ? !fullname.equals(that.fullname) : that.fullname != null) return false;
+		if (bio != null ? !bio.equals(that.bio) : that.bio != null) return false;
+		if (interestIds != null ? !interestIds.equals(that.interestIds) : that.interestIds != null) return false;
+		if (userEmail != null ? !userEmail.equals(that.userEmail) : that.userEmail != null) return false;
+		if (userWebsite != null ? !userWebsite.equals(that.userWebsite) : that.userWebsite != null) return false;
+		if (followsIds != null ? !followsIds.equals(that.followsIds) : that.followsIds != null) return false;
 		if (followedByIds != null ? !followedByIds.equals(that.followedByIds) : that.followedByIds != null)
 			return false;
-		if (friendIds != null ? !friendIds.equals(that.friendIds) : that.friendIds != null)
-			return false;
+		if (friendIds != null ? !friendIds.equals(that.friendIds) : that.friendIds != null) return false;
 		if (profileFeedIds != null ? !profileFeedIds.equals(that.profileFeedIds) : that.profileFeedIds != null)
 			return false;
-		if (attendingEventIds != null ? !attendingEventIds.equals(that.attendingEventIds)
-				: that.attendingEventIds != null)
+		if (attendingEventIds != null ? !attendingEventIds.equals(that.attendingEventIds) : that.attendingEventIds != null)
 			return false;
-		if (linkedOtherSocialNetworkProfileIds != null
-				? !linkedOtherSocialNetworkProfileIds.equals(that.linkedOtherSocialNetworkProfileIds)
-				: that.linkedOtherSocialNetworkProfileIds != null)
+		if (linkedOtherSocialNetworkProfileIds != null ? !linkedOtherSocialNetworkProfileIds.equals(that.linkedOtherSocialNetworkProfileIds) : that.linkedOtherSocialNetworkProfileIds != null)
+			return false;
+		if (interestKinds != null ? !interestKinds.equals(that.interestKinds) : that.interestKinds != null)
 			return false;
 		return !(dateFounded != null ? !dateFounded.equals(that.dateFounded) : that.dateFounded != null);
 
@@ -372,14 +366,43 @@ public class CoopProfile extends Profile implements Serializable {
 		result = 31 * result + (int) (profilePhotoMediaId ^ (profilePhotoMediaId >>> 32));
 		result = 31 * result + (int) (lastUpdateProfileFeedId ^ (lastUpdateProfileFeedId >>> 32));
 		result = 31 * result + (int) (hometownLocationId ^ (hometownLocationId >>> 32));
-		result = 31 * result + (followingIds != null ? followingIds.hashCode() : 0);
+		result = 31 * result + (followsIds != null ? followsIds.hashCode() : 0);
 		result = 31 * result + (followedByIds != null ? followedByIds.hashCode() : 0);
 		result = 31 * result + (friendIds != null ? friendIds.hashCode() : 0);
 		result = 31 * result + (profileFeedIds != null ? profileFeedIds.hashCode() : 0);
 		result = 31 * result + (attendingEventIds != null ? attendingEventIds.hashCode() : 0);
-		result = 31 * result
-				+ (linkedOtherSocialNetworkProfileIds != null ? linkedOtherSocialNetworkProfileIds.hashCode() : 0);
+		result = 31 * result + (linkedOtherSocialNetworkProfileIds != null ? linkedOtherSocialNetworkProfileIds.hashCode() : 0);
+		result = 31 * result + (interestKinds != null ? interestKinds.hashCode() : 0);
 		result = 31 * result + (dateFounded != null ? dateFounded.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public void addInterestKind(InterestKind ik) {
+		if (interestKinds == null) {
+			interestKinds = new ArrayList<>();
+		}
+		ModelUtils.addInterestKind(interestKinds, ik);
+	}
+
+	@Override
+	public void removeInterestKind(InterestKind ik) {
+		if (interestKinds == null) {
+			interestKinds = new ArrayList<>();
+		}
+		ModelUtils.removeInterestKind(interestKinds, ik);
+	}
+
+	@Override
+	public boolean isInterestKind(InterestKind ik) {
+		if (interestKinds == null) {
+			interestKinds = new ArrayList<>();
+		}
+		return interestKinds.contains(ik);
+	}
+
+	@Override
+	public boolean checkValidInterestKinds() {
+		return ModelUtils.checkValidInterestKinds(interestKinds);
 	}
 }

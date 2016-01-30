@@ -2,6 +2,7 @@ package de.due.ldsa.model;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import de.due.ldsa.exception.DbException;
 
@@ -9,16 +10,13 @@ import de.due.ldsa.exception.DbException;
  * Author: Romina (scrobart)
  *
  */
-public interface SocialNetworkInterest extends Serializable {
-    void addInterestKind(InterestKind ik)
-            throws DbException;
+public interface SocialNetworkInterest {
+    void addInterestKind(InterestKind ik);
 
-    void removeInterestKind(InterestKind ik)
-                    throws DbException;
-
+    void removeInterestKind(InterestKind ik);
     boolean isInterestKind(InterestKind ik);
 
-    long getId();
+    ArrayList<InterestKind> getInterestKinds();
 
-    void setId(long id);
+    boolean checkValidInterestKinds();
 }

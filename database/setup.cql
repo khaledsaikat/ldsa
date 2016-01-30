@@ -53,7 +53,8 @@ CREATE TABLE locations (
     country VARCHAR,
     latidue DOUBLE,
     longitude DOUBLE,
-    isInId BIGINT
+    isInId BIGINT,
+    interestKinds LIST<INT>
 );
 
 CREATE TABLE organisationPlaces (
@@ -67,7 +68,8 @@ CREATE TABLE organisationPlaces (
     latidue DOUBLE,
     longitude DOUBLE,
     isInId BIGINT,
-    organisationProfileId BIGINT
+    organisationProfileId BIGINT,
+    interestKinds LIST<INT>
 );
 
 CREATE TABLE coopProfiles (
@@ -91,7 +93,8 @@ CREATE TABLE coopProfiles (
     profileFeedIds LIST<BIGINT>,
     attendingEventIds LIST<BIGINT>,
     linkedOtherProfileIds LIST<BIGINT>,
-    dateFounded TIMESTAMP
+    dateFounded TIMESTAMP,
+    interestKinds LIST<INT>
 );
 
 CREATE TABLE humanProfiles (
@@ -118,7 +121,8 @@ CREATE TABLE humanProfiles (
     sex INT,
     birthday TIMESTAMP,
     relationshipStatus INT,
-    relationshipPersons LIST<BIGINT>
+    relationshipPersons LIST<BIGINT>,
+    interestKinds LIST<INT>
 );
 
 CREATE TABLE events (
@@ -131,7 +135,8 @@ CREATE TABLE events (
     locationId BIGINT,
     invitedIds LIST<BIGINT>,
     attendingIds LIST<BIGINT>,
-    eventText VARCHAR
+    eventText VARCHAR,
+    interestKinds LIST<INT>
 );
 
 CREATE TABLE comments (
@@ -147,10 +152,10 @@ CREATE TABLE comments (
     commentIds LIST<BIGINT>
 );
 
-CREATE TABLE interests (
-    id BIGINT PRIMARY KEY,
-    kinds LIST<INT>
+CREATE TABLE hashtags (
+    title VARCHAR PRIMARY KEY
 );
+
 
 // Cassandra is unable to use non-primary key columns in a WHERE query (WHY???), therefore we have to create a bunch of
 // indexes right here.
@@ -163,3 +168,6 @@ CREATE INDEX comment_socialNetwork ON comments (snid);
 CREATE INDEX location_socialNetwork ON locations (snid);
 CREATE INDEX organisationPlace_socialNetwork ON organisationplaces (snid);
 CREATE INDEX event_socialNetwork ON events (snid);
+
+CREATE INDEX profileFeeds_hashtagIndex ON profilefeeds (hashtags);
+CREATE INDEX comments_hashtagIndex ON comments (hashtagnames);

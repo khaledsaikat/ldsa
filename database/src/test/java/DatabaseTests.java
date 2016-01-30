@@ -173,7 +173,7 @@ public class DatabaseTests
         hp.setBirthday(TestUtils.getRandomLocalDate());
         hp.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
         hp.setFollowedByIds(TestUtils.getRandomArrayList());
-        hp.setFollowingIds(TestUtils.getRandomArrayList());
+        hp.setFollowsIds(TestUtils.getRandomArrayList());
         hp.setFriendIds(TestUtils.getRandomArrayList());
         hp.setFullname(TestUtils.getRandomName());
         hp.setHometownLocationId(TestUtils.getRandomLong());
@@ -246,24 +246,6 @@ public class DatabaseTests
     }
 
     @Test
-    public void testSaveInterest() throws Exception {
-        Database db = DatabaseImpl.getInstance();
-        db.truncateTable("interests");
-
-        SocialNetworkInterestImpl first = new SocialNetworkInterestImpl();
-        ArrayList<InterestKind> kinds = new ArrayList<InterestKind>();
-        kinds.add(InterestKind.FILM);
-        kinds.add(InterestKind.PRODUCT);
-        first.setInterestKinds(kinds);
-        first.setId(5);
-
-        db.saveInterest(first);
-
-        SocialNetworkInterestImpl second = db.getInterest(5);
-        Assert.assertEquals(first, second);
-    }
-
-    @Test
     public void testNullIfNonExistant() throws Exception {
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("socialNetworks");
@@ -298,6 +280,9 @@ public class DatabaseTests
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("humanProfiles");
         db.truncateTable("coopProfiles");
+        db.truncateTable("locations");
+        db.truncateTable("events");
+        db.truncateTable("organisationPlaces");
 
         long nId = db.getNextProfileId();
         if (nId != 1) Assert.fail("First ID should be 1 if there is nothing in the database.");

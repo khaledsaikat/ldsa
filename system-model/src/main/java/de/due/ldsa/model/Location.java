@@ -2,7 +2,9 @@ package de.due.ldsa.model;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 
+import de.due.ldsa.ModelUtils;
 import de.due.ldsa.exception.DbException;
 
 /**
@@ -13,7 +15,7 @@ import de.due.ldsa.exception.DbException;
 // We turned Location into an interface and had LocationImpl and
 // OrganisationPlace implement it, to get around the
 // limitation (the lack of inheritance) of the Cassandra driver.
-public interface Location extends SocialNetworkContent, Serializable {
+public interface Location extends SocialNetworkContent, Serializable, SocialNetworkInterest {
 	// ------------------------------------------------------------------------------------------------------------------
 	// Getters and setters
 	// ------------------------------------------------------------------------------------------------------------------
@@ -68,4 +70,15 @@ public interface Location extends SocialNetworkContent, Serializable {
 
 	void setPosition(Position p);
 
+	@Override
+	void addInterestKind(InterestKind ik);
+
+	@Override
+	void removeInterestKind(InterestKind ik);
+
+	@Override
+	boolean isInterestKind(InterestKind ik);
+
+	@Override
+	boolean checkValidInterestKinds();
 }

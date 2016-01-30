@@ -33,7 +33,7 @@ public class AccessorTests {
         db.autoSaveProfile(hp2);
 
         int result = 0;
-        for (HumanProfile i : db.getAllHumanProfilesAsIterable()) {
+        for (HumanProfile i : db.getAllHumanProfiles()) {
             result++;
         }
         Assert.assertEquals(2, result);
@@ -55,7 +55,7 @@ public class AccessorTests {
         db.saveComment(c2);
 
         int result = 0;
-        for (Comment i : db.getAllCommentsAsIterable()) {
+        for (Comment i : db.getAllComments()) {
             result++;
         }
         Assert.assertEquals(2, result);
@@ -88,7 +88,7 @@ public class AccessorTests {
         db.saveOrganisationPlace(op2);
 
         int result = 0;
-        for (Location l : db.getAllLocationsAsIterable()) {
+        for (Location l : db.getAllLocations()) {
             result++;
         }
         Assert.assertEquals(result, 4);
@@ -109,7 +109,7 @@ public class AccessorTests {
         }
 
         long result = 0;
-        for (ProfileFeed pf : db.getAllProfileFeedsAsIterable()) {
+        for (ProfileFeed pf : db.getAllProfileFeeds()) {
             result++;
         }
         Assert.assertEquals(amount, result);
@@ -130,7 +130,7 @@ public class AccessorTests {
         }
 
         long result = 0;
-        for (Media pf : db.getAllMediaAsIterable()) {
+        for (Media pf : db.getAllMedia()) {
             result++;
         }
         Assert.assertEquals(amount, result);

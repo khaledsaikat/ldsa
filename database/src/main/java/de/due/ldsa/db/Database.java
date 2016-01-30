@@ -1,8 +1,13 @@
 package de.due.ldsa.db;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.mapping.MappingManager;
+import com.datastax.driver.mapping.Result;
+import de.due.ldsa.db.accessors.*;
 import de.due.ldsa.model.*;
 
 public interface Database {
@@ -44,10 +49,6 @@ public interface Database {
 
 	Comment getComment(long id);
 
-	void saveInterest(SocialNetworkInterestImpl socialNetworkInterest) throws DbException;
-
-	SocialNetworkInterestImpl getInterest(long id);
-
 	boolean isHuman(long id) throws DbException;
 
 	long getNextProfileId() throws DbException;
@@ -80,22 +81,19 @@ public interface Database {
 
 	void saveHashtag(Hashtag hashtag)throws DbException;
 
-	Iterable<HumanProfile> getAllHumanProfilesAsIterable();
-
-	Iterable<Comment> getAllCommentsAsIterable();
-
-	Iterable<Location> getAllLocationsAsIterable();
-
-	Iterable<? extends ProfileFeed> getAllProfileFeedsAsIterable();
-
-	Iterable<? extends Media> getAllMediaAsIterable();
-
 	boolean isOrganisationPlace(long id);
 
-	Iterable<Profile> getAllProfilesFromSocialNetwork(int snId);
-	Iterable<ProfileFeed> getAllProfileFeedsFromSocialNetwork(int snId);
-	Iterable<Media> getAllMediaFromSocialNetwork(int snId);
-	Iterable<? extends SocialNetworkContent> getAllContentFromSocialNetwork(int snId);
-
 	long getNextEventId();
+
+	List<Profile> getAllProfilesFromSocialNetwork(int snId);
+	List<ProfileFeed> getAllProfileFeedsFromSocialNetwork(int snId);
+	List<Media> getAllMediaFromSocialNetwork(int snId);
+	List<SocialNetworkContent> getAllContentFromSocialNetwork(int snId) throws DbException;
+
+	void reconnect();
+
+	List<SocialNetworkContent> getHashtagUsedAtList(Hashtag hashtag) throws DbException;
+	List<SocialNetworkContent> getHashtagUsedAtList(String hashtag) throws DbException;
+
+	long getNextSocialNetworkInterestId() throws DbException;
 }
