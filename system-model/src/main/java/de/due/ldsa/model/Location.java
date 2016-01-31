@@ -58,7 +58,6 @@ public interface Location extends SocialNetworkContent, Serializable, SocialNetw
 	// ------------------------------------------------------------------------------------------------------------------
 	// Complex methods
 	// ------------------------------------------------------------------------------------------------------------------
-	int getTimesUsed() throws DbException;
 
 	OffsetDateTime getContentTimestamp() throws DbException;
 

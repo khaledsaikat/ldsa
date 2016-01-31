@@ -158,14 +158,6 @@ public class LocationImpl extends SocialNetworkContentImpl implements Location, 
 	transient Integer timesUsed;
 
 	@Override
-	public int getTimesUsed() throws DbException {
-		if (timesUsed != null) {
-			return timesUsed;
-		}
-		throw new DbException("not yet implemented.");
-	}
-
-	@Override
 	public OffsetDateTime getContentTimestamp() throws DbException {
 		return contentTimestamp;
 	}

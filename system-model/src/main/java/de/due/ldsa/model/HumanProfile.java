@@ -72,7 +72,8 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 	ArrayList<Long> attendingEventIds;
 	@Column(name = "linkedOtherProfileIds")
 	ArrayList<Long> linkedOtherSocialNetworkProfileIds;
-
+	@Column(name = "allComments")
+	ArrayList<Long> allCommentsId;
 	@Column(name = "sex")
 	Sex sex;
 	@Column(name = "birthday")
@@ -324,6 +325,14 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 		this.interestKinds = interestKinds;
 	}
 
+	public ArrayList<Long> getAllCommentsId() {
+		return allCommentsId;
+	}
+
+	public void setAllCommentsId(ArrayList<Long> allCommentsId) {
+		this.allCommentsId = allCommentsId;
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------
 	// COMPLEX METHODS
 	// ------------------------------------------------------------------------------------------------------------------
@@ -340,12 +349,20 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 		this.socialNetworkId = sn.getId();
 	}
 
-	public void setRelationship(RelationshipStatus relationshipStatus, ArrayList<Long> persons) {
-		throw new DbException("not yet implemented.");
+	public void setRelationship(Relationship relationship)
+	{
+		this.relationshipPersons = relationship.getPersonIds();
+		this.relationshipStatus = relationship.getRelationshipStatus();
 	}
 
-	public Relationship getRelationship() {
-		throw new DbException("not yet implemented.");
+	public void setRelationship(RelationshipStatus relationshipStatus, ArrayList<Long> persons) {
+		this.relationshipPersons = persons;
+		this.relationshipStatus = relationshipStatus;
+	}
+
+
+	public Relationship getRelationship() throws DbException {
+		return new Relationship(getRelationshipStatus(),getRelationshipPersons());
 	}
 
 	@Override

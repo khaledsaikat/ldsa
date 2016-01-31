@@ -12,6 +12,7 @@ import java.net.URL;
  */
 @Category(AllTestsExceptBenchmark.class)
 public class AccessorTests {
+
     @Test
     public void testHumanProfileAccessor()
             throws Exception {

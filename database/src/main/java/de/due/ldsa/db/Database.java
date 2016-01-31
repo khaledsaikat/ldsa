@@ -96,4 +96,20 @@ public interface Database {
 	List<SocialNetworkContent> getHashtagUsedAtList(String hashtag) throws DbException;
 
 	long getNextSocialNetworkInterestId() throws DbException;
+
+	ArrayList<Long> getProfileProfileFeeds(Profile p);
+
+	ArrayList<Long> getProfileAllComments(Profile p);
+
+	Location autoGetLocation(long l) throws DbException;
+
+	long locationTimesUsed(Location l);
+
+	int coopProfileCountInteraction(CoopProfile cp, Profile p) throws DbException;
+
+	double coopProfileCountAverageInteractionPerFeed(CoopProfile cp, Profile p) throws DbException;
+
+	double coopProfileGetAverageInteractionPerFeed(CoopProfile cp) throws DbException;
+
+	double coopProfileGetAverageOfActionsPerDay(CoopProfile cp) throws DbException;
 }

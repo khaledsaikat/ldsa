@@ -194,5 +194,31 @@ class TestUtils
         return String.format("%s %s", poolA[rng.nextInt(poolA.length)], poolB[rng.nextInt(poolB.length)]);
     }
 
+    public static String getRandomEventName() {
+        String[] poolA = new String[]{"Comic", "The Vocaloid", "Idol", "Trek", "Cave"};
+        String[] poolB = new String[]{"ket", "con", "master", " market", " Matsuri"};
+        String[] poolC = new String[]{"97,98,99,2000,2001,2015,2016"};
+        return String.format("%s %s %s", poolA[rng.nextInt(poolA.length)], poolB[rng.nextInt(poolB.length)], poolC[rng.nextInt(poolC.length)]);
+    }
 
+    public static ArrayList<Long> getArrayListFrom(long l) {
+        ArrayList<Long> result = new ArrayList<>();
+        result.add(l);
+        return result;
+    }
+
+    public static ArrayList<Long> getArrayListFrom(long l, long l2) {
+        ArrayList<Long> result = new ArrayList<>();
+        result.add(l);
+        result.add(l2);
+        return result;
+    }
+
+    public static ArrayList<Long> getArrayListFrom(long l, long l2, long l3) {
+        ArrayList<Long> result = new ArrayList<>();
+        result.add(l);
+        result.add(l2);
+        result.add(l3);
+        return result;
+    }
 }

@@ -523,6 +523,12 @@ public class DatabaseImpl implements Database, Closeable {
 		return getNextSocialNetworkInterestId();
 	}
 
+	/**
+	 * Saves an hashtag into the database. If it is already known, this does nothing at all.
+	 *
+	 * @param hashtag The hashtag you want to save
+	 * @throws DbException Thrown if something goes wrong while querying the database.
+	 */
 	@Override
 	public void saveHashtag(Hashtag hashtag) throws DbException {
 		if (hashtagMapper == null) {
@@ -534,10 +540,16 @@ public class DatabaseImpl implements Database, Closeable {
 	@Override
 	@Deprecated
 	public List<Hashtag> getAllHashtags() throws DbException {
-
+		//TODO: Implement getAllHashtags()
 		return null;
 	}
 
+	/**
+	 * Gets a list of all ProfileFeeds and comments in which a specific hashtag is mentioned.
+	 * @param hashtag The hashtag you want to analyze.
+	 * @return An ArrayList containing all the ProfileFeeds and Comments which mention the hashtag.
+	 * @throws DbException Thrown if something goes wrong while querying the database.
+	 */
 	public List<SocialNetworkContent> getHashtagUsedAtList(Hashtag hashtag) throws DbException
 	{
 		List<SocialNetworkContent> result = getHashtagUsedAtList(hashtag.getTitle());
@@ -545,6 +557,12 @@ public class DatabaseImpl implements Database, Closeable {
 		return result;
 	}
 
+	/**
+	 * Gets a list of all Comments and ProfileFeeds in which a specific Hashtag was mentioned.
+	 * @param hashtag The Hashtag you need to know more about. Should start with "#"
+	 * @return An ArrayList containing all Comments and ProfileFeeds.
+	 * @throws DbException Thrown if something goes wrong while querying the database
+	 */
 	public List<SocialNetworkContent> getHashtagUsedAtList(String hashtag) throws DbException
 	{
 		MappingManager mappingManager = new MappingManager(session);
@@ -558,6 +576,12 @@ public class DatabaseImpl implements Database, Closeable {
 		return result;
 	}
 
+	/**
+	 * Figures out how many times a hashtag was mentioned in all comments or profileFeeds.
+	 * @param hashtag The Hashtag you need to know more about
+	 * @return Amount of comments and profiles added together.
+	 * @throws DbException Thrown if something goes wrong while querying the database
+	 */
 	public long getHashtagTimesUsed(Hashtag hashtag) throws DbException
 	{
 		return getHashtagUsedAtList(hashtag).size();
@@ -594,4 +618,155 @@ public class DatabaseImpl implements Database, Closeable {
 
 		return Math.max(amount1, Math.max(amount2,Math.max(amount3,Math.max(amount4,amount5)))) + 1;
 	}
+
+	/**
+	 * Gets a list of Profile Feeds related to a Profile
+	 *
+	 * @param p The Profile you want to analyze.
+	 * @return An ArrayList of Profile Feed IDs related to that profile.
+	 */
+	public ArrayList<Long> getProfileProfileFeeds(Profile p) {
+		MappingManager mappingManager = new MappingManager(session);
+		ProfileAccessor profileAccessor = mappingManager.createAccessor(ProfileAccessor.class);
+		Result<ProfileFeed> feedResult = profileAccessor.getProfileFeeds(p.getId());
+
+		ArrayList<Long> result = new ArrayList<>();
+		for (ProfileFeed pf : feedResult.all()) {
+			result.add(pf.getId());
+		}
+
+		return result;
+	}
+
+	/**
+	 * Gets a list of all Comments made by a profile.
+	 *
+	 * @param p The Profile you want to analyze
+	 * @return An ArrayList containing all the Comment IDs
+	 */
+	public ArrayList<Long> getProfileAllComments(Profile p) {
+		MappingManager mappingManager = new MappingManager(session);
+		ProfileAccessor profileAccessor = mappingManager.createAccessor(ProfileAccessor.class);
+		Result<Comment> commentResult = profileAccessor.getProfileComments(p.getId());
+
+		ArrayList<Long> result = new ArrayList<>();
+		for (Comment c : commentResult.all()) {
+			result.add(c.getId());
+		}
+
+		return result;
+	}
+
+	/**
+	 * Count how often an Location is used for events.
+	 *
+	 * @param l The Location you want to analyze.
+	 * @return How often the Location was used for an event.
+	 */
+	public long locationTimesUsed(Location l) {
+		MappingManager mappingManager = new MappingManager(session);
+		LocationAccessor locationAccessor = mappingManager.createAccessor(LocationAccessor.class);
+		Result<Event> eventResult = locationAccessor.getEvents(l.getId());
+
+		return eventResult.all().size();
+	}
+
+	/**
+	 * Determines whether an Location ID correspondends to an Location or an OrganisationPlace and gets the object.
+	 *
+	 * @param l The ID of an Location or an OrganisationPlace
+	 * @return Location or an OrganisationPlace
+	 */
+	public Location autoGetLocation(long l) throws DbException {
+		Location loc = getLocation(l);
+		if (loc != null) return loc;
+
+		OrganisationPlace op = getOrganisationPlace(l);
+		if (op != null) return op;
+
+		throw new DbException("The supplied ID is neither an Location nor an OrganisationPlace");
+	}
+
+	/**
+	 * Checks how often a Profile interacts with a Company Profile
+	 *
+	 * @param cp The company profile you want to analyze.
+	 * @param p  The profile which you need the amount of interactions with.
+	 * @return Amount of all the interactions
+	 * @throws DbException Thrown if something goes wrong while querying the database.
+	 * @implNote In the model, this is supposed to be in "CoopProfile", however, we moved it here so we can avoid a
+	 * circular dependency.
+	 */
+	public int coopProfileCountInteraction(CoopProfile cp, Profile p) throws DbException {
+		int result = 0;
+		if (cp.getFollowedByIds() != null) {
+			if (cp.getFollowedByIds().contains(p.getId())) {
+				//If the person follows the company, it counts as interaction
+				result++;
+			}
+		}
+		if (cp.getProfileFeedIds() != null) {
+			for (Long i : cp.getProfileFeedIds()) {
+				ProfileFeed j = getProfileFeed(i);
+				if (j.getSharerIds() != null) {
+					//If our person shares it, it counts as interaction.
+					if (j.getSharerIds().contains(p.getId()))
+						result++;
+				}
+				if (j.getLikerIds() != null) {
+					//If our person likes it, it counts as interaction.
+					if (j.getLikerIds().contains(p.getId()))
+						result++;
+				}
+				if (j.getCommentIds() != null) {
+					for (Long k : j.getCommentIds()) {
+						result += countInteractions(getComment(k), p);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Counts how often a specific profile appears in a comment tree. This is supposed to be used by coopProfileCountInteraction
+	 *
+	 * @param c The comment tree node you want to analyze
+	 * @param p The profile you need the amount of interactions with.
+	 * @return How often p appears somewhere in c.
+	 */
+	private int countInteractions(Comment c, Profile p) {
+		int result = 0;
+		if (c.getLikerIds() != null) {
+			//If the person likes the comment, it counts as interaction.
+			if (c.getLikerIds().contains(p.getId()))
+				result++;
+		}
+		if (c.getCommentIds() != null) {
+			for (Long i : c.getCommentIds()) {
+				//Count the comments on this comment as well. (Yes, there are things like comment-trees - see reddit.)
+				result += countInteractions(getComment(i), p);
+			}
+		}
+		//If the person actually made this comment, it counts as interaction as well.
+		if (c.getCommenterId() == p.getId())
+			result++;
+
+		return result;
+	}
+
+	public double coopProfileCountAverageInteractionPerFeed(CoopProfile cp, Profile p) throws DbException {
+		throw new DbException("not yet implemented.");
+	}
+
+	public double coopProfileGetAverageInteractionPerFeed(CoopProfile cp) throws DbException {
+		throw new DbException("not yet implemented.");
+	}
+
+	public double coopProfileGetAverageOfActionsPerDay(CoopProfile cp) throws DbException {
+		throw new DbException("not yet implemented.");
+	}
+
+
+	//TODO: Generate mappings upon connection instead of on request (as it is now) - to gain more performance.
 }

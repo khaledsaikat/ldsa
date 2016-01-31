@@ -188,11 +188,6 @@ public class OrganisationPlace extends SocialNetworkContentImpl implements Locat
 	}
 
 	@Override
-	public int getTimesUsed() throws DbException {
-		throw new DbException("not yet implemented.");
-	}
-
-	@Override
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;

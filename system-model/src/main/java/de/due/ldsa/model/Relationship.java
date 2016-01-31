@@ -9,8 +9,13 @@ import java.util.ArrayList;
  */
 public class Relationship
 {
+    public Relationship(RelationshipStatus relationshipStatus, ArrayList<Long> personIds) {
+        this.relationshipStatus = relationshipStatus;
+        this.personIds = personIds;
+    }
+
     RelationshipStatus relationshipStatus;
-    ArrayList<HumanProfile> persons;
+    ArrayList<Long> personIds;
 
     public RelationshipStatus getRelationshipStatus() {
         return relationshipStatus;
@@ -20,30 +25,11 @@ public class Relationship
         this.relationshipStatus = relationshipStatus;
     }
 
-    public ArrayList<HumanProfile> getPersons() {
-        return persons;
+    public ArrayList<Long> getPersonIds() {
+        return personIds;
     }
 
-    public void setPersons(ArrayList<HumanProfile> persons) {
-        this.persons = persons;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Relationship)) return false;
-
-        Relationship that = (Relationship) o;
-
-        if (relationshipStatus != that.relationshipStatus) return false;
-        return persons.equals(that.persons);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = relationshipStatus.hashCode();
-        result = 31 * result + persons.hashCode();
-        return result;
+    public void setPersonIds(ArrayList<Long> personIds) {
+        this.personIds = personIds;
     }
 }

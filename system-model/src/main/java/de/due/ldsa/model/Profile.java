@@ -84,12 +84,90 @@ public abstract class Profile extends SocialNetworkContentImpl implements Serial
 
 	public abstract void setLinkedOtherSocialNetworkProfileIds(ArrayList<Long> linkedOtherSocialNetworkProfileIds);
 
+	public abstract ArrayList<Long> getAllCommentsId();
+	public abstract void setAllCommentsId(ArrayList<Long> allCommentsId);
+
 	// ------------------------------------------------------------------------------------------------------------------
 	// COMPLEX METHODS
 	// ------------------------------------------------------------------------------------------------------------------
 
-	public boolean link(SocialNetworkContent socialNetworkContent) throws DbException {
-		throw new DbException("not yet implemented");
+	/**
+	 * Tests whether a SocialNetworkContent is somehow related to this profile.
+	 * Please do not forget to set all the IDs first.
+	 * @param socialNetworkContent The Content you want to check.
+	 * @return True if the content is related in any way, false if either it is not, or if the corresponding IDs are not
+	 * loaded.
+	 * @apiNote Please do not forget to call the set...Id methods to ensure this can work correctly.
+     */
+	public boolean link(SocialNetworkContent socialNetworkContent) {
+		if (socialNetworkContent instanceof Comment)
+		{
+			if (getAllCommentsId() != null)
+			{
+				if (getAllCommentsId().contains(socialNetworkContent.getId()))
+					return true;
+			}
+		}
+		if (socialNetworkContent instanceof SocialNetworkInterest)
+		{
+			if (getInterestIds() != null)
+			{
+				if (getInterestIds().contains(socialNetworkContent.getId()))
+					return true;
+			}
+		}
+		if (socialNetworkContent instanceof  Media)
+		{
+			if (getProfilePhotoMediaId() == socialNetworkContent.getId())
+				return true;
+		}
+		if (socialNetworkContent instanceof ProfileFeed)
+		{
+			if (getLastUpdateProfileFeedId() == socialNetworkContent.getId())
+				return true;
+			if (getProfileFeedIds() != null)
+			{
+				if (getProfileFeedIds().contains(socialNetworkContent.getId()))
+					return true;
+			}
+		}
+		if (socialNetworkContent instanceof Location)
+		{
+			if (getLastUpdateProfileFeedId() == socialNetworkContent.getId())
+				return true;
+		}
+		if (socialNetworkContent instanceof Profile)
+		{
+			if (getFollowsIds() != null)
+			{
+				if (getFollowsIds().contains(socialNetworkContent.getId()))
+						return true;
+			}
+			if (getFollowedByIds() != null)
+			{
+				if (getFollowedByIds().contains(socialNetworkContent.getId()))
+					return true;
+			}
+			if (getFriendIds() != null)
+			{
+				if (getFriendIds().contains(socialNetworkContent.getId()))
+					return true;
+			}
+			if (getLinkedOtherSocialNetworkProfileIds() != null)
+			{
+				if (getLinkedOtherSocialNetworkProfileIds().contains(socialNetworkContent.getId()))
+					return true;
+			}
+		}
+		if (socialNetworkContent instanceof Event)
+		{
+			if (getAttendingEventIds() != null)
+			{
+				if (getAttendingEventIds().contains(socialNetworkContent.getId()))
+					return true;
+			}
+		}
+		return false;
 	}
 
 	/**

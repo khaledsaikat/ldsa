@@ -2,7 +2,9 @@
 DROP KEYSPACE IF EXISTS ldsa;
 
 CREATE KEYSPACE IF NOT EXISTS ldsa
-WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};
+WITH replication = {'class':'SimpleStrategy', 'replication_factor' : 1};    //change the "1" for the amount of how many
+                                                                            //copies should be distributed among the
+                                                                            //nodes.
 
 USE ldsa;
 
@@ -91,6 +93,7 @@ CREATE TABLE coopProfiles (
     followedByIds LIST<BIGINT>,
     friendIds LIST<BIGINT>,
     profileFeedIds LIST<BIGINT>,
+    allComments LIST<BIGINT>,
     attendingEventIds LIST<BIGINT>,
     linkedOtherProfileIds LIST<BIGINT>,
     dateFounded TIMESTAMP,
@@ -116,6 +119,7 @@ CREATE TABLE humanProfiles (
     followedByIds LIST<BIGINT>,
     friendIds LIST<BIGINT>,
     profileFeedIds LIST<BIGINT>,
+    allComments LIST<BIGINT>,
     attendingEventIds LIST<BIGINT>,
     linkedOtherProfileIds LIST<BIGINT>,
     sex INT,
@@ -171,3 +175,8 @@ CREATE INDEX event_socialNetwork ON events (snid);
 
 CREATE INDEX profileFeeds_hashtagIndex ON profilefeeds (hashtags);
 CREATE INDEX comments_hashtagIndex ON comments (hashtagnames);
+
+CREATE INDEX profileFeeds_profileIndex ON profilefeeds (profileid);
+CREATE INDEX comments_commenterIndex ON comments (commenter);
+
+CREATE INDEX events_locationIndex ON events (locationid);

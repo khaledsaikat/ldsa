@@ -66,6 +66,8 @@ public class CoopProfile extends Profile implements Serializable, SocialNetworkI
 	ArrayList<Long> attendingEventIds;
 	@Column(name = "linkedOtherProfileIds")
 	ArrayList<Long> linkedOtherSocialNetworkProfileIds;
+	@Column(name = "allComments")
+	ArrayList<Long> allCommentsId;
 
 	@Column(name = "interestKinds")
 	ArrayList<InterestKind> interestKinds;
@@ -285,24 +287,17 @@ public class CoopProfile extends Profile implements Serializable, SocialNetworkI
 		this.interestKinds = interestKinds;
 	}
 
+	public ArrayList<Long> getAllCommentsId() {
+		return allCommentsId;
+	}
+
+	public void setAllCommentsId(ArrayList<Long> allCommentsId) {
+		this.allCommentsId = allCommentsId;
+	}
+
 	// ------------------------------------------------------------------------------------------------------------------
 	// COMPLEX METHODS
 	// ------------------------------------------------------------------------------------------------------------------
-	public int countInteraction(Profile p) throws DbException {
-		throw new DbException("not yet implemented.");
-	}
-
-	public double countAverageInteractionPerFeed(Profile p) throws DbException {
-		throw new DbException("not yet implemented.");
-	}
-
-	public double getAverageInteractionPerFeed() throws DbException {
-		throw new DbException("not yet implemented.");
-	}
-
-	public double getAverageOfActionsPerDay() throws DbException {
-		throw new DbException("not yet implemented.");
-	}
 
 	@Override
 	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {

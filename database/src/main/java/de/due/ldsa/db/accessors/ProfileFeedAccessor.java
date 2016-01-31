@@ -13,7 +13,7 @@ import de.due.ldsa.model.ProfileFeed;
 @Accessor
 public interface ProfileFeedAccessor {
     @Query("SELECT * FROM ldsa.profileFeeds")
-    public Result<ProfileFeed> getAll();
+    Result<ProfileFeed> getAll();
 
     @Query("SELECT * FROM ldsa.profileFeeds WHERE snId = :id")
     Result<ProfileFeed> getAllFromSocialNetwork(@Param("id") int snId);
