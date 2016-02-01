@@ -12,7 +12,7 @@ import de.due.ldsa.model.SocialNetworkContent;
 import de.due.ldsa.ld.Parser;
 
 /**A Parser for an Instagram Api response from /media/media-id. 
- * Creates a List of a media object, a profile and a profile feed.
+ * Creates a List of a media object, a profile and a profilefeed.
  * 
  * @author Jan Kowollik
  *
