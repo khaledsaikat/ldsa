@@ -7,7 +7,9 @@ import de.due.ldsa.model.Comment;
 import de.due.ldsa.model.HumanProfile;
 import de.due.ldsa.model.Location;
 import de.due.ldsa.model.LocationImpl;
+import de.due.ldsa.model.Media;
 import de.due.ldsa.model.Profile;
+import de.due.ldsa.model.ProfileFeed;
 
 /**This class contains static methods for parsing a single system model
  * object from an Instagram API JSON response sub structure. Often one JSON
@@ -56,6 +58,21 @@ public class InstagramObjectParser {
 		return location;
 	}
 	
+	/**Parses a single Media object from a JSON structure.
+	 * 
+	 * @param json The {@link JSONObject} containing the {@link Media} data.
+	 * @return a Media instance with as many fields as possible filled out
+	 * @throws JSONException in case of malformed JSON data
+	 */
+	public static Media parseMedia(JSONObject json) throws JSONException {
+		Media media = new Media();
+		
+		media.setId(json.getLong("id"));
+		media.setCrawlingPath(json.getString("link"));
+		
+		return media;
+	}
+	
 	/**Parses a single Profile object from a JSON structure. Can handle the
 	 * users full name as a single attribute and split into two attributes
 	 * ("first_name" and "last_name").
@@ -79,6 +96,22 @@ public class InstagramObjectParser {
 		profile.setUserWebsite(json.optString("website"));
 		
 		return profile;
+	}
+	
+	/**Parses a single ProfileFeed object from a JSON structure.
+	 * 
+	 * @param json The {@link JSONObject} containing the {@link ProfileFeed} data.
+	 * @return a ProfileFeed instance with as many fields as possible filled out
+	 * @throws JSONException in case of malformed JSON data
+	 */
+	public static ProfileFeed parseProfileFeed(JSONObject json) throws JSONException {
+		ProfileFeed profileFeed = new ProfileFeed();
+		
+		profileFeed.setId(json.getLong("id"));
+		Profile profile = parseProfile(json.getJSONObject("user"));
+		profileFeed.setProfileId(profile.getId());
+		
+		return profileFeed;
 	}
 	
 }
