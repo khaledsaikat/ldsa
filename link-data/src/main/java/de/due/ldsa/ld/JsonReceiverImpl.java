@@ -11,14 +11,12 @@ import org.codehaus.jettison.json.JSONObject;
  *
  */
 public class JsonReceiverImpl implements JsonReceiver {
-
+	
 	@Override
-	public <T> void submitJsonObject(JSONObject jsonObject, Parser<T> parser, Action<T>... actions)
+	public <T> void submitJsonObject(JSONObject jsonObject, Parser<T> parser)
 			throws JSONException {
 		T t = parser.parse(jsonObject);
-		for (int i = 0; i < actions.length; i++) {
-			actions[i].onAction(t);
-		}
+		
 	}
 
 }
