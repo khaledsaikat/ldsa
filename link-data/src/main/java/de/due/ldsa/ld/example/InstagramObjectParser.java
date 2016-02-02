@@ -88,9 +88,13 @@ public class InstagramObjectParser {
 		profile.setUsername(json.getString("username"));
 		if(json.has("full_name")){
 			profile.setFullname(json.getString("full_name"));
-		}else if(json.has("first_name") && json.has("last_name")){
-			profile.setFullname(json.getString("first_name") + " " 
-					+ json.getString("last_name"));
+		}else{
+			if(json.has("first_name")){
+				profile.setFullname(json.getString("first_name"));
+			}
+			if(json.has("last_name")){
+				profile.setFullname(profile.getFullname() + " " + json.getString("last_name"));
+			}
 		}
 		profile.setBio(json.optString("bio"));
 		profile.setUserWebsite(json.optString("website"));
