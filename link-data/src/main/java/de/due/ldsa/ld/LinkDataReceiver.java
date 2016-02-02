@@ -112,4 +112,10 @@ public interface LinkDataReceiver {
 	 */
 	public List<Hashtag> getHashtags(Fetch fetchMode);
 
+	/**
+	 * Setting data stream
+	 * @param json
+	 */
+	public void setData(String json);
+
 }

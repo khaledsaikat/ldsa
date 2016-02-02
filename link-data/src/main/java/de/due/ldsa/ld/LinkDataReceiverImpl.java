@@ -55,7 +55,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 	 * private constructor to prevent create instances
 	 * 
 	 */
-	private LinkDataReceiverImpl() {
+	public LinkDataReceiverImpl() {
 		humanProfilesService = HumanProfilesService.getInstance();
 		locationsService = LocationsService.getInstance();
 		profileFeedsService = ProfileFeedsService.getInstance();
@@ -89,7 +89,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 			}
 
 		}
-		
+
 		dataSource.setSourceData(humanProfilesSteam);
 	}
 
@@ -104,7 +104,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveLocation((LocationImpl) location);
 			}
 		}
-		
+
 		dataSource.setSourceData(locationsSteam);
 	}
 
@@ -120,7 +120,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveProfileFeed(profileFeed);
 			}
 		}
-		
+
 		dataSource.setSourceData(profileFeedsStream);
 	}
 
@@ -135,7 +135,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveHashtag(hashtag);
 			}
 		}
-		
+
 		dataSource.setSourceData(hashtagsStream);
 	}
 
@@ -150,7 +150,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveComment(comment);
 			}
 		}
-		
+
 		dataSource.setSourceData(commentsStream);
 	}
 
@@ -165,7 +165,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				databaseService.saveMedia(media);
 			}
 		}
-		
+
 		dataSource.setSourceData(mediaStream);
 
 	}
@@ -239,6 +239,12 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 			e.printStackTrace();
 		}
 		return media;
+	}
+
+	@Override
+	public void setData(String json) {
+		// detect data type
+		// redirect to the correct service.
 	}
 
 }

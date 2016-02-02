@@ -16,6 +16,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Author: Romina (scrobart)
@@ -88,6 +89,30 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 
 	@Transient
 	transient Relationship rs;
+
+	@Transient
+	List<Comment> comments;
+
+	@Transient
+	List<ProfileFeed> profileFeeds;
+
+	@Transient
+	List<HumanProfile> linkedOtherSocialNetworkProfiles;
+
+	public List<ProfileFeed> getProfileFeeds() {
+		return profileFeeds;
+	}
+
+	public void setProfileFeeds(List<ProfileFeed> profileFeeds) {
+		this.profileFeeds = profileFeeds;
+	}
+
+	@Transient
+	private List<HumanProfile> relationshipPersonsProfiles;
+
+	public List<HumanProfile> getRelationshipPersonsProfiles() {
+		return relationshipPersonsProfiles;
+	}
 
 	@Override
 	public long getId() {
@@ -349,8 +374,7 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 		this.socialNetworkId = sn.getId();
 	}
 
-	public void setRelationship(Relationship relationship)
-	{
+	public void setRelationship(Relationship relationship) {
 		this.relationshipPersons = relationship.getPersonIds();
 		this.relationshipStatus = relationship.getRelationshipStatus();
 	}
@@ -360,48 +384,71 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 		this.relationshipStatus = relationshipStatus;
 	}
 
-
 	public Relationship getRelationship() throws DbException {
-		return new Relationship(getRelationshipStatus(),getRelationshipPersons());
+		return new Relationship(getRelationshipStatus(), getRelationshipPersons());
 	}
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		HumanProfile that = (HumanProfile) o;
 
-		if (socialNetworkId != that.socialNetworkId) return false;
-		if (id != that.id) return false;
-		if (profilePhotoMediaId != that.profilePhotoMediaId) return false;
-		if (lastUpdateProfileFeedId != that.lastUpdateProfileFeedId) return false;
-		if (hometownLocationId != that.hometownLocationId) return false;
+		if (socialNetworkId != that.socialNetworkId)
+			return false;
+		if (id != that.id)
+			return false;
+		if (profilePhotoMediaId != that.profilePhotoMediaId)
+			return false;
+		if (lastUpdateProfileFeedId != that.lastUpdateProfileFeedId)
+			return false;
+		if (hometownLocationId != that.hometownLocationId)
+			return false;
 		if (contentTimestamp != null ? !contentTimestamp.equals(that.contentTimestamp) : that.contentTimestamp != null)
 			return false;
-		if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null)
+		if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp)
+				: that.crawlingTimestamp != null)
 			return false;
-		if (username != null ? !username.equals(that.username) : that.username != null) return false;
-		if (profileURL != null ? !profileURL.equals(that.profileURL) : that.profileURL != null) return false;
-		if (fullname != null ? !fullname.equals(that.fullname) : that.fullname != null) return false;
-		if (bio != null ? !bio.equals(that.bio) : that.bio != null) return false;
-		if (interestIds != null ? !interestIds.equals(that.interestIds) : that.interestIds != null) return false;
-		if (userEmail != null ? !userEmail.equals(that.userEmail) : that.userEmail != null) return false;
-		if (userWebsite != null ? !userWebsite.equals(that.userWebsite) : that.userWebsite != null) return false;
-		if (followsIds != null ? !followsIds.equals(that.followsIds) : that.followsIds != null) return false;
+		if (username != null ? !username.equals(that.username) : that.username != null)
+			return false;
+		if (profileURL != null ? !profileURL.equals(that.profileURL) : that.profileURL != null)
+			return false;
+		if (fullname != null ? !fullname.equals(that.fullname) : that.fullname != null)
+			return false;
+		if (bio != null ? !bio.equals(that.bio) : that.bio != null)
+			return false;
+		if (interestIds != null ? !interestIds.equals(that.interestIds) : that.interestIds != null)
+			return false;
+		if (userEmail != null ? !userEmail.equals(that.userEmail) : that.userEmail != null)
+			return false;
+		if (userWebsite != null ? !userWebsite.equals(that.userWebsite) : that.userWebsite != null)
+			return false;
+		if (followsIds != null ? !followsIds.equals(that.followsIds) : that.followsIds != null)
+			return false;
 		if (followedByIds != null ? !followedByIds.equals(that.followedByIds) : that.followedByIds != null)
 			return false;
-		if (friendIds != null ? !friendIds.equals(that.friendIds) : that.friendIds != null) return false;
+		if (friendIds != null ? !friendIds.equals(that.friendIds) : that.friendIds != null)
+			return false;
 		if (profileFeedIds != null ? !profileFeedIds.equals(that.profileFeedIds) : that.profileFeedIds != null)
 			return false;
-		if (attendingEventIds != null ? !attendingEventIds.equals(that.attendingEventIds) : that.attendingEventIds != null)
+		if (attendingEventIds != null ? !attendingEventIds.equals(that.attendingEventIds)
+				: that.attendingEventIds != null)
 			return false;
-		if (linkedOtherSocialNetworkProfileIds != null ? !linkedOtherSocialNetworkProfileIds.equals(that.linkedOtherSocialNetworkProfileIds) : that.linkedOtherSocialNetworkProfileIds != null)
+		if (linkedOtherSocialNetworkProfileIds != null
+				? !linkedOtherSocialNetworkProfileIds.equals(that.linkedOtherSocialNetworkProfileIds)
+				: that.linkedOtherSocialNetworkProfileIds != null)
 			return false;
-		if (sex != that.sex) return false;
-		if (birthday != null ? !birthday.equals(that.birthday) : that.birthday != null) return false;
-		if (relationshipStatus != that.relationshipStatus) return false;
-		if (relationshipPersons != null ? !relationshipPersons.equals(that.relationshipPersons) : that.relationshipPersons != null)
+		if (sex != that.sex)
+			return false;
+		if (birthday != null ? !birthday.equals(that.birthday) : that.birthday != null)
+			return false;
+		if (relationshipStatus != that.relationshipStatus)
+			return false;
+		if (relationshipPersons != null ? !relationshipPersons.equals(that.relationshipPersons)
+				: that.relationshipPersons != null)
 			return false;
 		return !(interestKinds != null ? !interestKinds.equals(that.interestKinds) : that.interestKinds != null);
 
@@ -428,7 +475,8 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 		result = 31 * result + (friendIds != null ? friendIds.hashCode() : 0);
 		result = 31 * result + (profileFeedIds != null ? profileFeedIds.hashCode() : 0);
 		result = 31 * result + (attendingEventIds != null ? attendingEventIds.hashCode() : 0);
-		result = 31 * result + (linkedOtherSocialNetworkProfileIds != null ? linkedOtherSocialNetworkProfileIds.hashCode() : 0);
+		result = 31 * result
+				+ (linkedOtherSocialNetworkProfileIds != null ? linkedOtherSocialNetworkProfileIds.hashCode() : 0);
 		result = 31 * result + (sex != null ? sex.hashCode() : 0);
 		result = 31 * result + (birthday != null ? birthday.hashCode() : 0);
 		result = 31 * result + (relationshipStatus != null ? relationshipStatus.hashCode() : 0);
@@ -444,9 +492,9 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 				+ ", profileURL=" + profileURL + ", fullname='" + fullname + '\'' + ", bio='" + bio + '\''
 				+ ", interestIds=" + interestIds + ", userEmail='" + userEmail + '\'' + ", userWebsite='" + userWebsite
 				+ '\'' + ", profilePhotoMediaId=" + profilePhotoMediaId + ", lastUpdateProfileFeedId="
-				+ lastUpdateProfileFeedId + ", hometownLocationId=" + hometownLocationId + ", followingId="
-				+ followsIds + ", followedByIds=" + followedByIds + ", friendIds=" + friendIds + ", profileFeedIds="
-				+ profileFeedIds + ", attendingEventIds=" + attendingEventIds + ", linkedOtherSocialNetworkProfileIds="
+				+ lastUpdateProfileFeedId + ", hometownLocationId=" + hometownLocationId + ", followingId=" + followsIds
+				+ ", followedByIds=" + followedByIds + ", friendIds=" + friendIds + ", profileFeedIds=" + profileFeedIds
+				+ ", attendingEventIds=" + attendingEventIds + ", linkedOtherSocialNetworkProfileIds="
 				+ linkedOtherSocialNetworkProfileIds + ", sex=" + sex + ", birthday=" + birthday
 				+ ", relationshipStatus=" + relationshipStatus + ", relationshipPersons=" + relationshipPersons + '}';
 	}
@@ -478,5 +526,58 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 	@Override
 	public boolean checkValidInterestKinds() {
 		return ModelUtils.checkValidInterestKinds(interestKinds);
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Comment> getComments() {
+		return this.comments;
+	}
+
+	public void setRelationshipPersonsProfiles(List<HumanProfile> relationshipPersonsProfiles) {
+		this.relationshipPersonsProfiles = relationshipPersonsProfiles;
+	}
+
+	public List<HumanProfile> getLinkedOtherSocialNetworkProfiles() {
+		return linkedOtherSocialNetworkProfiles;
+	}
+
+	public void setLinkedOtherSocialNetworkProfiles(List<HumanProfile> linkedOtherSocialNetworkProfiles) {
+		this.linkedOtherSocialNetworkProfiles = linkedOtherSocialNetworkProfiles;
+	}
+
+	@Transient
+	List<HumanProfile> friends;
+
+	public List<HumanProfile> getFriends() {
+		return friends;
+	}
+
+	public void setFriends(List<HumanProfile> friends) {
+		this.friends = friends;
+	}
+
+	@Transient
+	List<HumanProfile> follows;
+	
+	@Transient
+	List<HumanProfile> followedBy;
+
+	public List<HumanProfile> getFollows() {
+		return follows;
+	}
+
+	public void setFollows(List<HumanProfile> follows) {
+		this.follows = follows;
+	}
+
+	public List<HumanProfile> getFollowedBy() {
+		return followedBy;
+	}
+
+	public void setFollowedBy(List<HumanProfile> followedBy) {
+		this.followedBy = followedBy;
 	}
 }

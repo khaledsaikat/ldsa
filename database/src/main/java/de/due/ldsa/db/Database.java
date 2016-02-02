@@ -79,20 +79,24 @@ public interface Database {
 
 	List<Media> getAllMedia() throws DbException;
 
-	void saveHashtag(Hashtag hashtag)throws DbException;
+	void saveHashtag(Hashtag hashtag) throws DbException;
 
 	boolean isOrganisationPlace(long id);
 
 	long getNextEventId();
 
 	List<Profile> getAllProfilesFromSocialNetwork(int snId);
+
 	List<ProfileFeed> getAllProfileFeedsFromSocialNetwork(int snId);
+
 	List<Media> getAllMediaFromSocialNetwork(int snId);
+
 	List<SocialNetworkContent> getAllContentFromSocialNetwork(int snId) throws DbException;
 
 	void reconnect();
 
 	List<SocialNetworkContent> getHashtagUsedAtList(Hashtag hashtag) throws DbException;
+
 	List<SocialNetworkContent> getHashtagUsedAtList(String hashtag) throws DbException;
 
 	long getNextSocialNetworkInterestId() throws DbException;
@@ -112,4 +116,14 @@ public interface Database {
 	double coopProfileGetAverageInteractionPerFeed(CoopProfile cp) throws DbException;
 
 	double coopProfileGetAverageOfActionsPerDay(CoopProfile cp) throws DbException;
+
+	ArrayList<Long> getProfileRelationshipPersons(HumanProfile humanProfile) throws DbException;
+
+	ArrayList<Long> getProfileLinkedOtherSocialNetworkProfileIds(HumanProfile humanProfile) throws DbException;
+
+	ArrayList<Long> getProfileFriendsIds(HumanProfile humanProfile) throws DbException;
+
+	ArrayList<Long> getProfileFollowsIds(HumanProfile humanProfile) throws DbException;
+	
+	ArrayList<Long> getProfileFollowedByIds(HumanProfile humanProfile) throws DbException;
 }

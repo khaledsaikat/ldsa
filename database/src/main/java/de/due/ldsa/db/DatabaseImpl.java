@@ -767,6 +767,36 @@ public class DatabaseImpl implements Database, Closeable {
 		throw new DbException("not yet implemented.");
 	}
 
+	@Override
+	public ArrayList<Long> getProfileRelationshipPersons(HumanProfile humanProfile) throws DbException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Long> getProfileLinkedOtherSocialNetworkProfileIds(HumanProfile humanProfile) throws DbException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Long> getProfileFriendsIds(HumanProfile humanProfile) throws DbException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Long> getProfileFollowsIds(HumanProfile humanProfile) throws DbException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Long> getProfileFollowedByIds(HumanProfile humanProfile) throws DbException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	//TODO: Generate mappings upon connection instead of on request (as it is now) - to gain more performance.
 }
