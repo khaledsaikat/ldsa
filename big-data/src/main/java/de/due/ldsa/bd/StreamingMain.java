@@ -7,9 +7,9 @@ package de.due.ldsa.bd;
  */
 public class StreamingMain {
 	public static void main(String[] args) {
-		DataSource source = new DataProvider();
+		DataSource source = DataProvider.getInstance();
 		source.setSourceData("Hello World");
-		Streaming app = new Streaming();
+		Streaming app = Streaming.getInstance();
 		app.run();
 	}
 }

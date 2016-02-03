@@ -3,18 +3,35 @@ package de.due.ldsa.bd;
 import java.util.List;
 
 /**
- * Data source for Streaming class.
+ * Data provider for Streaming class.
  * 
- * Link-Data group should call DataSource.setSourceData(data) for providing data
- * to Streaming. Right now, we only accept data as sting.
+ * Link-Data group should call setSourceData method for providing data to
+ * Streaming.
  * 
  * getSourceData has been called by CustomReceiver class.
  * 
  * @author Khaled Hossain
  */
 public class DataProvider implements DataSource {
-	private static String stringSource;
-	private static List<?> listSource;
+	private static DataProvider instance = null;
+	private String stringSource;
+	private List<?> listSource;
+
+	/**
+	 * Get singleton instance
+	 */
+	public static DataProvider getInstance() {
+		if (instance == null) {
+			instance = new DataProvider();
+		}
+		return instance;
+	}
+
+	/**
+	 * Private constructor singleton object.
+	 */
+	private DataProvider() {
+	}
 
 	@Override
 	public void setSourceData(String data) {

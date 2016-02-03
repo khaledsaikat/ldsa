@@ -25,7 +25,7 @@ public class Offline extends Base {
 	 * Making base rdd and assign it to into baseRDD property.
 	 */
 	private void populateBaseRDD() {
-		DataProvider source = new DataProvider();
+		DataProvider source = DataProvider.getInstance();
 		baseRDD = sparkContext.parallelize(source.getListSourceData());
 	}
 	

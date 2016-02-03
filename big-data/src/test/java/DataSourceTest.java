@@ -11,10 +11,10 @@ public class DataSourceTest {
 	public void testSetAndGetStringSourceData() {
 		String data = "Hello World";
 		
-		DataProvider source1 = new DataProvider();	
+		DataProvider source1 = DataProvider.getInstance();
 		source1.setSourceData(data);
 		
-		DataProvider source2 = new DataProvider();	
+		DataProvider source2 = DataProvider.getInstance();
 		assertEquals(source2.getStringSourceData(), data);
 	}
 	
@@ -22,10 +22,10 @@ public class DataSourceTest {
 	public void testSetAndGetListSourceData() {
 		List<String> data = Arrays.asList("Hello World1", "Hello World2");
 		
-		DataProvider source1 = new DataProvider();	
+		DataProvider source1 = DataProvider.getInstance();
 		source1.setSourceData(data);
 		
-		DataProvider source2 = new DataProvider();	
+		DataProvider source2 = DataProvider.getInstance();
 		assertEquals(source2.getListSourceData(), data);
 	}
 }
