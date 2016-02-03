@@ -1,4 +1,4 @@
-package de.due.ldsa.bd;
+package de.due.ldsa.bd.analysis;
 
 import java.util.ArrayList;
 import java.util.Collections;
