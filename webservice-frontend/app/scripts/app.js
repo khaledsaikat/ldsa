@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc overview
- * @name webserviceFrontendApp
+ * @name testXApp
  * @description
- * # webserviceFrontendApp
+ * # testXApp
  *
  * Main module of the application.
  */
 angular
-  .module('webserviceFrontendApp', [
+  .module('testXApp', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -29,6 +29,18 @@ angular
         controller: 'AboutCtrl',
         controllerAs: 'about'
       })
+	  .when('/analysis', {
+		templateUrl: 'views/analysis.html'
+	  })
+	  .when('/database',{
+		templateUrl: 'views/database.html'
+	  })
+	  .when('/request',{
+		templateUrl: 'views/request.html'
+	  })
+	  .when('/token',{
+		templateUrl: 'views/token.html'
+	  })
       .otherwise({
         redirectTo: '/'
       });

@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name webserviceFrontendApp.controller:MainCtrl
+ * @name testXApp.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the webserviceFrontendApp
+ * Controller of the testXApp
  */
-angular.module('webserviceFrontendApp')
+angular.module('testXApp')
   .controller('MainCtrl', function () {
     this.awesomeThings = [
       'HTML5 Boilerplate',
