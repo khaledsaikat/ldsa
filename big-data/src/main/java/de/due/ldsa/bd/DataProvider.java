@@ -52,4 +52,9 @@ public class DataProvider implements DataSource {
 	public List<?> getListSourceData() {
 		return listSource;
 	}
+	
+	public void empty() {
+		stringSource = null;
+		listSource = null;
+	}
 }

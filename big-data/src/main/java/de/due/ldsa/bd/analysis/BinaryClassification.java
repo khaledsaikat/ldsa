@@ -1,6 +1,5 @@
 package de.due.ldsa.bd.analysis;
 
-import de.due.ldsa.bd.Data;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.Pipeline;
@@ -35,7 +34,7 @@ public class BinaryClassification {
 	 * @return DataFrame for training.
 	 */
 	private DataFrame getTrainingDataFrame() {
-		String path = "src/main/resources/smsspamcollection/SMSSpamCollection";
+		String path = "../big-data/src/main/resources/smsspamcollection/SMSSpamCollection";
 		JavaRDD<Object> rdd = sparkContext.textFile(path).map(line -> {
 			String[] parts = line.split("\t");
 			Double label = parts[0].equals("spam") ? 1.0 : 0.0;

@@ -2,6 +2,7 @@ package de.due.ldsa.bd;
 
 import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.receiver.Receiver;
+import java.util.List;
 
 /**
  * CustomReceiver class that collect data for Streaming. This class is calling
@@ -9,7 +10,7 @@ import org.apache.spark.streaming.receiver.Receiver;
  * 
  * @author Khaled Hossain
  */
-public class CustomReceiver extends Receiver<String> {
+public class CustomReceiver extends Receiver<List<?>> {
 	private static final long serialVersionUID = -1187714361055563697L;
 
 	/**
@@ -36,6 +37,7 @@ public class CustomReceiver extends Receiver<String> {
 	 * get called on stop.
 	 */
 	public void onStop() {
+		//DataProvider.getInstance().empty();
 	}
 
 	/**
@@ -43,9 +45,12 @@ public class CustomReceiver extends Receiver<String> {
 	 */
 	private void receive() {
 		try {
-			store(DataProvider.getInstance().getStringSourceData());
+			List<?> data = DataProvider.getInstance().getListSourceData();
+			if (data != null) {
+				store(data);			
+			}
 			restart("Restarting");
-		} catch(Exception e) {
+		} catch (Exception e) {
 			restart("Trying to connect again", e);
 		}
 	}
