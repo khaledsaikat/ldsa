@@ -42,6 +42,11 @@ public class CustomReceiver extends Receiver<String> {
 	 * Get data from DataSource
 	 */
 	private void receive() {
-		store(new DataProvider().getStringSourceData());
+		try {
+			store(DataProvider.getInstance().getStringSourceData());
+			restart("Restarting");
+		} catch(Exception e) {
+			restart("Trying to connect again", e);
+		}
 	}
 }

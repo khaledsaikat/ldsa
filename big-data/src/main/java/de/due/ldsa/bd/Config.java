@@ -19,5 +19,5 @@ public class Config {
 	/**
 	 * Interval for streaming 
 	 */
-	public final static Integer interval = 5;
+	public final static Integer interval = 2;
 }

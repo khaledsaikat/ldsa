@@ -14,9 +14,9 @@ public class OfflineMain {
 		 * Setting Winutil property is only valid for Windows machine
 		 */
 		Helper.setProperty();
-		
+
 		List<String> items = Arrays.asList("Hello World1", "Hello World2", "Hello World3");
-		DataProvider source = new DataProvider();
+		DataProvider source = DataProvider.getInstance();
 		source.setSourceData(items);
 		Offline app = new Offline();
 		app.run();

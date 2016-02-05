@@ -349,6 +349,36 @@ public class StoreInDatabaseActionTest {
 			return 0;
 		}
 		
+		@Override
+		public ArrayList<Long> getProfileRelationshipPersons(HumanProfile humanProfile) throws DbException {
+			fail("getProfileRelationshipPersons of Database not supposed to be called");
+			return null;
+		}
+
+		@Override
+		public ArrayList<Long> getProfileLinkedOtherSocialNetworkProfileIds(HumanProfile humanProfile)
+				throws DbException {
+			fail("getProfileLinkedOtherSocialNetworkProfileIds of Database not supposed to be called");
+			return null;
+		}
+
+		@Override
+		public ArrayList<Long> getProfileFriendsIds(HumanProfile humanProfile) throws DbException {
+			fail("getProfileFriendsIds of Database not supposed to be called");
+			return null;
+		}
+
+		@Override
+		public ArrayList<Long> getProfileFollowsIds(HumanProfile humanProfile) throws DbException {
+			fail("getProfileFollowsIds of Database not supposed to be called");
+			return null;
+		}
+
+		@Override
+		public ArrayList<Long> getProfileFollowedByIds(HumanProfile humanProfile) throws DbException {
+			fail("getProfileFollowedByIds of Database not supposed to be called");
+			return null;
+		}
 		
 		public Comment getStoredComment() {
 			return storedComment;
@@ -385,6 +415,7 @@ public class StoreInDatabaseActionTest {
 		public SocialNetwork getStoredSocialNetwork() {
 			return storedSocialNetwork;
 		}
+		
 		
 	}
 	
