@@ -1,4 +1,4 @@
-package de.due.ldsa.bd;
+package de.due.ldsa.bd.analysis;
 
 import org.apache.spark.api.java.JavaDoubleRDD;
 import org.apache.spark.api.java.JavaPairRDD;

@@ -1,5 +1,6 @@
 package de.due.ldsa.bd.analysis;
 
+import de.due.ldsa.bd.Data;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.Pipeline;
@@ -10,10 +11,6 @@ import org.apache.spark.ml.feature.HashingTF;
 import org.apache.spark.ml.feature.Tokenizer;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.SQLContext;
-
-import java.util.List;
-
-import com.google.common.collect.Lists;
 
 /**
  * Binary classification analysis. We need to provide training data to train the
@@ -37,7 +34,7 @@ public class BinaryClassification {
 	/**
 	 * @return DataFrame for training.
 	 */
-	private DataFrame getDataFrame() {
+	private DataFrame getTrainingDataFrame() {
 		String path = "src/main/resources/smsspamcollection/SMSSpamCollection";
 		JavaRDD<Object> rdd = sparkContext.textFile(path).map(line -> {
 			String[] parts = line.split("\t");
@@ -68,7 +65,7 @@ public class BinaryClassification {
 	 * Train the model and based on trained model run test data
 	 */
 	public void analysisRandom() {
-		DataFrame[] splits = getDataFrame().randomSplit(new double[] { 0.9, 0.1 });
+		DataFrame[] splits = getTrainingDataFrame().randomSplit(new double[] { 0.9, 0.1 });
 		DataFrame training = splits[0];
 		DataFrame test = splits[1];
 		Pipeline pipeline = getPipeline();
@@ -80,16 +77,11 @@ public class BinaryClassification {
 	/**
 	 * Analysis comments based on trained model
 	 */
-	public void analysisComments() {
-		DataFrame training = getDataFrame();
+	public void analysis(DataFrame data) {
+		DataFrame training = getTrainingDataFrame();
 		Pipeline pipeline = getPipeline();
 		PipelineModel model = pipeline.fit(training);
-		List<CommentSample> comments = Lists.newArrayList(new CommentSample("Some sample comments"),
-				new CommentSample(
-						"Thanks for your subscription to Ringtone. Your mobile will be charged £5/month Please confirm by replying YES or NO."),
-				new CommentSample("Other sample comment"));
-		DataFrame test = sqlContext.createDataFrame(sparkContext.parallelize(comments), CommentSample.class);
-		DataFrame predictions = model.transform(test);
+		DataFrame predictions = model.transform(data);
 		predictions.show();
 	}
 }

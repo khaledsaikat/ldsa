@@ -13,6 +13,9 @@ public class BinaryClassificationModel implements Serializable {
 	private Double label;
 	private String text;
 
+	public BinaryClassificationModel() {
+	}
+
 	public BinaryClassificationModel(Double label, String text) {
 		this.setLabel(label);
 		this.setText(text);

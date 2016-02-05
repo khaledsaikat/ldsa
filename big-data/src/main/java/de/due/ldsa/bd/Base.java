@@ -15,6 +15,7 @@ public abstract class Base {
 	protected SparkConf conf;
 	protected JavaSparkContext sparkContext;
 	protected SQLContext sqlContext;
+	protected Data baseData;
 
 	/**
 	 * Initializing conf, sparkContext and sqlContext.

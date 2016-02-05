@@ -66,6 +66,11 @@ public class FPGrowthAnalysis {
 
 		JavaRDD<ArrayList<String>> transactions = sc.textFile(analysis.getInputFile())
 				.map(new Function<String, ArrayList<String>>() {
+					/**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
 					@Override
 					public ArrayList<String> call(String s) {
 						return Lists.newArrayList(s.split(" "));
@@ -79,6 +84,6 @@ public class FPGrowthAnalysis {
 			System.out.println("[" + Joiner.on(",").join(s.javaItems()) + "], " + s.freq());
 		}
 
-		sc.stop();
+		sc.close();
 	}
 }
