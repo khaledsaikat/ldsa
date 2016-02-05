@@ -4,6 +4,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
+import com.google.gson.annotations.SerializedName;
 
 import de.due.ldsa.exception.DbException;
 
@@ -30,8 +31,10 @@ public class Comment extends SocialNetworkContentImpl implements Serializable {
 	OffsetDateTime contentTimestamp;
 	@Column(name = "crawlingTimestamp")
 	OffsetDateTime crawlingTimestamp;
+	@SerializedName("id")
 	@PartitionKey
 	long id;
+	@SerializedName("text")
 	@Column(name = "text")
 	private String text;
 	@Column(name = "commenter")

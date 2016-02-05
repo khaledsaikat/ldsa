@@ -2,6 +2,7 @@ package de.due.ldsa.ld;
 
 import java.util.List;
 
+import de.due.ldsa.ld.exceptions.UnexpectedJsonStringException;
 import de.due.ldsa.model.Comment;
 import de.due.ldsa.model.Hashtag;
 import de.due.ldsa.model.HumanProfile;
@@ -19,22 +20,25 @@ public interface LinkDataReceiver {
 	 * Setting the steam of HumanProfiles
 	 * 
 	 * @param humanProfilesJson
+	 * @throws UnexpectedJsonStringException 
 	 */
-	public void setHumanProfiles(String humanProfilesJson);
+	public void setHumanProfiles(String humanProfilesJson) throws UnexpectedJsonStringException;
 
 	/**
 	 * Setting the steam of Locations
 	 * 
 	 * @param locationsJson
+	 * @throws UnexpectedJsonStringException 
 	 */
-	public void setLocations(String locationsJson);
+	public void setLocations(String locationsJson) throws UnexpectedJsonStringException;
 
 	/**
 	 * Setting the stream of ProfileFeeds
 	 * 
 	 * @param profileFeedsJson
+	 * @throws UnexpectedJsonStringException 
 	 */
-	public void setProfileFeeds(String profileFeedsJson);
+	public void setProfileFeeds(String profileFeedsJson) throws UnexpectedJsonStringException;
 
 	/**
 	 * Setting the Hashtags stream
@@ -47,8 +51,9 @@ public interface LinkDataReceiver {
 	 * Setting the Comments stream
 	 * 
 	 * @param commentsJson
+	 * @throws UnexpectedJsonStringException 
 	 */
-	public void setComments(String commentsJson);
+	public void setComments(String commentsJson) throws UnexpectedJsonStringException;
 
 	/**
 	 * Setting the Media Steam

@@ -4,6 +4,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
+import com.google.gson.annotations.SerializedName;
 
 import de.due.ldsa.ModelUtils;
 import de.due.ldsa.exception.DbException;
@@ -39,20 +40,25 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 	@Column(name = "crawlingTimestamp")
 	OffsetDateTime crawlingTimestamp;
 
+	@SerializedName("id")
 	@PartitionKey
 	long id;
+	@SerializedName("username") 
 	@Column(name = "username")
 	String username;
 	@Column(name = "profileURL")
 	URL profileURL;
+	@SerializedName("full_name")
 	@Column(name = "fullname")
 	String fullname;
+	@SerializedName("bio") 
 	@Column(name = "bio")
 	String bio;
 	@Column(name = "interestIds")
 	ArrayList<Long> interestIds;
 	@Column(name = "userEmail")
 	String userEmail;
+	@SerializedName("website") 
 	@Column(name = "userWebsite")
 	String userWebsite;
 	@Column(name = "profilePhotoMediaId")

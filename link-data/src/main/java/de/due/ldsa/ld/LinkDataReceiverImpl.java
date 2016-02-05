@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.lang.reflect.Type;
 import java.util.List;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 
 import de.due.ldsa.bd.DataProvider;
@@ -12,6 +16,7 @@ import de.due.ldsa.bd.DataSource;
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.ld.exceptions.UndefinedFetchMethodException;
+import de.due.ldsa.ld.exceptions.UnexpectedJsonStringException;
 import de.due.ldsa.model.Comment;
 import de.due.ldsa.model.Hashtag;
 import de.due.ldsa.model.HumanProfile;
@@ -65,7 +70,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		databaseService = DatabaseImpl.getInstance();
 		streamsProviderService = StreamsProviderService.getInstance();
 		saveToDatabase = false;
-		dataSource = new DataProvider();
+		dataSource = DataProvider.getInstance();
 	}
 
 	public static LinkDataReceiverImpl getInstance() {
@@ -76,10 +81,22 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 	}
 
 	@Override
-	public void setHumanProfiles(String humanProfilesJson) {
-		List<HumanProfile> humanProfilesSteam = new Gson().fromJson(humanProfilesJson,
-				new TypeToken<ArrayList<HumanProfile>>() {
-				}.getType());
+	public void setHumanProfiles(String humanProfilesJson) throws UnexpectedJsonStringException {
+		String jsonObject = getJsonData(humanProfilesJson);
+		List<HumanProfile> humanProfilesSteam = new ArrayList<HumanProfile>();
+		try {
+			humanProfilesSteam = new Gson().fromJson(jsonObject, new TypeToken<ArrayList<HumanProfile>>() {
+			}.getType());
+
+		} catch (JsonParseException e) {
+			try {
+				HumanProfile humanProfile = new Gson().fromJson(jsonObject, HumanProfile.class);
+				humanProfilesSteam.add(humanProfile);
+			} catch (Exception ex) {
+				throw new UnexpectedJsonStringException("Json string must be list of HumanProfiles");
+			}
+
+		}
 
 		streamsProviderService.setLastUpdatedHumanProfilesSteam(humanProfilesSteam);
 
@@ -93,10 +110,32 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		dataSource.setSourceData(humanProfilesSteam);
 	}
 
+	private String getJsonData(String humanProfilesJson) {
+		String dataField = "";
+		try {
+			dataField = new JSONObject(humanProfilesJson).getString("data");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return dataField;
+	}
+
 	@Override
-	public void setLocations(String locationsJson) {
-		List<Location> locationsSteam = new Gson().fromJson(locationsJson, new TypeToken<ArrayList<LocationImpl>>() {
-		}.getType());
+	public void setLocations(String locationsJson) throws UnexpectedJsonStringException {
+		String jsonObject = getJsonData(locationsJson);
+
+		List<Location> locationsSteam = new ArrayList<Location>();
+		try {
+			locationsSteam = new Gson().fromJson(jsonObject, new TypeToken<ArrayList<LocationImpl>>() {
+			}.getType());
+		} catch (JsonParseException e) {
+			try {
+				LocationImpl loc = new Gson().fromJson(jsonObject, LocationImpl.class);
+				locationsSteam.add(loc);
+			} catch (JsonParseException ex) {
+				throw new UnexpectedJsonStringException("Json string must be list of Locations");
+			}
+		}
 
 		streamsProviderService.setLastUpdatedLocationsStream(locationsSteam);
 		if (saveToDatabase) {
@@ -109,10 +148,20 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 	}
 
 	@Override
-	public void setProfileFeeds(String profileFeedsJson) {
-		List<ProfileFeed> profileFeedsStream = new Gson().fromJson(profileFeedsJson,
-				new TypeToken<ArrayList<ProfileFeed>>() {
-				}.getType());
+	public void setProfileFeeds(String profileFeedsJson) throws UnexpectedJsonStringException {
+		String jsonObject = getJsonData(profileFeedsJson);
+		List<ProfileFeed> profileFeedsStream = new ArrayList<ProfileFeed>();
+		try {
+			profileFeedsStream = new Gson().fromJson(jsonObject, new TypeToken<ArrayList<ProfileFeed>>() {
+			}.getType());
+		} catch (JsonParseException e) {
+			try {
+				ProfileFeed profileFeed = new Gson().fromJson(jsonObject, ProfileFeed.class);
+				profileFeedsStream.add(profileFeed);
+			} catch (Exception ex) {
+				throw new UnexpectedJsonStringException("Json string must be list of profileFeeds");
+			}
+		}
 
 		streamsProviderService.setLastUpdatedProfileFeedsStream(profileFeedsStream);
 		if (saveToDatabase) {
@@ -140,9 +189,20 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 	}
 
 	@Override
-	public void setComments(String commentsJson) {
-		List<Comment> commentsStream = new Gson().fromJson(commentsJson, new TypeToken<ArrayList<Comment>>() {
-		}.getType());
+	public void setComments(String commentsJson) throws UnexpectedJsonStringException {
+		String jsonObject = getJsonData(commentsJson);
+		List<Comment> commentsStream = new ArrayList<Comment>();
+		try {
+			commentsStream = new Gson().fromJson(commentsJson, new TypeToken<ArrayList<Comment>>() {
+			}.getType());
+		} catch (JsonParseException e) {
+			try {
+				Comment comment = new Gson().fromJson(jsonObject, Comment.class);
+				commentsStream.add(comment);
+			} catch (Exception ex) {
+				throw new UnexpectedJsonStringException("Json string must be list of comments");
+			}
+		}
 
 		streamsProviderService.setLastUpdatedCommentsStream(commentsStream);
 		if (saveToDatabase) {
@@ -242,9 +302,23 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 	}
 
 	@Override
+	@Deprecated
 	public void setData(String json) {
-		// detect data type
-		// redirect to the correct service.
+		try {
+			JSONObject jsonObject = new JSONObject(json);
+			Gson gson = new Gson();
+
+			HumanProfile profile = gson.fromJson(jsonObject.getString("data"), HumanProfile.class);
+			List<HumanProfile> humanProfilesStream = new ArrayList<HumanProfile>();
+			humanProfilesStream.add(profile);
+			dataSource.setSourceData(humanProfilesStream);
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 }
