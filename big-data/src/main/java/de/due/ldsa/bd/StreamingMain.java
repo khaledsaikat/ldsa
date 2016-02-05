@@ -5,7 +5,7 @@ import java.util.List;
 import de.due.ldsa.bd.analysis.CommentSample;
 
 /**
- * An example of running analysis on streaming sample data.
+ * Example of running analysis on streaming sample data.
  * 
  * @author Khaled Hossain
  */

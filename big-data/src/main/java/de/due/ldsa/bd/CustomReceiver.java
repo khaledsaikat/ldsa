@@ -3,6 +3,9 @@ package de.due.ldsa.bd;
 import org.apache.spark.storage.StorageLevel;
 import org.apache.spark.streaming.receiver.Receiver;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * CustomReceiver class that collect data for Streaming. This class is calling
@@ -24,12 +27,18 @@ public class CustomReceiver extends Receiver<List<?>> {
 	 * This method will run every time on start receiving data.
 	 */
 	public void onStart() {
-		new Thread() {
-			@Override
-			public void run() {
-				receive();
-			}
-		}.start();
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		executor.submit(() -> {
+			receive();
+		});
+		try {
+			executor.shutdown();
+			executor.awaitTermination(5, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+			System.err.println("Tasks Interrupted");
+		} finally {
+			executor.shutdownNow();
+		}
 	}
 
 	/**
@@ -37,7 +46,7 @@ public class CustomReceiver extends Receiver<List<?>> {
 	 * get called on stop.
 	 */
 	public void onStop() {
-		//DataProvider.getInstance().empty();
+		// DataProvider.getInstance().empty();
 	}
 
 	/**
@@ -47,7 +56,7 @@ public class CustomReceiver extends Receiver<List<?>> {
 		try {
 			List<?> data = DataProvider.getInstance().getListSourceData();
 			if (data != null) {
-				store(data);			
+				store(data);
 			}
 			restart("Restarting");
 		} catch (Exception e) {
