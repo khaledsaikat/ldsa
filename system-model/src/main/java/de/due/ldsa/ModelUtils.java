@@ -27,9 +27,6 @@ public class ModelUtils {
 
     public static boolean checkValidInterestKinds(List<InterestKind> kinds) {
         //TODO: check for other contradictions
-        if (kinds.contains(InterestKind.ALC_DRINK) && kinds.contains(InterestKind.NON_ALC_DRINK)) {
-            return false;
-        }
-        return true;
+        return !(kinds.contains(InterestKind.ALC_DRINK) && kinds.contains(InterestKind.NON_ALC_DRINK));
     }
 }

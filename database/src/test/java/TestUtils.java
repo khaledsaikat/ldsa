@@ -145,15 +145,20 @@ class TestUtils
         return poolA[rng.nextInt(poolA.length)] + poolB[rng.nextInt(poolB.length)] + new Integer(rng.nextInt(100)).toString();
     }
 
-    public static String getRandomHashtag() {
-        //Googled for trending hashtags to come up with these.
-        String[] pool = new String[]{"#DoItLikeDeMaiziere", "#Weihnachten", "#32c3", "#berlin", "#kalt", "#germany",
-                "#follow", "#instapic", "#deutschland", "#wether", "#enjoy", "#love", "#tourist", "#goodlife", "#traveling",
-                "#blond", "#blonde", "#berlinermauer", "#trip", "#sightseeing", "#winter", "#travel", "#christmastime",
-                "#amazing", "#czechgirl", "#amerika", "#england", "#portugal", "#frankreich", "#heilbronn", "#italien",
-                "#nürnberg", "#brasilien"};
+    //Googled for trending hashtags to come up with these.
+    static String[] hashtagPool = new String[]
+            {"#DoItLikeDeMaiziere", "#Weihnachten", "#32c3", "#berlin", "#kalt", "#germany",
+                    "#follow", "#instapic", "#deutschland", "#wether", "#enjoy", "#love", "#tourist", "#goodlife", "#traveling",
+                    "#blond", "#blonde", "#berlinermauer", "#trip", "#sightseeing", "#winter", "#travel", "#christmastime",
+                    "#amazing", "#czechgirl", "#amerika", "#england", "#portugal", "#frankreich", "#heilbronn", "#italien",
+                    "#nürnberg", "#brasilien"};
 
-        return pool[rng.nextInt(pool.length)];
+    public static String getRandomHashtag() {
+        return hashtagPool[rng.nextInt(hashtagPool.length)];
+    }
+
+    public static String[] getAllHashtags() {
+        return hashtagPool;
     }
 
     public static ArrayList<String> getRandomHashtagArrayList() {

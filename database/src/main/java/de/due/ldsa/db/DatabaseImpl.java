@@ -27,7 +27,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Author: Romina (scrobart)
+ * Provides access to a Cassandra-based Database.
+ * @author scrobart
  */
 public class DatabaseImpl implements Database, Closeable {
 	private static DatabaseImpl singleton;
@@ -43,21 +44,28 @@ public class DatabaseImpl implements Database, Closeable {
 	private Mapper<Comment> commentMapper;
 	private Mapper<Hashtag> hashtagMapper;
 
+	/**
+	 * Closes the connection the Database
+	 *
+	 * @throws IOException Thrown if the close request fails.
+	 */
 	@Override
 	public void close() throws IOException {
 		session.close();
 	}
 
+	/**
+	 * Connects to Cassandra
+	 */
 	private DatabaseImpl() {
 		reconnect();
 	}
 
 	/**
-	 * Call this function, if the connection died for some reason, and you need to establish it again.
+	 * Call this function if the connection died for some reason, and you need to establish it again.
 	 */
 	public void reconnect() {
-		// TODO: don't hardcode "127.0.0.1" - make this loadable from somewhere...
-		Cluster cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
+		Cluster cluster = Cluster.builder().addContactPoint(DatabaseConfiguration.getIP()).build();
 		session = cluster.connect("ldsa");
 
 		CodecRegistry registry = cluster.getConfiguration().getCodecRegistry();
@@ -85,7 +93,10 @@ public class DatabaseImpl implements Database, Closeable {
 		hashtagMapper = null;
 	}
 
-
+	/**
+	 * Provides an instance of this singleton. Allows reading and writing to a Cassandra-based Database
+	 * @return An Instance of this singleton.
+	 */
 	public static Database getInstance() {
 		if (singleton == null) {
 			singleton = new DatabaseImpl();
@@ -105,6 +116,10 @@ public class DatabaseImpl implements Database, Closeable {
 		session.execute(t);
 	}
 
+	/**
+	 * Saves a Social Network into the Database.
+	 * @param sn The social network you want to save.
+	 */
 	public void saveSocialNetwork(SocialNetwork sn) {
 		if (socialNetworkMapper == null) {
 			socialNetworkMapper = new MappingManager(session).mapper(SocialNetwork.class);
@@ -113,12 +128,28 @@ public class DatabaseImpl implements Database, Closeable {
 		socialNetworkMapper.save(sn);
 	}
 
+	/**
+	 * Fetches a social Network
+	 * @param i The ID of the social Network you want to get.
+	 * @return The specified social network.
+	 */
 	public SocialNetwork getSocialNetwork(int i) {
 		if (socialNetworkMapper == null) {
 			socialNetworkMapper = new MappingManager(session).mapper(SocialNetwork.class);
 		}
 
 		return socialNetworkMapper.get(i);
+	}
+
+	/**
+	 * Use this to assign an ID to a new social network you want to save.
+	 *
+	 * @return A free ID
+	 * @throws DbException Thrown if something
+	 */
+	public long getNextSocialNetworkID() throws DbException {
+		ResultSet rs1 = session.execute("SELECT MAX(id) FROM socialNetworks");
+		return rs1.one().getLong(0) + 1;
 	}
 
 	public void saveProfileFeed(ProfileFeed pf) {
@@ -454,7 +485,7 @@ public class DatabaseImpl implements Database, Closeable {
 		Result<HumanProfile> humanProfiles = humanProfileAccessor.getAllFromSocialNetwork(snId);
 		Result<CoopProfile> coopProfiles = coopProfileAccessor.getAllFromSocialNetwork(snId);
 
-		ArrayList<Profile> result = new ArrayList<Profile>();
+		ArrayList<Profile> result = new ArrayList<>();
 		result.addAll(humanProfiles.all());
 		result.addAll(coopProfiles.all());
 		return result;
@@ -537,11 +568,17 @@ public class DatabaseImpl implements Database, Closeable {
 		hashtagMapper.save(hashtag);
 	}
 
+	/**
+	 * Returns a List of all the Hashtag objects in the database.
+	 * @return A List of hashtags.
+	 * @throws DbException Thrown, if something goes wrong while querying the database
+	 */
 	@Override
-	@Deprecated
 	public List<Hashtag> getAllHashtags() throws DbException {
-		//TODO: Implement getAllHashtags()
-		return null;
+		MappingManager mappingManager = new MappingManager(session);
+		HashtagAccessor hashtagAccessor = mappingManager.createAccessor(HashtagAccessor.class);
+
+		return hashtagAccessor.getHashtags().all();
 	}
 
 	/**
@@ -563,6 +600,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return An ArrayList containing all Comments and ProfileFeeds.
 	 * @throws DbException Thrown if something goes wrong while querying the database
 	 */
+	@Override
 	public List<SocialNetworkContent> getHashtagUsedAtList(String hashtag) throws DbException
 	{
 		MappingManager mappingManager = new MappingManager(session);
@@ -582,6 +620,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return Amount of comments and profiles added together.
 	 * @throws DbException Thrown if something goes wrong while querying the database
 	 */
+	@Override
 	public long getHashtagTimesUsed(Hashtag hashtag) throws DbException
 	{
 		return getHashtagUsedAtList(hashtag).size();
@@ -687,116 +726,56 @@ public class DatabaseImpl implements Database, Closeable {
 		throw new DbException("The supplied ID is neither an Location nor an OrganisationPlace");
 	}
 
-	/**
-	 * Checks how often a Profile interacts with a Company Profile
-	 *
-	 * @param cp The company profile you want to analyze.
-	 * @param p  The profile which you need the amount of interactions with.
-	 * @return Amount of all the interactions
-	 * @throws DbException Thrown if something goes wrong while querying the database.
-	 * @implNote In the model, this is supposed to be in "CoopProfile", however, we moved it here so we can avoid a
-	 * circular dependency.
-	 */
-	public int coopProfileCountInteraction(CoopProfile cp, Profile p) throws DbException {
-		int result = 0;
-		if (cp.getFollowedByIds() != null) {
-			if (cp.getFollowedByIds().contains(p.getId())) {
-				//If the person follows the company, it counts as interaction
-				result++;
-			}
-		}
-		if (cp.getProfileFeedIds() != null) {
-			for (Long i : cp.getProfileFeedIds()) {
-				ProfileFeed j = getProfileFeed(i);
-				if (j.getSharerIds() != null) {
-					//If our person shares it, it counts as interaction.
-					if (j.getSharerIds().contains(p.getId()))
-						result++;
-				}
-				if (j.getLikerIds() != null) {
-					//If our person likes it, it counts as interaction.
-					if (j.getLikerIds().contains(p.getId()))
-						result++;
-				}
-				if (j.getCommentIds() != null) {
-					for (Long k : j.getCommentIds()) {
-						result += countInteractions(getComment(k), p);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Counts how often a specific profile appears in a comment tree. This is supposed to be used by coopProfileCountInteraction
-	 *
-	 * @param c The comment tree node you want to analyze
-	 * @param p The profile you need the amount of interactions with.
-	 * @return How often p appears somewhere in c.
-	 */
-	private int countInteractions(Comment c, Profile p) {
-		int result = 0;
-		if (c.getLikerIds() != null) {
-			//If the person likes the comment, it counts as interaction.
-			if (c.getLikerIds().contains(p.getId()))
-				result++;
-		}
-		if (c.getCommentIds() != null) {
-			for (Long i : c.getCommentIds()) {
-				//Count the comments on this comment as well. (Yes, there are things like comment-trees - see reddit.)
-				result += countInteractions(getComment(i), p);
-			}
-		}
-		//If the person actually made this comment, it counts as interaction as well.
-		if (c.getCommenterId() == p.getId())
-			result++;
-
-		return result;
-	}
-
-	public double coopProfileCountAverageInteractionPerFeed(CoopProfile cp, Profile p) throws DbException {
-		throw new DbException("not yet implemented.");
-	}
-
-	public double coopProfileGetAverageInteractionPerFeed(CoopProfile cp) throws DbException {
-		throw new DbException("not yet implemented.");
-	}
-
-	public double coopProfileGetAverageOfActionsPerDay(CoopProfile cp) throws DbException {
-		throw new DbException("not yet implemented.");
-	}
-
+	//@Firas: What are these methods for?
 	@Override
 	public ArrayList<Long> getProfileRelationshipPersons(HumanProfile humanProfile) throws DbException {
-		// TODO Auto-generated method stub
-		return null;
+		return humanProfile.getRelationshipPersons();
 	}
 
 	@Override
 	public ArrayList<Long> getProfileLinkedOtherSocialNetworkProfileIds(HumanProfile humanProfile) throws DbException {
-		// TODO Auto-generated method stub
-		return null;
+		return humanProfile.getLinkedOtherSocialNetworkProfileIds();
 	}
 
 	@Override
 	public ArrayList<Long> getProfileFriendsIds(HumanProfile humanProfile) throws DbException {
-		// TODO Auto-generated method stub
-		return null;
+		return humanProfile.getProfileFeedIds();
 	}
 
 	@Override
 	public ArrayList<Long> getProfileFollowsIds(HumanProfile humanProfile) throws DbException {
-		// TODO Auto-generated method stub
-		return null;
+		return humanProfile.getFollowsIds();
 	}
 
 	@Override
 	public ArrayList<Long> getProfileFollowedByIds(HumanProfile humanProfile) throws DbException {
-		// TODO Auto-generated method stub
-		return null;
+		return humanProfile.getFollowedByIds();
 	}
 
+	public CoopProfile organisationPlaceGetCoopProfile(OrganisationPlace op) throws DbException {
+		return getCoopProfile(op.organisationProfileId);
+	}
 
 	//TODO: Generate mappings upon connection instead of on request (as it is now) - to gain more performance.
+
+	/**
+	 * Saves more than one Content element at a time.
+	 *
+	 * @param set Any Iterable object that iterates over content.
+	 * @throws DbException Thrown if an unknown type of content is encountered or if something goes wrong while querying
+	 *                     the Database.
+	 */
+	@Override
+	public void SaveSet(Iterable<SocialNetworkContent> set) throws DbException {
+		for (SocialNetworkContent snc : set)
+			if (snc instanceof Comment) saveComment((Comment) snc);
+			else if (snc instanceof Media) saveMedia((Media) snc);
+			else if (snc instanceof ProfileFeed) saveProfileFeed((ProfileFeed) snc);
+			else if (snc instanceof HumanProfile) saveHumanProfile((HumanProfile) snc);
+			else if (snc instanceof CoopProfile) saveCoopProfile((CoopProfile) snc);
+			else if (snc instanceof LocationImpl) saveLocation((LocationImpl) snc);
+			else if (snc instanceof OrganisationPlace) saveOrganisationPlace((OrganisationPlace) snc);
+			else if (snc instanceof Event) saveEvent((Event) snc);
+			else throw new DbException("Detected unknown SocialNetworkContent type: " + snc.getClass().getName());
+	}
 }

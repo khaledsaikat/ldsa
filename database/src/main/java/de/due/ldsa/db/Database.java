@@ -109,14 +109,6 @@ public interface Database {
 
 	long locationTimesUsed(Location l);
 
-	int coopProfileCountInteraction(CoopProfile cp, Profile p) throws DbException;
-
-	double coopProfileCountAverageInteractionPerFeed(CoopProfile cp, Profile p) throws DbException;
-
-	double coopProfileGetAverageInteractionPerFeed(CoopProfile cp) throws DbException;
-
-	double coopProfileGetAverageOfActionsPerDay(CoopProfile cp) throws DbException;
-
 	ArrayList<Long> getProfileRelationshipPersons(HumanProfile humanProfile) throws DbException;
 
 	ArrayList<Long> getProfileLinkedOtherSocialNetworkProfileIds(HumanProfile humanProfile) throws DbException;
@@ -126,4 +118,10 @@ public interface Database {
 	ArrayList<Long> getProfileFollowsIds(HumanProfile humanProfile) throws DbException;
 	
 	ArrayList<Long> getProfileFollowedByIds(HumanProfile humanProfile) throws DbException;
+
+	CoopProfile organisationPlaceGetCoopProfile(OrganisationPlace op) throws DbException;
+
+	long getHashtagTimesUsed(Hashtag hashtag) throws DbException;
+
+	void SaveSet(Iterable<SocialNetworkContent> set) throws DbException;
 }

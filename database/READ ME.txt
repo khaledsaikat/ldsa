@@ -1,0 +1,19 @@
+To make this work, Cassandra must be running locally.
+
+
+1. Install Python and Java on your machine.
+
+2. Get Cassandra 3.0.0 from here:
+http://archive.apache.org/dist/cassandra/3.0.0/apache-cassandra-3.0.0-bin.tar.gz
+
+3. Unpack it somewhere
+
+4. In the extracted Cassandra folder there is a bin folder. Make sure that one is in your PATH variable!!!!!
+
+5. Run Cassandra by executing the "cassandra" command. This only works if you've done step 4 correctly.
+
+5. While Cassandra is running, import setup.cql into it by running
+    cqlsh --file=link-data-stream-analysis\database\setup.cql
+
+6. Done!
+

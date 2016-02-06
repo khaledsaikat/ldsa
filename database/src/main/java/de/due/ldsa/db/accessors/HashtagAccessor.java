@@ -4,6 +4,7 @@ import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
 import de.due.ldsa.model.Comment;
+import de.due.ldsa.model.Hashtag;
 import de.due.ldsa.model.ProfileFeed;
 
 /**
@@ -16,4 +17,7 @@ public interface HashtagAccessor {
 
     @Query("SELECT * FROM profileFeeds WHERE hashtags CONTAINS :name")
     Result<ProfileFeed> getProfileFeedsUsedIn(String s);
+
+    @Query("SELECT * FROM hashtags")
+    Result<Hashtag> getHashtags();
 }

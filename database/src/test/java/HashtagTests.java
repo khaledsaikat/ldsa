@@ -53,4 +53,28 @@ public class HashtagTests {
         }
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    public void testGetAllHashtags() throws Exception {
+        Database db = DatabaseImpl.getInstance();
+        db.truncateTable("hashtags");
+
+        String[] demoNames = TestUtils.getAllHashtags();
+        Hashtag[] first = new Hashtag[demoNames.length];
+        for (int i = 0; i < demoNames.length; i++) {
+            first[i] = new Hashtag(demoNames[i]);
+            db.saveHashtag(first[i]);
+        }
+
+        List<Hashtag> secondRaw = db.getAllHashtags();
+
+        //We can't compare the array directly, because a Cassandra query can't guarantee the correct order.
+        //Assert.assertArrayEquals(first,secondRaw.toArray());
+
+        for (int i = 0; i < demoNames.length; i++) {
+            if (!secondRaw.contains(first[i])) {
+                Assert.fail("Could not find " + first[i] + " in the second list.");
+            }
+        }
+    }
 }

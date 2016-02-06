@@ -53,6 +53,13 @@ public class Hashtag implements Serializable {
 	}
 
 	@Override
+	public String toString() {
+		return "Hashtag{" +
+				"title='" + title + '\'' +
+				'}';
+	}
+
+	@Override
 	public int hashCode() {
 		return title.hashCode();
 	}
