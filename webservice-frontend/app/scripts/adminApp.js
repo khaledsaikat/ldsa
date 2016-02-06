@@ -744,3 +744,12 @@ function _init() {
     });
   };
 }(jQuery));
+
+/*
+ * Sidebar Functionality
+ */
+$('.sidebarbutton').on('click', function(ev){
+	$('.sidebarbutton').parent().removeClass("active");
+	$('.treeview').removeClass("active");
+	$(ev.currentTarget).parent().addClass("active");
+});
