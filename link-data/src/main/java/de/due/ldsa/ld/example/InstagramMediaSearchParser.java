@@ -29,10 +29,10 @@ public class InstagramMediaSearchParser implements Parser<ArrayList<SocialNetwor
 		ArrayList<SocialNetworkContent> contentList = new ArrayList<>();
 		
 		for (int i = 0; i < jsonArray.length(); i++) {
-			json = jsonArray.getJSONObject(i);
-			Media media = InstagramObjectParser.parseMedia(json);
-			Profile creator = InstagramObjectParser.parseProfile(json.getJSONObject("user"));
-			ProfileFeed profileFeed = InstagramObjectParser.parseProfileFeed(json);
+			JSONObject elementJson = jsonArray.getJSONObject(i);
+			Media media = InstagramObjectParser.parseMedia(elementJson);
+			Profile creator = InstagramObjectParser.parseProfile(elementJson.getJSONObject("user"));
+			ProfileFeed profileFeed = InstagramObjectParser.parseProfileFeed(elementJson);
 			
 			profileFeed.setMediaId((int) media.getId());
 			ArrayList<Long> profileFeedIdList = new ArrayList<>();
