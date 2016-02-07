@@ -2,13 +2,8 @@ package de.due.ldsa.db;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.mapping.MappingManager;
-import com.datastax.driver.mapping.Result;
-import de.due.ldsa.db.accessors.*;
 import de.due.ldsa.model.*;
 
 public interface Database {
@@ -99,7 +94,7 @@ public interface Database {
 	 * Saves an Organisation Place into the Database.
 	 * @param op The Organisation Place you want to save
 	 */
-	void saveOrganisationPlace(OrganisationPlace op) throws DbException;
+	void saveCoopLocation(CoopLocation op) throws DbException;
 
 	/**
 	 * Fetches an Organisation Place into the Database
@@ -107,7 +102,7 @@ public interface Database {
 	 * @param id The ID of the Organisation Place you want to fetch.
 	 * @return The specified organisation place
 	 */
-	OrganisationPlace getOrganisationPlace(long id) throws DbException;
+	CoopLocation getCoopPlace(long id) throws DbException;
 
 	/**
 	 * Writes a Company Profile to the database.
@@ -203,7 +198,7 @@ public interface Database {
 
 	/**
 	 * Use this to figure out an empty ID for either an regular Location or an
-	 * OrganisationPlace. Location and Organisation place share the same Number
+	 * CoopLocation. Location and Organisation place share the same Number
 	 * Sequence.
 	 *
 	 * @return An ID
@@ -236,7 +231,7 @@ public interface Database {
 	 * @param id The ID of a Location you want to test.
 	 * @return True if it is an Organisation Place, false if it is a Location
 	 */
-	boolean isOrganisationPlace(long id) throws DbException;
+	boolean isCoopPlace(long id) throws DbException;
 
 	/**
 	 * @return An ArrayList containing all the human profiles
@@ -352,7 +347,7 @@ public interface Database {
 	long getHashtagTimesUsed(Hashtag hashtag) throws DbException;
 
 	/**
-	 * Use this to figure out an empty ID for either an HumanProfile, an CoopProfile, an OrganisationPlace, an Location
+	 * Use this to figure out an empty ID for either an HumanProfile, an CoopProfile, an CoopLocation, an Location
 	 * or an Event.
 	 * @return An ID as Long
 	 * @throws DbException Thrown, if something goes wrong while querying the database.
@@ -384,10 +379,10 @@ public interface Database {
 	long locationTimesUsed(Location l) throws DbException;
 
 	/**
-	 * Determines whether an Location ID correspondends to an Location or an OrganisationPlace and gets the object.
+	 * Determines whether an Location ID correspondends to an Location or an CoopLocation and gets the object.
 	 *
-	 * @param l The ID of an Location or an OrganisationPlace
-	 * @return Location or an OrganisationPlace
+	 * @param l The ID of an Location or an CoopLocation
+	 * @return Location or an CoopLocation
 	 */
 	Location autoGetLocation(long l) throws DbException;
 
@@ -405,10 +400,10 @@ public interface Database {
 	/**
 	 * Returns the Organisation Place of a CoopProfile
 	 * @param op The Organisation Place form
-	 * @return The CoopProfile associated to that OrganisationPlace
+	 * @return The CoopProfile associated to that CoopLocation
 	 * @throws DbException
 	 */
-	CoopProfile organisationPlaceGetCoopProfile(OrganisationPlace op) throws DbException;
+	CoopProfile coopLocationGetCoopProfile(CoopLocation op) throws DbException;
 
 	/**
 	 * Saves more than one Content element at a time.

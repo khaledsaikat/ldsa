@@ -99,14 +99,14 @@ public class DatabaseTests
     }
 
     @Test
-    public void testSaveOrganisationPlace() throws Exception {
+    public void testSaveCoopLocation() throws Exception {
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("socialNetworks");
-        db.truncateTable("organisationPlaces");
+        db.truncateTable("coopLocations");
 
         SocialNetwork sn = TestUtils.getDummySocialNetwork(db);
 
-        OrganisationPlace op = new OrganisationPlace();
+        CoopLocation op = new CoopLocation();
         op.setCity(TestUtils.getRandomCityName());
         op.setContentMeta(TestUtils.getRandomDateTime(), TestUtils.getRandomDateTime(), sn);
         op.setCountry(TestUtils.getRandomCountry());
@@ -116,9 +116,9 @@ public class DatabaseTests
         op.setOrganisationProfileId(3);
         op.setPosition(TestUtils.getRandomPosition());
 
-        db.saveOrganisationPlace(op);
+        db.saveCoopLocation(op);
 
-        OrganisationPlace second = db.getOrganisationPlace(1);
+        CoopLocation second = db.getCoopPlace(1);
 
         Assert.assertEquals(op, second);
     }
@@ -282,7 +282,7 @@ public class DatabaseTests
         db.truncateTable("coopProfiles");
         db.truncateTable("locations");
         db.truncateTable("events");
-        db.truncateTable("organisationPlaces");
+        db.truncateTable("coopLocations");
 
         long nId = db.getNextProfileId();
         if (nId != 1) Assert.fail("First ID should be 1 if there is nothing in the database.");

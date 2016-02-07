@@ -108,7 +108,7 @@ public class SocialNetworkTests {
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("events");
         db.truncateTable("locations");
-        db.truncateTable("organisationPlaces");
+        db.truncateTable("coopLocations");
         db.truncateTable("coopProfiles");
         db.truncateTable("humanProfiles");
         db.truncateTable("profileFeeds");
@@ -133,11 +133,11 @@ public class SocialNetworkTests {
             db.saveLocation(li);
 
             //
-            OrganisationPlace op = new OrganisationPlace();
+            CoopLocation op = new CoopLocation();
             op.setId(db.getNextLocationId());
             op.setSocialNetworkId(TestUtils.rng.nextInt(10));
             if (op.getSocialNetworkId() == targetSn) expected++;
-            db.saveOrganisationPlace(op);
+            db.saveCoopLocation(op);
 
             //
             HumanProfile hp = new HumanProfile();

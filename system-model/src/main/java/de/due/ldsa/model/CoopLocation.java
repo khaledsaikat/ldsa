@@ -16,10 +16,14 @@ import java.util.ArrayList;
  *
  */
 
+//This was once called OrganisationPlace, but as suggested in
+// http://jira.es.uni-due.de:8080/browse/BDW-37?focusedCommentId=10937&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-10937
+//we renamed it.
+
 // We know this should extend LocationImpl, but we can't do that, because the
 // Cassandra driver does not support inheritance.
-@Table(keyspace = "ldsa", name = "organisationPlaces")
-public class OrganisationPlace extends SocialNetworkContentImpl implements Location, Serializable {
+@Table(keyspace = "ldsa", name = "coopLocations")
+public class CoopLocation extends SocialNetworkContentImpl implements Location, Serializable {
 	/*
 	 * This needs to be put right here, because Datastax' Cassandra mapper does
 	 * not support inheritance. If you need access to these fields use the
@@ -197,10 +201,10 @@ public class OrganisationPlace extends SocialNetworkContentImpl implements Locat
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof OrganisationPlace))
+		if (!(o instanceof CoopLocation))
 			return false;
 
-		OrganisationPlace that = (OrganisationPlace) o;
+		CoopLocation that = (CoopLocation) o;
 
 		if (socialNetworkId != that.socialNetworkId)
 			return false;

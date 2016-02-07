@@ -6,24 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.due.ldsa.model.*;
 import org.junit.Test;
 
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DbException;
 import de.due.ldsa.ld.StoreInDatabaseAction;
-import de.due.ldsa.model.Comment;
-import de.due.ldsa.model.CoopProfile;
-import de.due.ldsa.model.Event;
-import de.due.ldsa.model.Hashtag;
-import de.due.ldsa.model.HumanProfile;
-import de.due.ldsa.model.Location;
-import de.due.ldsa.model.LocationImpl;
-import de.due.ldsa.model.Media;
-import de.due.ldsa.model.OrganisationPlace;
-import de.due.ldsa.model.Profile;
-import de.due.ldsa.model.ProfileFeed;
-import de.due.ldsa.model.SocialNetwork;
-import de.due.ldsa.model.SocialNetworkContent;
+import de.due.ldsa.model.CoopLocation;
 
 /**Testcases for {@link StoreInDatabaseAction}.
  * Has one test with single objects and one test with a list.
@@ -41,7 +30,7 @@ public class StoreInDatabaseActionTest {
 		private HumanProfile storedHumanProfile;
 		private LocationImpl storedLocationImpl;
 		private Media storedMedia;
-		private OrganisationPlace storedOrganisationPlace;
+		private CoopLocation storedOrganisationPlace;
 		private ProfileFeed storedProfileFeed;
 		private SocialNetwork storedSocialNetwork;
 
@@ -95,13 +84,13 @@ public class StoreInDatabaseActionTest {
 		}
 
 		@Override
-		public void saveOrganisationPlace(OrganisationPlace op) throws DbException {
+		public void saveCoopLocation(CoopLocation op) throws DbException {
 			storedOrganisationPlace = op;
 		}
 
 		@Override
-		public OrganisationPlace getOrganisationPlace(long id) {
-			fail("getOrganisationPlace of Database not supposed to be called");
+		public CoopLocation getCoopPlace(long id) {
+			fail("getCoopPlace of Database not supposed to be called");
 			return storedOrganisationPlace;
 		}
 
@@ -238,8 +227,8 @@ public class StoreInDatabaseActionTest {
 		}
 
 		@Override
-		public boolean isOrganisationPlace(long id) {
-			fail("isOrganisationPlace of Database not supposed to be called");
+		public boolean isCoopPlace(long id) {
+			fail("isCoopPlace of Database not supposed to be called");
 			return false;
 		}
 
@@ -374,8 +363,8 @@ public class StoreInDatabaseActionTest {
 		}
 
 		@Override
-		public CoopProfile organisationPlaceGetCoopProfile(OrganisationPlace op) throws DbException {
-			fail("organisationPlaceGetCoopProfile of Database not supposed to be called");
+		public CoopProfile coopLocationGetCoopProfile(CoopLocation op) throws DbException {
+			fail("coopLocationGetCoopProfile of Database not supposed to be called");
 			return null;
 		}
 
@@ -408,7 +397,7 @@ public class StoreInDatabaseActionTest {
 			return storedMedia;
 		}
 
-		public OrganisationPlace getStoredOrganisationPlace() {
+		public CoopLocation getStoredOrganisationPlace() {
 			return storedOrganisationPlace;
 		}
 
@@ -456,7 +445,7 @@ public class StoreInDatabaseActionTest {
 		storeInDatabaseAction.onAction(media);
 		assertEquals(media, mockDatabase.getStoredMedia());
 		
-		OrganisationPlace organisationPlace = new OrganisationPlace();
+		CoopLocation organisationPlace = new CoopLocation();
 		storeInDatabaseAction.onAction(organisationPlace);
 		assertEquals(organisationPlace, mockDatabase.getStoredOrganisationPlace());
 		
@@ -482,7 +471,7 @@ public class StoreInDatabaseActionTest {
 		contentList.add(new HumanProfile());
 		contentList.add(new LocationImpl());
 		contentList.add(new Media());
-		contentList.add(new OrganisationPlace());
+		contentList.add(new CoopLocation());
 		contentList.add(new ProfileFeed());
 		
 		storeInDatabaseAction.onAction(contentList);

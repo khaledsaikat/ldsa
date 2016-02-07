@@ -5,9 +5,7 @@ import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Param;
 import com.datastax.driver.mapping.annotations.Query;
 import de.due.ldsa.model.Event;
-import de.due.ldsa.model.Location;
 import de.due.ldsa.model.LocationImpl;
-import de.due.ldsa.model.OrganisationPlace;
 
 /**
  * @author scrobart

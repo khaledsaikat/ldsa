@@ -66,7 +66,7 @@ public class AccessorTests {
     public void testLocationAccessor() throws Exception {
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("locations");
-        db.truncateTable("organisationPlaces");
+        db.truncateTable("coopLocations");
 
         LocationImpl l1 = new LocationImpl();
         l1.setId(db.getNextLocationId());
@@ -78,15 +78,15 @@ public class AccessorTests {
         l2.setName(TestUtils.getRandomLocationName());
         db.saveLocation(l2);
 
-        OrganisationPlace op1 = new OrganisationPlace();
+        CoopLocation op1 = new CoopLocation();
         op1.setId(db.getNextLocationId());
         op1.setName(TestUtils.getRandomLocationName());
-        db.saveOrganisationPlace(op1);
+        db.saveCoopLocation(op1);
 
-        OrganisationPlace op2 = new OrganisationPlace();
+        CoopLocation op2 = new CoopLocation();
         op2.setId(db.getNextLocationId());
         op2.setName(TestUtils.getRandomLocationName());
-        db.saveOrganisationPlace(op2);
+        db.saveCoopLocation(op2);
 
         int result = 0;
         for (Location l : db.getAllLocations()) {

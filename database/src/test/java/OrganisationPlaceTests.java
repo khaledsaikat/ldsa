@@ -1,7 +1,7 @@
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
+import de.due.ldsa.model.CoopLocation;
 import de.due.ldsa.model.CoopProfile;
-import de.due.ldsa.model.OrganisationPlace;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -17,7 +17,7 @@ public class OrganisationPlaceTests {
     public void testGetCoopProfile() throws Exception {
         Database db = DatabaseImpl.getInstance();
         db.truncateTable("coopProfiles");
-        db.truncateTable("organisationPlaces");
+        db.truncateTable("coopLocations");
 
         CoopProfile cp = new CoopProfile();
         cp.setFullname(TestUtils.getRandomCompanyName());
@@ -25,18 +25,18 @@ public class OrganisationPlaceTests {
         cp.setProfileURL(new URL("http://127.0.0.1/what"));
         db.saveCoopProfile(cp);
 
-        OrganisationPlace op = new OrganisationPlace();
+        CoopLocation op = new CoopLocation();
         op.setName(TestUtils.getRandomCompanyName());
         op.setId(db.getNextLocationId());
         op.setOrganisationProfileId(cp.getId());
-        db.saveOrganisationPlace(op);
+        db.saveCoopLocation(op);
 
-        OrganisationPlace op2 = db.getOrganisationPlace(op.getId());
+        CoopLocation op2 = db.getCoopPlace(op.getId());
         if (!op2.equals(op)) {
-            Assert.fail("Deserialisation of OrganisationPlace failed.");
+            Assert.fail("Deserialisation of CoopLocation failed.");
         }
 
-        CoopProfile cp2 = db.organisationPlaceGetCoopProfile(op2);
+        CoopProfile cp2 = db.coopLocationGetCoopProfile(op2);
         Assert.assertEquals(cp, cp2);
     }
 }

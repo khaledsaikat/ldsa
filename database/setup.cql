@@ -59,7 +59,7 @@ CREATE TABLE locations (
     interestKinds LIST<INT>
 );
 
-CREATE TABLE organisationPlaces (
+CREATE TABLE coopLocations (
     id BIGINT PRIMARY KEY,
     snId INT,
     contentTimestamp TIMESTAMP,
@@ -170,7 +170,7 @@ CREATE INDEX profileFeed_socialNetwork ON profilefeeds (snid);
 CREATE INDEX media_socialNetwork ON media (snid);
 CREATE INDEX comment_socialNetwork ON comments (snid);
 CREATE INDEX location_socialNetwork ON locations (snid);
-CREATE INDEX organisationPlace_socialNetwork ON organisationplaces (snid);
+CREATE INDEX coopLocations_socialNetwork ON coopLocations (snid);
 CREATE INDEX event_socialNetwork ON events (snid);
 
 CREATE INDEX profileFeeds_hashtagIndex ON profilefeeds (hashtags);

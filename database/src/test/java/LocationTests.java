@@ -1,9 +1,9 @@
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
+import de.due.ldsa.model.CoopLocation;
 import de.due.ldsa.model.Event;
 import de.due.ldsa.model.Location;
 import de.due.ldsa.model.LocationImpl;
-import de.due.ldsa.model.OrganisationPlace;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -25,7 +25,7 @@ public class LocationTests {
         Random rng = TestUtils.rng;
         db.truncateTable("events");
         db.truncateTable("locations");
-        db.truncateTable("organisationPlaces");
+        db.truncateTable("coopLocations");
 
         for (int i = 0; i < locationCount; i++) {
             LocationImpl li = new LocationImpl();
@@ -33,10 +33,10 @@ public class LocationTests {
             li.setName(TestUtils.getRandomCityName());
             db.saveLocation(li);
 
-            OrganisationPlace op = new OrganisationPlace();
+            CoopLocation op = new CoopLocation();
             op.setId(db.getNextLocationId());
             op.setName(TestUtils.getRandomLocationName());
-            db.saveOrganisationPlace(op);
+            db.saveCoopLocation(op);
 
             locationIds[i * 2 + 0] = li.getId();
             locationIds[i * 2 + 1] = op.getId();

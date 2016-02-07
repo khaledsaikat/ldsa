@@ -22,9 +22,7 @@ import de.due.ldsa.model.*;
 import org.apache.log4j.Logger;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -38,7 +36,7 @@ public class DatabaseImpl implements Database, Closeable {
 	private Mapper<ProfileFeed> profileFeedMapper;
 	private Mapper<Media> mediaMapper;
 	private Mapper<LocationImpl> locationMapper;
-	private Mapper<OrganisationPlace> organisationPlaceMapper;
+	private Mapper<CoopLocation> coopLocationMapper;
 	private Mapper<CoopProfile> coopProfileMapper;
 	private Mapper<HumanProfile> humanProfileMapper;
 	private Mapper<Event> eventMapper;
@@ -50,7 +48,7 @@ public class DatabaseImpl implements Database, Closeable {
 	private HumanProfileAccessor humanProfileAccessor;
 	private CommentAccessor commentAccessor;
 	private LocationAccessor locationAccessor;
-	private OrganisationPlaceAccessor organisationPlaceAccessor;
+	private CoopLocationAccessor coopLocationAccessor;
 	private ProfileFeedAccessor profileFeedAccessor;
 	private MediaAccessor mediaAccessor;
 	private CoopProfileAccessor coopProfileAccessor;
@@ -103,7 +101,7 @@ public class DatabaseImpl implements Database, Closeable {
 		profileFeedMapper = new MappingManager(session).mapper(ProfileFeed.class);
 		mediaMapper = new MappingManager(session).mapper(Media.class);
 		locationMapper = new MappingManager(session).mapper(LocationImpl.class);
-		organisationPlaceMapper = new MappingManager(session).mapper(OrganisationPlace.class);
+		coopLocationMapper = new MappingManager(session).mapper(CoopLocation.class);
 		coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
 		humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
 		eventMapper = new MappingManager(session).mapper(Event.class);
@@ -116,7 +114,7 @@ public class DatabaseImpl implements Database, Closeable {
 		humanProfileAccessor = manager.createAccessor(HumanProfileAccessor.class);
 		commentAccessor = manager.createAccessor(CommentAccessor.class);
 		locationAccessor = manager.createAccessor(LocationAccessor.class);
-		organisationPlaceAccessor = manager.createAccessor(OrganisationPlaceAccessor.class);
+		coopLocationAccessor = manager.createAccessor(CoopLocationAccessor.class);
 		profileFeedAccessor = manager.createAccessor(ProfileFeedAccessor.class);
 		mediaAccessor = manager.createAccessor(MediaAccessor.class);
 		coopProfileAccessor = manager.createAccessor(CoopProfileAccessor.class);
@@ -234,8 +232,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * Saves an Organisation Place into the Database.
 	 * @param op The Organisation Place you want to save
 	 */
-	public void saveOrganisationPlace(OrganisationPlace op) {
-		organisationPlaceMapper.save(op);
+	public void saveCoopLocation(CoopLocation op) {
+		coopLocationMapper.save(op);
 	}
 
 	/**
@@ -243,8 +241,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @param id The ID of the Organisation Place you want to fetch.
 	 * @return The specified organisation place
 	 */
-	public OrganisationPlace getOrganisationPlace(long id) {
-		return organisationPlaceMapper.get(id);
+	public CoopLocation getCoopPlace(long id) {
+		return coopLocationMapper.get(id);
 	}
 
 	/**
@@ -354,7 +352,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException
 	 */
 	public long getNextProfileId() {
-		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
+		//HumanProfile, CoopProfile, CoopLocation, Location & Event now share the same Number Sequence, to satisfy
 		//SocialNetworkInterest.
 		return getNextSocialNetworkInterestId();
 	}
@@ -393,7 +391,7 @@ public class DatabaseImpl implements Database, Closeable {
 
 	/**
 	 * Use this to figure out an empty ID for either an regular Location or an
-	 * OrganisationPlace. Location and Organisation place share the same Number
+	 * CoopLocation. Location and Organisation place share the same Number
 	 * Sequence.
 	 *
 	 * @return An ID
@@ -401,7 +399,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 *             Thrown if querying the ID from the Database fails.
 	 */
 	public long getNextLocationId() {
-		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
+		//HumanProfile, CoopProfile, CoopLocation, Location & Event now share the same Number Sequence, to satisfy
 		//SocialNetworkInterest.
 		return getNextSocialNetworkInterestId();
 	}
@@ -444,8 +442,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @param id The ID of a Location you want to test.
 	 * @return True if it is an Organisation Place, false if it is a Location
 	 */
-	public boolean isOrganisationPlace(long id) throws DbException {
-		OrganisationPlace op = getOrganisationPlace(id);
+	public boolean isCoopPlace(long id) throws DbException {
+		CoopLocation op = getCoopPlace(id);
 		if (op != null)
 			return true;
 
@@ -454,7 +452,7 @@ public class DatabaseImpl implements Database, Closeable {
 			return false;
 
 		throw new DbException(
-				"The specified ID is neither a Location nor an OrganisationPlace:" + Long.toString(id));
+				"The specified ID is neither a Location nor an CoopLocation:" + Long.toString(id));
 	}
 
 	/**
@@ -485,17 +483,17 @@ public class DatabaseImpl implements Database, Closeable {
 	/**
 	 * Gets all the Locations from the Database.
 	 *
-	 * @return An ArrayList containing all the Locations and OrganisationPlaces in the Database
+	 * @return An ArrayList containing all the Locations and CoopLoactions in the Database
 	 * @throws DbException Thrown, if something goes wrong when querying the Database
 	 */
 	@Override
 	public List<Location> getAllLocations() {
 		Result<LocationImpl> locations = locationAccessor.getAll();
-		Result<OrganisationPlace> organisationPlaces = organisationPlaceAccessor.getAll();
+		Result<CoopLocation> coopLocations = coopLocationAccessor.getAll();
 
 		List<Location> result = new ArrayList<>();
 		result.addAll(locations.all());
-		result.addAll(organisationPlaces.all());
+		result.addAll(coopLocations.all());
 		return result;
 	}
 
@@ -576,7 +574,7 @@ public class DatabaseImpl implements Database, Closeable {
 		Result<ProfileFeed> profileFeeds = profileFeedAccessor.getAllFromSocialNetwork(snId);
 		Result<HumanProfile> humanProfiles = humanProfileAccessor.getAllFromSocialNetwork(snId);
 		Result<CoopProfile> coopProfiles = coopProfileAccessor.getAllFromSocialNetwork(snId);
-		Result<OrganisationPlace> organisationPlaces = organisationPlaceAccessor.getAllFromSocialNetwork(snId);
+		Result<CoopLocation> coopLocations = coopLocationAccessor.getAllFromSocialNetwork(snId);
 		Result<LocationImpl> locations = locationAccessor.getAllFromSocialNetwork(snId);
 		Result<Event> events = eventAccessor.getAllFromSocialNetwork(snId);
 
@@ -586,7 +584,7 @@ public class DatabaseImpl implements Database, Closeable {
 		result.addAll(profileFeeds.all());
 		result.addAll(humanProfiles.all());
 		result.addAll(coopProfiles.all());
-		result.addAll(organisationPlaces.all());
+		result.addAll(coopLocations.all());
 		result.addAll(locations.all());
 		result.addAll(events.all());
 
@@ -598,7 +596,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return A free ID
 	 */
 	public long getNextEventId() {
-		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
+		//HumanProfile, CoopProfile, CoopLocation, Location & Event now share the same Number Sequence, to satisfy
 		//SocialNetworkInterest.
 		return getNextSocialNetworkInterestId();
 	}
@@ -668,7 +666,7 @@ public class DatabaseImpl implements Database, Closeable {
 	}
 
 	/**
-	 * Use this to figure out an empty ID for either an HumanProfile, an CoopProfile, an OrganisationPlace, an Location
+	 * Use this to figure out an empty ID for either an HumanProfile, an CoopProfile, an CoopLocation, an Location
 	 * or an Event.
 	 * @return An ID as Long
 	 * @throws DbException Thrown, if something goes wrong while querying the database.
@@ -690,7 +688,7 @@ public class DatabaseImpl implements Database, Closeable {
 		ResultSet rs3 = session.execute("SELECT MAX(id) FROM locations");
 		long amount3 = rs3.one().getLong(0);
 
-		ResultSet rs4 = session.execute("SELECT MAX(id) FROM organisationPlaces");
+		ResultSet rs4 = session.execute("SELECT MAX(id) FROM coopLocations");
 		long amount4 = rs4.one().getLong(0);
 
 		ResultSet rs5 = session.execute("SELECT MAX(id) FROM events");
@@ -746,19 +744,19 @@ public class DatabaseImpl implements Database, Closeable {
 	}
 
 	/**
-	 * Determines whether an Location ID correspondends to an Location or an OrganisationPlace and gets the object.
+	 * Determines whether an Location ID correspondends to an Location or an CoopLocation and gets the object.
 	 *
-	 * @param l The ID of an Location or an OrganisationPlace
-	 * @return Location or an OrganisationPlace
+	 * @param l The ID of an Location or an CoopLocation
+	 * @return Location or an CoopLocation
 	 */
 	public Location autoGetLocation(long l) throws DbException {
 		Location loc = getLocation(l);
 		if (loc != null) return loc;
 
-		OrganisationPlace op = getOrganisationPlace(l);
+		CoopLocation op = getCoopPlace(l);
 		if (op != null) return op;
 
-		throw new DbException("The supplied ID is neither an Location nor an OrganisationPlace");
+		throw new DbException("The supplied ID is neither an Location nor an CoopLocation");
 	}
 
 	//@Firas: What are these methods for?
@@ -791,10 +789,10 @@ public class DatabaseImpl implements Database, Closeable {
 	 * Returns the Organisation Place of a CoopProfile
 	 *
 	 * @param op The Organisation Place form
-	 * @return The CoopProfile associated to that OrganisationPlace
+	 * @return The CoopProfile associated to that CoopLocation
 	 * @throws DbException
 	 */
-	public CoopProfile organisationPlaceGetCoopProfile(OrganisationPlace op) {
+	public CoopProfile coopLocationGetCoopProfile(CoopLocation op) {
 		return getCoopProfile(op.organisationProfileId);
 	}
 
@@ -814,7 +812,7 @@ public class DatabaseImpl implements Database, Closeable {
 			else if (snc instanceof HumanProfile) saveHumanProfile((HumanProfile) snc);
 			else if (snc instanceof CoopProfile) saveCoopProfile((CoopProfile) snc);
 			else if (snc instanceof LocationImpl) saveLocation((LocationImpl) snc);
-			else if (snc instanceof OrganisationPlace) saveOrganisationPlace((OrganisationPlace) snc);
+			else if (snc instanceof CoopLocation) saveCoopLocation((CoopLocation) snc);
 			else if (snc instanceof Event) saveEvent((Event) snc);
 			else throw new DbException("Detected unknown SocialNetworkContent type: " + snc.getClass().getName());
 	}

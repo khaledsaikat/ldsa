@@ -3,15 +3,8 @@ package de.due.ldsa.ld;
 import java.util.List;
 
 import de.due.ldsa.db.Database;
-import de.due.ldsa.model.Comment;
-import de.due.ldsa.model.CoopProfile;
-import de.due.ldsa.model.Hashtag;
-import de.due.ldsa.model.HumanProfile;
-import de.due.ldsa.model.LocationImpl;
-import de.due.ldsa.model.Media;
-import de.due.ldsa.model.OrganisationPlace;
-import de.due.ldsa.model.ProfileFeed;
-import de.due.ldsa.model.SocialNetwork;
+import de.due.ldsa.model.*;
+import de.due.ldsa.model.CoopLocation;
 
 /**Stores Objects of certain supported types in the Database.
  * 
@@ -56,8 +49,8 @@ public class StoreInDatabaseAction<T> implements Action<T>{
 			database.saveLocation((LocationImpl) t);	
 		}else if(t instanceof Media){
 			database.saveMedia((Media) t);
-		}else if(t instanceof OrganisationPlace){
-			database.saveOrganisationPlace((OrganisationPlace) t);
+		}else if(t instanceof CoopLocation){
+			database.saveCoopLocation((CoopLocation) t);
 		}else if(t instanceof ProfileFeed){
 			database.saveProfileFeed((ProfileFeed) t);
 		}else if(t instanceof SocialNetwork){

@@ -11,7 +11,7 @@ import de.due.ldsa.exception.ModelException;
  */
 
 // We turned Location into an interface and had LocationImpl and
-// OrganisationPlace implement it, to get around the
+// CoopLocation implement it, to get around the
 // limitation (the lack of inheritance) of the Cassandra driver.
 public interface Location extends SocialNetworkContent, Serializable, SocialNetworkInterest {
 	// ------------------------------------------------------------------------------------------------------------------
