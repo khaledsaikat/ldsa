@@ -23,7 +23,9 @@ public class ContentMeta implements Serializable
         if (sourceNetworkId != that.sourceNetworkId) return false;
         if (contentTimestamp != null ? !contentTimestamp.equals(that.contentTimestamp) : that.contentTimestamp != null)
             return false;
-        return !(crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null);
+        if (!(crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp) : that.crawlingTimestamp != null))
+            return true;
+        else return false;
 
     }
 

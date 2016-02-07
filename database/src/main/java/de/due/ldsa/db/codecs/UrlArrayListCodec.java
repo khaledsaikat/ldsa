@@ -18,16 +18,17 @@ import java.util.List;
  * Author: Romina (scrobart)
  *
  * Used to save an ArrayList<URL> into Cassandra. (used in ProfileFeed)
+ * Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class UrlArrayListCodec extends TypeCodec<ArrayList<URL>> {
     public UrlArrayListCodec() {
-        super(DataType.list(DataType.varchar()), (TypeToken<ArrayList<URL>>) new TypeToken<ArrayList<URL>>() {
+        super(DataType.list(DataType.varchar()), new TypeToken<ArrayList<URL>>() {
         });
     }
 
     @Override
     public ByteBuffer serialize(ArrayList<URL> value, ProtocolVersion protocolVersion) throws InvalidTypeException {
-        ArrayList<String> trueValue = new ArrayList<String>();
+        ArrayList<String> trueValue = new ArrayList<>();
         if (value != null) {
             for (URL url : value) {
                 trueValue.add(url.toString());
@@ -39,7 +40,7 @@ public class UrlArrayListCodec extends TypeCodec<ArrayList<URL>> {
     @Override
     public ArrayList<URL> deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         List<String> temp = TypeCodec.list(TypeCodec.varchar()).deserialize(bytes, protocolVersion);
-        ArrayList<URL> trueValue = new ArrayList<URL>();
+        ArrayList<URL> trueValue = new ArrayList<>();
 
         for (String i : temp) {
             try {

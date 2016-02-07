@@ -5,7 +5,7 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
 import de.due.ldsa.ModelUtils;
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -70,11 +70,11 @@ public class Event extends SocialNetworkContentImpl implements Serializable, Soc
 		this.crawlingTimestamp = crawlingTimestamp;
 	}
 
-	public OffsetDateTime getContentTimestamp() throws DbException {
+	public OffsetDateTime getContentTimestamp() throws ModelException {
 		return contentTimestamp;
 	}
 
-	public OffsetDateTime getCrawlingTimestamp() throws DbException {
+	public OffsetDateTime getCrawlingTimestamp() throws ModelException {
 		return crawlingTimestamp;
 	}
 
@@ -140,7 +140,7 @@ public class Event extends SocialNetworkContentImpl implements Serializable, Soc
 	// COMPLEX METHODS
 	// ------------------------------------------------------------------------------------------------------------------
 
-	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
 		this.socialNetworkId = sn.getId();
@@ -163,9 +163,7 @@ public class Event extends SocialNetworkContentImpl implements Serializable, Soc
 		if (name != null ? !name.equals(event.name) : event.name != null) return false;
 		if (hostIds != null ? !hostIds.equals(event.hostIds) : event.hostIds != null) return false;
 		if (invitedIds != null ? !invitedIds.equals(event.invitedIds) : event.invitedIds != null) return false;
-		if (attendingIds != null ? !attendingIds.equals(event.attendingIds) : event.attendingIds != null) return false;
-		if (eventText != null ? !eventText.equals(event.eventText) : event.eventText != null) return false;
-		return !(interestKinds != null ? !interestKinds.equals(event.interestKinds) : event.interestKinds != null);
+		return !(attendingIds != null ? !attendingIds.equals(event.attendingIds) : event.attendingIds != null) && !(eventText != null ? !eventText.equals(event.eventText) : event.eventText != null) && !(interestKinds != null ? !interestKinds.equals(event.interestKinds) : event.interestKinds != null);
 
 	}
 

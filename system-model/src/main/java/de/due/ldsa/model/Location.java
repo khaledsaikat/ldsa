@@ -2,10 +2,8 @@ package de.due.ldsa.model;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 
-import de.due.ldsa.ModelUtils;
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 /**
  * Author: Romina (scrobart)
@@ -59,11 +57,11 @@ public interface Location extends SocialNetworkContent, Serializable, SocialNetw
 	// Complex methods
 	// ------------------------------------------------------------------------------------------------------------------
 
-	OffsetDateTime getContentTimestamp() throws DbException;
+	OffsetDateTime getContentTimestamp() throws ModelException;
 
-	OffsetDateTime getCrawlingTimestamp() throws DbException;
+	OffsetDateTime getCrawlingTimestamp() throws ModelException;
 
-	void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException;
+	void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException;
 
 	Position getPosition();
 

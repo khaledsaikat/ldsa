@@ -6,6 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
+import java.net.URL;
+
 /**
  * Created by  Romina
  */
@@ -20,6 +22,7 @@ public class OrganisationPlaceTests {
         CoopProfile cp = new CoopProfile();
         cp.setFullname(TestUtils.getRandomCompanyName());
         cp.setId(db.getNextProfileId());
+        cp.setProfileURL(new URL("http://127.0.0.1/what"));
         db.saveCoopProfile(cp);
 
         OrganisationPlace op = new OrganisationPlace();

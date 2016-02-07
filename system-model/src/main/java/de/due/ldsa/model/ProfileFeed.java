@@ -3,9 +3,8 @@ package de.due.ldsa.model;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import com.datastax.driver.mapping.annotations.Transient;
 
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.net.URL;
 import java.time.OffsetDateTime;
@@ -159,18 +158,18 @@ public class ProfileFeed extends SocialNetworkContentImpl {
 	}
 
 	@Override
-	public OffsetDateTime getContentTimestamp() throws DbException {
+	public OffsetDateTime getContentTimestamp() throws ModelException {
 		return contentTimestamp;
 	}
 
 	@Override
-	public OffsetDateTime getCrawlingTimestamp() throws DbException {
+	public OffsetDateTime getCrawlingTimestamp() throws ModelException {
 		return crawlingTimestamp;
 	}
 
 
 	@Override
-	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
 		this.socialNetworkId = sn.getId();
@@ -208,11 +207,7 @@ public class ProfileFeed extends SocialNetworkContentImpl {
 			return false;
 		if (hashtagNames != null ? !hashtagNames.equals(that.hashtagNames) : that.hashtagNames != null)
 			return false;
-		if (links != null ? !links.equals(that.links) : that.links != null)
-			return false;
-		if (taggedUserIds != null ? !taggedUserIds.equals(that.taggedUserIds) : that.taggedUserIds != null)
-			return false;
-		return !(commentIds != null ? !commentIds.equals(that.commentIds) : that.commentIds != null);
+		return !(links != null ? !links.equals(that.links) : that.links != null) && !(taggedUserIds != null ? !taggedUserIds.equals(that.taggedUserIds) : that.taggedUserIds != null) && !(commentIds != null ? !commentIds.equals(that.commentIds) : that.commentIds != null);
 
 	}
 

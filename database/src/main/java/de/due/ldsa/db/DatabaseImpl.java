@@ -19,6 +19,7 @@ import com.datastax.driver.mapping.Result;
 import de.due.ldsa.db.accessors.*;
 import de.due.ldsa.db.codecs.*;
 import de.due.ldsa.model.*;
+import org.apache.log4j.Logger;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -44,13 +45,27 @@ public class DatabaseImpl implements Database, Closeable {
 	private Mapper<Comment> commentMapper;
 	private Mapper<Hashtag> hashtagMapper;
 
+	private MappingManager manager;
+
+	private HumanProfileAccessor humanProfileAccessor;
+	private CommentAccessor commentAccessor;
+	private LocationAccessor locationAccessor;
+	private OrganisationPlaceAccessor organisationPlaceAccessor;
+	private ProfileFeedAccessor profileFeedAccessor;
+	private MediaAccessor mediaAccessor;
+	private CoopProfileAccessor coopProfileAccessor;
+	private EventAccessor eventAccessor;
+	private HashtagAccessor hashtagAccessor;
+	private ProfileAccessor profileAccessor;
+
+	private Logger logger;
+
 	/**
 	 * Closes the connection the Database
 	 *
-	 * @throws IOException Thrown if the close request fails.
 	 */
 	@Override
-	public void close() throws IOException {
+	public void close() {
 		session.close();
 	}
 
@@ -65,6 +80,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * Call this function if the connection died for some reason, and you need to establish it again.
 	 */
 	public void reconnect() {
+		logger = Logger.getLogger("database");
+		logger.info("(Re-)Connecting to Cassandra...");
 		Cluster cluster = Cluster.builder().addContactPoint(DatabaseConfiguration.getIP()).build();
 		session = cluster.connect("ldsa");
 
@@ -81,16 +98,33 @@ public class DatabaseImpl implements Database, Closeable {
 		registry.register(new InterestKindArrayListCodec());
 		registry.register(new UrlArrayListCodec());
 
-		socialNetworkMapper = null;
-		profileFeedMapper = null;
-		mediaMapper = null;
-		locationMapper = null;
-		organisationPlaceMapper = null;
-		coopProfileMapper = null;
-		humanProfileMapper = null;
-		eventMapper = null;
-		commentMapper = null;
-		hashtagMapper = null;
+		logger.info("Generating Cassandra Mappers...");
+		socialNetworkMapper = new MappingManager(session).mapper(SocialNetwork.class);
+		profileFeedMapper = new MappingManager(session).mapper(ProfileFeed.class);
+		mediaMapper = new MappingManager(session).mapper(Media.class);
+		locationMapper = new MappingManager(session).mapper(LocationImpl.class);
+		organisationPlaceMapper = new MappingManager(session).mapper(OrganisationPlace.class);
+		coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
+		humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
+		eventMapper = new MappingManager(session).mapper(Event.class);
+		commentMapper = new MappingManager(session).mapper(Comment.class);
+		hashtagMapper = new MappingManager(session).mapper(Hashtag.class);
+
+		manager = new MappingManager(session);
+
+		logger.info("Generating Cassandra Accessors...");
+		humanProfileAccessor = manager.createAccessor(HumanProfileAccessor.class);
+		commentAccessor = manager.createAccessor(CommentAccessor.class);
+		locationAccessor = manager.createAccessor(LocationAccessor.class);
+		organisationPlaceAccessor = manager.createAccessor(OrganisationPlaceAccessor.class);
+		profileFeedAccessor = manager.createAccessor(ProfileFeedAccessor.class);
+		mediaAccessor = manager.createAccessor(MediaAccessor.class);
+		coopProfileAccessor = manager.createAccessor(CoopProfileAccessor.class);
+		eventAccessor = manager.createAccessor(EventAccessor.class);
+		hashtagAccessor = manager.createAccessor(HashtagAccessor.class);
+		profileAccessor = manager.createAccessor(ProfileAccessor.class);
+
+		logger.trace("Database is all set and ready to go!");
 	}
 
 	/**
@@ -121,10 +155,6 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @param sn The social network you want to save.
 	 */
 	public void saveSocialNetwork(SocialNetwork sn) {
-		if (socialNetworkMapper == null) {
-			socialNetworkMapper = new MappingManager(session).mapper(SocialNetwork.class);
-		}
-
 		socialNetworkMapper.save(sn);
 	}
 
@@ -134,10 +164,6 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return The specified social network.
 	 */
 	public SocialNetwork getSocialNetwork(int i) {
-		if (socialNetworkMapper == null) {
-			socialNetworkMapper = new MappingManager(session).mapper(SocialNetwork.class);
-		}
-
 		return socialNetworkMapper.get(i);
 	}
 
@@ -147,73 +173,77 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return A free ID
 	 * @throws DbException Thrown if something
 	 */
-	public long getNextSocialNetworkID() throws DbException {
+	public long getNextSocialNetworkID() {
 		ResultSet rs1 = session.execute("SELECT MAX(id) FROM socialNetworks");
 		return rs1.one().getLong(0) + 1;
 	}
 
+	/**
+	 * Saves a profile feed into the database.
+	 *
+	 * @param pf The Profile Feed you need to save.
+	 */
 	public void saveProfileFeed(ProfileFeed pf) {
-		if (profileFeedMapper == null) {
-			profileFeedMapper = new MappingManager(session).mapper(ProfileFeed.class);
-		}
-
 		profileFeedMapper.save(pf);
-
 	}
 
+	/**
+	 * Fetches a specific Profile Feed from the database.
+	 * @param id The ID of the profile feed you want to fetch.
+	 * @return The specified ProfileFeed
+	 */
 	public ProfileFeed getProfileFeed(long id) {
-		if (profileFeedMapper == null) {
-			profileFeedMapper = new MappingManager(session).mapper(ProfileFeed.class);
-		}
-
 		return profileFeedMapper.get(id);
 	}
 
+	/**
+	 * Saves a Media-Object into the Database
+	 * @param m The Media object you want to save
+	 */
 	public void saveMedia(Media m) {
-		if (mediaMapper == null) {
-			mediaMapper = new MappingManager(session).mapper(Media.class);
-		}
-
 		mediaMapper.save(m);
 	}
 
+	/**
+	 * Fetches a Media Object from the Database.
+	 * @param id The ID of the Media Object you want to get.
+	 * @return The specified Media object.
+	 */
 	public Media getMedia(long id) {
-		if (mediaMapper == null) {
-			mediaMapper = new MappingManager(session).mapper(Media.class);
-		}
-
 		return mediaMapper.get(id);
 	}
 
+	/**
+	 * Saves a Location into the Database
+	 * @param l The Location you want to save.
+	 */
 	public void saveLocation(LocationImpl l) {
-		if (locationMapper == null) {
-			locationMapper = new MappingManager(session).mapper(LocationImpl.class);
-		}
-
 		locationMapper.save(l);
 	}
 
+	/**
+	 * Fetches a Location from the Database
+	 * @param id The ID of the Location you want to get.
+	 * @return The specified Location
+	 */
 	public LocationImpl getLocation(long id) {
-		if (locationMapper == null) {
-			locationMapper = new MappingManager(session).mapper(LocationImpl.class);
-		}
-
 		return locationMapper.get(id);
 	}
 
+	/**
+	 * Saves an Organisation Place into the Database.
+	 * @param op The Organisation Place you want to save
+	 */
 	public void saveOrganisationPlace(OrganisationPlace op) {
-		if (organisationPlaceMapper == null) {
-			organisationPlaceMapper = new MappingManager(session).mapper(OrganisationPlace.class);
-		}
-
 		organisationPlaceMapper.save(op);
 	}
 
+	/**
+	 * Fetches an Organisation Place into the Database
+	 * @param id The ID of the Organisation Place you want to fetch.
+	 * @return The specified organisation place
+	 */
 	public OrganisationPlace getOrganisationPlace(long id) {
-		if (organisationPlaceMapper == null) {
-			organisationPlaceMapper = new MappingManager(session).mapper(OrganisationPlace.class);
-		}
-
 		return organisationPlaceMapper.get(id);
 	}
 
@@ -229,22 +259,23 @@ public class DatabaseImpl implements Database, Closeable {
 			// same number sequence.
 			throw new DbException(String.format("The ID specified in that company profile is already used by a human ID:%s", Long.toString(cp.getId())));
 		}
-
-		if (coopProfileMapper == null) {
-			coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
-		}
-
 		coopProfileMapper.save(cp);
 	}
 
+	/**
+	 * Fetches a Company Profile from the Database
+	 * @param id The ID of the company Profile you want to fetch
+	 * @return The specified company Profile
+	 */
 	public CoopProfile getCoopProfile(long id) {
-		if (coopProfileMapper == null) {
-			coopProfileMapper = new MappingManager(session).mapper(CoopProfile.class);
-		}
-
 		return coopProfileMapper.get(id);
 	}
 
+	/**
+	 * Saves a human Profile into the Database
+	 * @param hp The Human Profile you want to save
+	 * @throws DbException Thrown if the ID of that Human Profile is already occupied by a company profile
+	 */
 	public void saveHumanProfile(HumanProfile hp) throws DbException {
 		if (getCoopProfile(hp.getId()) != null) {
 			// This needs to be done because Human IDs and Company IDs share the
@@ -252,54 +283,58 @@ public class DatabaseImpl implements Database, Closeable {
 			throw new DbException("The ID specified in that company profile is already used by a company ID: "
 					+ Long.toString(hp.getId()));
 		}
-
-		if (humanProfileMapper == null) {
-			humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
-		}
-
 		humanProfileMapper.save(hp);
 	}
 
+	/**
+	 * Fetches a human Profile from the Database
+	 * @param id The ID of the Human Profile you want to fetch
+	 * @return The specified Human Profile
+	 */
 	public HumanProfile getHumanProfile(long id) {
-		if (humanProfileMapper == null) {
-			humanProfileMapper = new MappingManager(session).mapper(HumanProfile.class);
-		}
-
 		return humanProfileMapper.get(id);
 	}
 
+	/**
+	 * Saves an Event into the Database
+	 * @param id The Event you want to save.
+	 */
 	public void saveEvent(Event id) {
-		if (eventMapper == null) {
-			eventMapper = new MappingManager(session).mapper(Event.class);
-		}
-
 		eventMapper.save(id);
 	}
 
+	/**
+	 * Fetches an Event from the Database
+	 * @param id The ID of the Event you want to fetch.
+	 * @return The specified Event
+	 */
 	public Event getEvent(long id) {
-		if (eventMapper == null) {
-			eventMapper = new MappingManager(session).mapper(Event.class);
-		}
-
 		return eventMapper.get(id);
 	}
 
+	/**
+	 * Saves a Comment into the Database
+	 * @param c The Comment you want to save.
+	 */
 	public void saveComment(Comment c) {
-		if (commentMapper == null) {
-			commentMapper = new MappingManager(session).mapper(Comment.class);
-		}
-
 		commentMapper.save(c);
 	}
 
+	/**
+	 * Fetches a Comment from the Database
+	 * @param id The ID of the Comment you want to get.
+	 * @return The specified Comment.
+	 */
 	public Comment getComment(long id) {
-		if (commentMapper == null) {
-			commentMapper = new MappingManager(session).mapper(Comment.class);
-		}
-
 		return commentMapper.get(id);
 	}
 
+	/**
+	 * Tests if a profile ID belongs to a human or a company.
+	 * @param id The ID of the Profile you want to check.
+	 * @return True if the ID belongs to a human Profile, false if the ID belongs to a company.
+	 * @throws DbException Thrown if it is neither human nor company, or it does not exist at all.
+	 */
 	public boolean isHuman(long id) throws DbException {
 		HumanProfile hp = getHumanProfile(id);
 		if (hp != null)
@@ -309,7 +344,7 @@ public class DatabaseImpl implements Database, Closeable {
 		if (cp != null)
 			return false;
 
-		throw new DbException("The specified ID does not exist:" + Long.toString(id));
+		throw new DbException("The specified ID is neither a human nor a company profile:" + Long.toString(id));
 	}
 
 	/**
@@ -318,28 +353,40 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return A free ID
 	 * @throws DbException
 	 */
-	public long getNextProfileId() throws DbException {
+	public long getNextProfileId() {
 		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
 		//SocialNetworkInterest.
 		return getNextSocialNetworkInterestId();
 	}
 
-	public long getNextMediaId() throws DbException {
+	/**
+	 * Use this to figure out a new ID for a Media Object
+	 *
+	 * @return A free ID
+	 * @throws DbException Thrown if something goes wrong while querying the database.
+	 */
+	public long getNextMediaId() {
 		ResultSet rs1 = session.execute("SELECT MAX(id) FROM media");
 		return rs1.one().getLong(0) + 1;
 	}
 
-	public long getNextCommentId() throws DbException {
+	/**
+	 * Use this to figure out a new ID for a Comment
+	 *
+	 * @return A free ID
+	 * @throws DbException Thrown if something goes wrong while querying the database.
+	 */
+	public long getNextCommentId() {
 		ResultSet rs1 = session.execute("SELECT MAX(id) FROM comments");
 		return rs1.one().getLong(0) + 1;
 	}
 
-	public long getNextInterestId() throws DbException {
-		ResultSet rs1 = session.execute("SELECT MAX(id) FROM interests");
-		return rs1.one().getLong(0) + 1;
-	}
-
-	public long getNextProfileFeedId() throws DbException {
+	/**
+	 * Use this to figure out an ID for a new Profile Feed
+	 * @return A free ID
+	 * @throws DbException Thrown if something goes wrong while querying the database.
+	 */
+	public long getNextProfileFeedId() {
 		ResultSet rs1 = session.execute("SELECT MAX(id) FROM profileFeeds");
 		return rs1.one().getLong(0) + 1;
 	}
@@ -353,7 +400,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException
 	 *             Thrown if querying the ID from the Database fails.
 	 */
-	public long getNextLocationId() throws DbException {
+	public long getNextLocationId() {
 		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
 		//SocialNetworkInterest.
 		return getNextSocialNetworkInterestId();
@@ -367,7 +414,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 *            The ID of the profile you want to get.
 	 * @return Either a CoopProfile or a HumanProfile
 	 */
-	public Profile autoGetProfile(long id) throws DbException {
+	public Profile autoGetProfile(long id) {
 		if (isHuman(id)) {
 			return getHumanProfile(id);
 		} else {
@@ -375,6 +422,12 @@ public class DatabaseImpl implements Database, Closeable {
 		}
 	}
 
+	/**
+	 * Saves a HumanProfile or a CoopProfile into the Database
+	 * @param p The Profile you want to save
+	 * @throws DbException Thrown if it is neither a HumanProfile nor a CoopProfile, or something goes wrong while
+	 * querying the database.
+	 */
 	public void autoSaveProfile(Profile p) throws DbException {
 		if (p instanceof HumanProfile) {
 			saveHumanProfile((HumanProfile) p);
@@ -385,7 +438,13 @@ public class DatabaseImpl implements Database, Closeable {
 		}
 	}
 
-	public boolean isOrganisationPlace(long id) {
+	/**
+	 * Tests if an ID belongs to an Organisation Place
+	 *
+	 * @param id The ID of a Location you want to test.
+	 * @return True if it is an Organisation Place, false if it is a Location
+	 */
+	public boolean isOrganisationPlace(long id) throws DbException {
 		OrganisationPlace op = getOrganisationPlace(id);
 		if (op != null)
 			return true;
@@ -398,16 +457,13 @@ public class DatabaseImpl implements Database, Closeable {
 				"The specified ID is neither a Location nor an OrganisationPlace:" + Long.toString(id));
 	}
 
-
 	/**
 	 * @return An ArrayList containing all the human profiles
 	 * @throws DbException
 	 * @deprecated Please use the Iterable instead! Lists will get troublesome in terms of memory, if the database grows larger.
 	 */
 	@Override
-	public List<HumanProfile> getAllHumanProfiles() throws DbException {
-		MappingManager manager = new MappingManager(session);
-		HumanProfileAccessor humanProfileAccessor = manager.createAccessor(HumanProfileAccessor.class);
+	public List<HumanProfile> getAllHumanProfiles() {
 		Result<HumanProfile> humanprofiles = humanProfileAccessor.getAll();
 
 		return humanprofiles.all();
@@ -419,9 +475,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException
 	 */
 	@Override
-	public List<Comment> getAllComments() throws DbException {
-		MappingManager manager = new MappingManager(session);
-		CommentAccessor commentAccessor = manager.createAccessor(CommentAccessor.class);
+	public List<Comment> getAllComments() {
+
 		Result<Comment> comments = commentAccessor.getAll();
 
 		return comments.all();
@@ -434,12 +489,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown, if something goes wrong when querying the Database
 	 */
 	@Override
-	public List<Location> getAllLocations() throws DbException {
-		MappingManager manager = new MappingManager(session);
-		LocationAccessor locationAccessor = manager.createAccessor(LocationAccessor.class);
+	public List<Location> getAllLocations() {
 		Result<LocationImpl> locations = locationAccessor.getAll();
-
-		OrganisationPlaceAccessor organisationPlaceAccessor = manager.createAccessor(OrganisationPlaceAccessor.class);
 		Result<OrganisationPlace> organisationPlaces = organisationPlaceAccessor.getAll();
 
 		List<Location> result = new ArrayList<>();
@@ -454,9 +505,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown, if something goes wrong when querying the database.
 	 */
 	@Override
-	public List<ProfileFeed> getAllProfileFeeds() throws DbException {
-		MappingManager mappingManager = new MappingManager(session);
-		ProfileFeedAccessor profileFeedAccessor = mappingManager.createAccessor(ProfileFeedAccessor.class);
+	public List<ProfileFeed> getAllProfileFeeds() {
 		Result<ProfileFeed> profileFeeds = profileFeedAccessor.getAll();
 
 		return profileFeeds.all();
@@ -470,18 +519,18 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown if something with the Database goes wrong.
 	 */
 	@Override
-	public List<Media> getAllMedia() throws DbException {
-		MappingManager mappingManager = new MappingManager(session);
-		MediaAccessor mediaAccessor = mappingManager.createAccessor(MediaAccessor.class);
+	public List<Media> getAllMedia() {
 		Result<Media> mediaResult = mediaAccessor.getAll();
 
 		return mediaResult.all();
 	}
 
+	/**
+	 * Gets all Profiles from a specified Social Network
+	 * @param snId The ID of the social network you need the profiles from.
+	 * @return A List of all the profiles in that social network.
+	 */
 	public List<Profile> getAllProfilesFromSocialNetwork(int snId) {
-		MappingManager mappingManager = new MappingManager(session);
-		HumanProfileAccessor humanProfileAccessor = mappingManager.createAccessor(HumanProfileAccessor.class);
-		CoopProfileAccessor coopProfileAccessor = mappingManager.createAccessor(CoopProfileAccessor.class);
 		Result<HumanProfile> humanProfiles = humanProfileAccessor.getAllFromSocialNetwork(snId);
 		Result<CoopProfile> coopProfiles = coopProfileAccessor.getAllFromSocialNetwork(snId);
 
@@ -491,17 +540,23 @@ public class DatabaseImpl implements Database, Closeable {
 		return result;
 	}
 
+	/**
+	 * Gets all Profile feeds from a specified Social Network
+	 * @param snId The ID of the Social Network you want to query.
+	 * @return A List of all the Profile Feeds from the specified social network.
+	 */
 	public List<ProfileFeed> getAllProfileFeedsFromSocialNetwork(int snId) {
-		MappingManager mappingManager = new MappingManager(session);
-		ProfileFeedAccessor profileFeedAccessor = mappingManager.createAccessor(ProfileFeedAccessor.class);
 		Result<ProfileFeed> profileFeeds = profileFeedAccessor.getAllFromSocialNetwork(snId);
 
 		return profileFeeds.all();
 	}
 
+	/**
+	 * Gets all the Media from a specified Social Network
+	 * @param snId The ID of the Social Network you want to query.
+	 * @return A List of all Media from the specified social Network
+	 */
 	public List<Media> getAllMediaFromSocialNetwork(int snId) {
-		MappingManager mappingManager = new MappingManager(session);
-		MediaAccessor mediaAccessor = mappingManager.createAccessor(MediaAccessor.class);
 		Result<Media> mediaResult = mediaAccessor.getAllFromSocialNetwork(snId);
 
 		return mediaResult.all();
@@ -514,18 +569,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return An Iterable iterating over all the content.
 	 * @implNote For more information about the Accessors and Results check this: https://docs.datastax.com/en/developer/java-driver/2.1/common/drivers/reference/accessorAnnotatedInterfaces.html
 	 */
-	public List<SocialNetworkContent> getAllContentFromSocialNetwork(int snId) throws DbException
+	public List<SocialNetworkContent> getAllContentFromSocialNetwork(int snId)
 	{
-		MappingManager mappingManager = new MappingManager(session);
-		CommentAccessor commentAccessor = mappingManager.createAccessor(CommentAccessor.class);
-		MediaAccessor mediaAccessor = mappingManager.createAccessor(MediaAccessor.class);
-		ProfileFeedAccessor profileFeedAccessor = mappingManager.createAccessor(ProfileFeedAccessor.class);
-		HumanProfileAccessor humanProfileAccessor = mappingManager.createAccessor(HumanProfileAccessor.class);
-		CoopProfileAccessor coopProfileAccessor = mappingManager.createAccessor(CoopProfileAccessor.class);
-		OrganisationPlaceAccessor organisationPlaceAccessor = mappingManager.createAccessor(OrganisationPlaceAccessor.class);
-		LocationAccessor locationAccessor = mappingManager.createAccessor(LocationAccessor.class);
-		EventAccessor eventAccessor = mappingManager.createAccessor(EventAccessor.class);
-
 		Result<Comment> comments = commentAccessor.getAllFromSocialNetwork(snId);
 		Result<Media> medias = mediaAccessor.getAllFromSocialNetwork(snId);
 		Result<ProfileFeed> profileFeeds = profileFeedAccessor.getAllFromSocialNetwork(snId);
@@ -548,6 +593,10 @@ public class DatabaseImpl implements Database, Closeable {
 		return result;
 	}
 
+	/**
+	 * Use this to figure out the ID for a new Event
+	 * @return A free ID
+	 */
 	public long getNextEventId() {
 		//HumanProfile, CoopProfile, OrganisationPlace, Location & Event now share the same Number Sequence, to satisfy
 		//SocialNetworkInterest.
@@ -561,10 +610,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown if something goes wrong while querying the database.
 	 */
 	@Override
-	public void saveHashtag(Hashtag hashtag) throws DbException {
-		if (hashtagMapper == null) {
-			hashtagMapper = new MappingManager(session).mapper(Hashtag.class);
-		}
+	public void saveHashtag(Hashtag hashtag) {
 		hashtagMapper.save(hashtag);
 	}
 
@@ -574,10 +620,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown, if something goes wrong while querying the database
 	 */
 	@Override
-	public List<Hashtag> getAllHashtags() throws DbException {
-		MappingManager mappingManager = new MappingManager(session);
-		HashtagAccessor hashtagAccessor = mappingManager.createAccessor(HashtagAccessor.class);
-
+	public List<Hashtag> getAllHashtags() {
 		return hashtagAccessor.getHashtags().all();
 	}
 
@@ -587,7 +630,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return An ArrayList containing all the ProfileFeeds and Comments which mention the hashtag.
 	 * @throws DbException Thrown if something goes wrong while querying the database.
 	 */
-	public List<SocialNetworkContent> getHashtagUsedAtList(Hashtag hashtag) throws DbException
+	public List<SocialNetworkContent> getHashtagUsedAtList(Hashtag hashtag)
 	{
 		List<SocialNetworkContent> result = getHashtagUsedAtList(hashtag.getTitle());
 		hashtag.setUsedAtList(result);
@@ -601,10 +644,8 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown if something goes wrong while querying the database
 	 */
 	@Override
-	public List<SocialNetworkContent> getHashtagUsedAtList(String hashtag) throws DbException
+	public List<SocialNetworkContent> getHashtagUsedAtList(String hashtag)
 	{
-		MappingManager mappingManager = new MappingManager(session);
-		HashtagAccessor hashtagAccessor = mappingManager.createAccessor(HashtagAccessor.class);
 		Result<Comment> commentResult = hashtagAccessor.getCommentsUsedIn(hashtag);
 		Result<ProfileFeed> profileFeedResult = hashtagAccessor.getProfileFeedsUsedIn(hashtag);
 
@@ -621,7 +662,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @throws DbException Thrown if something goes wrong while querying the database
 	 */
 	@Override
-	public long getHashtagTimesUsed(Hashtag hashtag) throws DbException
+	public long getHashtagTimesUsed(Hashtag hashtag)
 	{
 		return getHashtagUsedAtList(hashtag).size();
 	}
@@ -632,7 +673,7 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return An ID as Long
 	 * @throws DbException Thrown, if something goes wrong while querying the database.
      */
-	public long getNextSocialNetworkInterestId() throws DbException
+	public long getNextSocialNetworkInterestId()
 	{
 		// We have not found a way to do this in a mapper-way, therefore we
 		// absolutely need to use a hand-crafted command
@@ -665,8 +706,6 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return An ArrayList of Profile Feed IDs related to that profile.
 	 */
 	public ArrayList<Long> getProfileProfileFeeds(Profile p) {
-		MappingManager mappingManager = new MappingManager(session);
-		ProfileAccessor profileAccessor = mappingManager.createAccessor(ProfileAccessor.class);
 		Result<ProfileFeed> feedResult = profileAccessor.getProfileFeeds(p.getId());
 
 		ArrayList<Long> result = new ArrayList<>();
@@ -684,8 +723,6 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return An ArrayList containing all the Comment IDs
 	 */
 	public ArrayList<Long> getProfileAllComments(Profile p) {
-		MappingManager mappingManager = new MappingManager(session);
-		ProfileAccessor profileAccessor = mappingManager.createAccessor(ProfileAccessor.class);
 		Result<Comment> commentResult = profileAccessor.getProfileComments(p.getId());
 
 		ArrayList<Long> result = new ArrayList<>();
@@ -703,8 +740,6 @@ public class DatabaseImpl implements Database, Closeable {
 	 * @return How often the Location was used for an event.
 	 */
 	public long locationTimesUsed(Location l) {
-		MappingManager mappingManager = new MappingManager(session);
-		LocationAccessor locationAccessor = mappingManager.createAccessor(LocationAccessor.class);
 		Result<Event> eventResult = locationAccessor.getEvents(l.getId());
 
 		return eventResult.all().size();
@@ -728,35 +763,40 @@ public class DatabaseImpl implements Database, Closeable {
 
 	//@Firas: What are these methods for?
 	@Override
-	public ArrayList<Long> getProfileRelationshipPersons(HumanProfile humanProfile) throws DbException {
+	public ArrayList<Long> getProfileRelationshipPersons(HumanProfile humanProfile) {
 		return humanProfile.getRelationshipPersons();
 	}
 
 	@Override
-	public ArrayList<Long> getProfileLinkedOtherSocialNetworkProfileIds(HumanProfile humanProfile) throws DbException {
+	public ArrayList<Long> getProfileLinkedOtherSocialNetworkProfileIds(HumanProfile humanProfile) {
 		return humanProfile.getLinkedOtherSocialNetworkProfileIds();
 	}
 
 	@Override
-	public ArrayList<Long> getProfileFriendsIds(HumanProfile humanProfile) throws DbException {
+	public ArrayList<Long> getProfileFriendsIds(HumanProfile humanProfile) {
 		return humanProfile.getProfileFeedIds();
 	}
 
 	@Override
-	public ArrayList<Long> getProfileFollowsIds(HumanProfile humanProfile) throws DbException {
+	public ArrayList<Long> getProfileFollowsIds(HumanProfile humanProfile) {
 		return humanProfile.getFollowsIds();
 	}
 
 	@Override
-	public ArrayList<Long> getProfileFollowedByIds(HumanProfile humanProfile) throws DbException {
+	public ArrayList<Long> getProfileFollowedByIds(HumanProfile humanProfile) {
 		return humanProfile.getFollowedByIds();
 	}
 
-	public CoopProfile organisationPlaceGetCoopProfile(OrganisationPlace op) throws DbException {
+	/**
+	 * Returns the Organisation Place of a CoopProfile
+	 *
+	 * @param op The Organisation Place form
+	 * @return The CoopProfile associated to that OrganisationPlace
+	 * @throws DbException
+	 */
+	public CoopProfile organisationPlaceGetCoopProfile(OrganisationPlace op) {
 		return getCoopProfile(op.organisationProfileId);
 	}
-
-	//TODO: Generate mappings upon connection instead of on request (as it is now) - to gain more performance.
 
 	/**
 	 * Saves more than one Content element at a time.

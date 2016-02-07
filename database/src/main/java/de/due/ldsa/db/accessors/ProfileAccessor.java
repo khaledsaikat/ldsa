@@ -8,7 +8,9 @@ import de.due.ldsa.model.Comment;
 import de.due.ldsa.model.ProfileFeed;
 
 /**
- * Created by  Romina
+ * @author scrobart
+ * Provides an interface to work with Profiles in general.
+ * Normally you do not need to implement this interface. The Mapper will generate a class at run-time.
  */
 @Accessor
 public interface ProfileAccessor {

@@ -15,10 +15,11 @@ import java.util.List;
  * Author: Romina (scrobart)
  *
  * Used to save an ArrayList<String> into Cassandra. (used in ProfileFeed for the Hashtags)
+ * Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class StringArrayListCodec extends TypeCodec<ArrayList<String>> {
     public StringArrayListCodec() {
-        super(DataType.list(DataType.varchar()), (TypeToken<ArrayList<String>>) new TypeToken<ArrayList<String>>() {
+        super(DataType.list(DataType.varchar()), new TypeToken<ArrayList<String>>() {
         });
     }
 
@@ -31,7 +32,7 @@ public class StringArrayListCodec extends TypeCodec<ArrayList<String>> {
     public ArrayList<String> deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         List<String> temp = TypeCodec.list(TypeCodec.varchar()).deserialize(bytes, protocolVersion);
 
-        ArrayList<String> result = new ArrayList<String>();
+        ArrayList<String> result = new ArrayList<>();
         result.addAll(temp);
         return result;
     }

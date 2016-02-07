@@ -16,19 +16,20 @@ import java.util.List;
  * Author: Romina (scrobart)
  *
  * Used to save an ArrayList<InterestKind> into Cassandra. (used in SocialNetworkInterest)
+ * Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class InterestKindArrayListCodec extends TypeCodec<ArrayList<InterestKind>> {
     public InterestKindArrayListCodec() {
-        super(DataType.list(DataType.cint()), (TypeToken<ArrayList<InterestKind>>) new TypeToken<ArrayList<InterestKind>>() {
+        super(DataType.list(DataType.cint()), new TypeToken<ArrayList<InterestKind>>() {
         });
     }
 
     @Override
     public ByteBuffer serialize(ArrayList<InterestKind> value, ProtocolVersion protocolVersion) throws InvalidTypeException {
-        ArrayList<Integer> trueValue = new ArrayList<Integer>();
+        ArrayList<Integer> trueValue = new ArrayList<>();
         if (value != null) {
             for (InterestKind ik : value) {
-                trueValue.add(new Integer(ik.ordinal()));
+                trueValue.add(ik.ordinal());
             }
         }
         return TypeCodec.list(TypeCodec.cint()).serialize(trueValue, protocolVersion);
@@ -37,7 +38,7 @@ public class InterestKindArrayListCodec extends TypeCodec<ArrayList<InterestKind
     @Override
     public ArrayList<InterestKind> deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         List<Integer> temp = TypeCodec.list(TypeCodec.cint()).deserialize(bytes, protocolVersion);
-        ArrayList<InterestKind> trueValue = new ArrayList<InterestKind>();
+        ArrayList<InterestKind> trueValue = new ArrayList<>();
 
         for (Integer i : temp) {
             trueValue.add(InterestKind.fromOrdinal(i));

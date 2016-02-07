@@ -16,10 +16,11 @@ import java.util.List;
  * Author: Romina (scrobart)
  *
  * Used to save an ArrayList<Long> into Cassandra. (used to store various IDs)
+ * Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class LongArrayListCodec extends TypeCodec<ArrayList<Long>> {
     public LongArrayListCodec() {
-        super(DataType.list(DataType.bigint()), (TypeToken<ArrayList<Long>>) new TypeToken<ArrayList<Long>>() {
+        super(DataType.list(DataType.bigint()), new TypeToken<ArrayList<Long>>() {
         });
     }
 
@@ -32,7 +33,7 @@ public class LongArrayListCodec extends TypeCodec<ArrayList<Long>> {
     public ArrayList<Long> deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         List<Long> temp = TypeCodec.list(TypeCodec.bigint()).deserialize(bytes, protocolVersion);
 
-        ArrayList<Long> result = new ArrayList<Long>();
+        ArrayList<Long> result = new ArrayList<>();
         result.addAll(temp);
         return result;
     }

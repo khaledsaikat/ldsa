@@ -15,6 +15,7 @@ import java.util.Date;
  * Author: Romina (scrobart)
  *
  * Used to save an LocalDate  into Cassandra. (used in HumanProfile)
+ *  Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class LocalDateCodec extends TypeCodec<LocalDate> {
     public LocalDateCodec() {
@@ -35,8 +36,7 @@ public class LocalDateCodec extends TypeCodec<LocalDate> {
     public LocalDate deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         Date temp = TypeCodec.timestamp().deserialize(bytes, protocolVersion);
         if (temp == null) return null;
-        LocalDate temp2 = temp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return temp2;
+        return temp.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     @Override

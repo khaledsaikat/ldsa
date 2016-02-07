@@ -2,6 +2,7 @@ package de.due.ldsa.ld.test;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -173,12 +174,6 @@ public class StoreInDatabaseActionTest {
 		}
 
 		@Override
-		public long getNextInterestId() throws DbException {
-			fail("getNextInterestId of Database not supposed to be called");
-			return 0;
-		}
-
-		@Override
 		public long getNextProfileFeedId() throws DbException {
 			fail("getNextProfileFeedId of Database not supposed to be called");
 			return 0;
@@ -325,29 +320,6 @@ public class StoreInDatabaseActionTest {
 			return 0;
 		}
 
-		@Override
-		public int coopProfileCountInteraction(CoopProfile cp, Profile p) throws DbException {
-			fail("coopProfileCountInteraction of Database not supposed to be called");
-			return 0;
-		}
-
-		@Override
-		public double coopProfileCountAverageInteractionPerFeed(CoopProfile cp, Profile p) throws DbException {
-			fail("coopProfileCountAverageInteractionPerFeed of Database not supposed to be called");
-			return 0;
-		}
-
-		@Override
-		public double coopProfileGetAverageInteractionPerFeed(CoopProfile cp) throws DbException {
-			fail("coopProfileGetAverageInteractionPerFeed of Database not supposed to be called");
-			return 0;
-		}
-
-		@Override
-		public double coopProfileGetAverageOfActionsPerDay(CoopProfile cp) throws DbException {
-			fail("coopProfileGetAverageOfActionsPerDay of Database not supposed to be called");
-			return 0;
-		}
 		
 		@Override
 		public ArrayList<Long> getProfileRelationshipPersons(HumanProfile humanProfile) throws DbException {
@@ -379,7 +351,39 @@ public class StoreInDatabaseActionTest {
 			fail("getProfileFollowedByIds of Database not supposed to be called");
 			return null;
 		}
-		
+
+		/*
+			Romina: We have added some methods to our Database interface.
+		    We added them here because we did not want to mess up the build.
+		 */
+		@Override
+		public void close() throws IOException {
+			fail("close of Database not supposed to be called");
+		}
+
+		@Override
+		public long getNextSocialNetworkID() throws DbException {
+			fail("getNextSocialNetworkID of Database not supposed to be called");
+			return 0;
+		}
+
+		@Override
+		public long getHashtagTimesUsed(Hashtag hashtag) throws DbException {
+			fail("getHashtagTimesUsed of Database not supposed to be called");
+			return 0;
+		}
+
+		@Override
+		public CoopProfile organisationPlaceGetCoopProfile(OrganisationPlace op) throws DbException {
+			fail("organisationPlaceGetCoopProfile of Database not supposed to be called");
+			return null;
+		}
+
+		@Override
+		public void SaveSet(Iterable<SocialNetworkContent> set) throws DbException {
+			fail("SaveSet of Database not supposed to be called");
+		}
+
 		public Comment getStoredComment() {
 			return storedComment;
 		}
@@ -387,7 +391,7 @@ public class StoreInDatabaseActionTest {
 		public CoopProfile getStoredCoopProfile() {
 			return storedCoopProfile;
 		}
-		
+
 		public Hashtag getStoredHashtag() {
 			return storedHashtag;
 		}
@@ -415,8 +419,6 @@ public class StoreInDatabaseActionTest {
 		public SocialNetwork getStoredSocialNetwork() {
 			return storedSocialNetwork;
 		}
-		
-		
 	}
 	
 	@Test

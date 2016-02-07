@@ -8,13 +8,26 @@ import de.due.ldsa.model.Comment;
 import de.due.ldsa.model.ProfileFeed;
 
 /**
- * Created by  Romina
+ * @author scrobart
+ * Provides an interface to work with Profile Feeds
+ * Normally you do not need to implement this interface. The Mapper will generate a class at run-time.
  */
 @Accessor
 public interface ProfileFeedAccessor {
+    /**
+     * Gets all profile feeds from all social networks.
+     *
+     * @return A Cassandra Result containing all ProfileFeeds.
+     */
     @Query("SELECT * FROM ldsa.profileFeeds")
     Result<ProfileFeed> getAll();
 
+    /**
+     * Gets all profile feeds from a specific social network.
+     *
+     * @param snId The ID of the social network
+     * @return A Cassandra Result containing all ProfileFeeds from the specified social network.
+     */
     @Query("SELECT * FROM ldsa.profileFeeds WHERE snId = :id")
     Result<ProfileFeed> getAllFromSocialNetwork(@Param("id") int snId);
 }

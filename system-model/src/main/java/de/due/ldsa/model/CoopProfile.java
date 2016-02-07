@@ -5,7 +5,7 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
 import de.due.ldsa.ModelUtils;
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -300,7 +300,7 @@ public class CoopProfile extends Profile implements Serializable, SocialNetworkI
 	// ------------------------------------------------------------------------------------------------------------------
 
 	@Override
-	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
 		this.socialNetworkId = sn.getId();
@@ -335,13 +335,9 @@ public class CoopProfile extends Profile implements Serializable, SocialNetworkI
 		if (friendIds != null ? !friendIds.equals(that.friendIds) : that.friendIds != null) return false;
 		if (profileFeedIds != null ? !profileFeedIds.equals(that.profileFeedIds) : that.profileFeedIds != null)
 			return false;
-		if (attendingEventIds != null ? !attendingEventIds.equals(that.attendingEventIds) : that.attendingEventIds != null)
-			return false;
-		if (linkedOtherSocialNetworkProfileIds != null ? !linkedOtherSocialNetworkProfileIds.equals(that.linkedOtherSocialNetworkProfileIds) : that.linkedOtherSocialNetworkProfileIds != null)
-			return false;
-		if (interestKinds != null ? !interestKinds.equals(that.interestKinds) : that.interestKinds != null)
-			return false;
-		return !(dateFounded != null ? !dateFounded.equals(that.dateFounded) : that.dateFounded != null);
+		if (!(attendingEventIds != null ? !attendingEventIds.equals(that.attendingEventIds) : that.attendingEventIds != null) && !(linkedOtherSocialNetworkProfileIds != null ? !linkedOtherSocialNetworkProfileIds.equals(that.linkedOtherSocialNetworkProfileIds) : that.linkedOtherSocialNetworkProfileIds != null) && !(interestKinds != null ? !interestKinds.equals(that.interestKinds) : that.interestKinds != null) && !(dateFounded != null ? !dateFounded.equals(that.dateFounded) : that.dateFounded != null))
+			return true;
+		else return false;
 
 	}
 

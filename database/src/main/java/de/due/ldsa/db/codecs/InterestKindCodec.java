@@ -13,6 +13,7 @@ import java.nio.ByteBuffer;
  * Author: Romina (scrobart)
  *
  * Used to save an InterestKind into Cassandra. (required for SocialNetworkInterest)
+ *  Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class InterestKindCodec extends TypeCodec<InterestKind> {
     public InterestKindCodec() {

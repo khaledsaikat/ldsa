@@ -6,7 +6,7 @@ import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
 
 import de.due.ldsa.ModelUtils;
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -158,17 +158,17 @@ public class LocationImpl extends SocialNetworkContentImpl implements Location, 
 	transient Integer timesUsed;
 
 	@Override
-	public OffsetDateTime getContentTimestamp() throws DbException {
+	public OffsetDateTime getContentTimestamp() throws ModelException {
 		return contentTimestamp;
 	}
 
 	@Override
-	public OffsetDateTime getCrawlingTimestamp() throws DbException {
+	public OffsetDateTime getCrawlingTimestamp() throws ModelException {
 		return crawlingTimestamp;
 	}
 
 	@Override
-	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
 		this.socialNetworkId = sn.getId();
@@ -207,14 +207,8 @@ public class LocationImpl extends SocialNetworkContentImpl implements Location, 
 		if (contentTimestamp != null ? !contentTimestamp.equals(location.contentTimestamp)
 				: location.contentTimestamp != null)
 			return false;
-		if (crawlingTimestamp != null ? !crawlingTimestamp.equals(location.crawlingTimestamp)
-				: location.crawlingTimestamp != null)
-			return false;
-		if (!name.equals(location.name))
-			return false;
-		if (city != null ? !city.equals(location.city) : location.city != null)
-			return false;
-		return !(country != null ? !country.equals(location.country) : location.country != null);
+		return !(crawlingTimestamp != null ? !crawlingTimestamp.equals(location.crawlingTimestamp)
+				: location.crawlingTimestamp != null) && name.equals(location.name) && !(city != null ? !city.equals(location.city) : location.city != null) && !(country != null ? !country.equals(location.country) : location.country != null);
 
 	}
 

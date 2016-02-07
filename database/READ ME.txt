@@ -1,5 +1,6 @@
-To make this work, Cassandra must be running locally.
+------------------------------------------------------------------------------------------------------------------------
 
+To make this work, Cassandra must be running locally.
 
 1. Install Python and Java on your machine.
 
@@ -17,3 +18,38 @@ http://archive.apache.org/dist/cassandra/3.0.0/apache-cassandra-3.0.0-bin.tar.gz
 
 6. Done!
 
+------------------------------------------------------------------------------------------------------------------------
+
+To write something into the Database:
+
+1. Get an instance of the Database:
+    -> Database db = DatabaseImpl.getInstance();
+
+2. Create an instance of the Object you want to work with:
+    -> HumanProfile hp = new HumanProfile();
+
+3. Do whatever you need to do with the object.
+
+4. Assign an ID to the object:
+    -> hp.setId(db.getNextProfileId());
+    If you need to overwrite an Object, just assign an already used ID.
+
+5. Save the Object:
+    -> db.saveHumanProfile(hp);
+
+------------------------------------------------------------------------------------------------------------------------
+
+To read something from the Database:
+
+1. Get an instance of the Database:
+    -> Database db = DatabaseImpl.getInstance();
+
+2. Fetch the Object:
+    -> HumanProfile hp = db.getHumanProfile(25);
+
+To do bulk read use Methods like getAllMedia() and getAllMediaFromSocialNetwork(int snId) are provided.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Means of deleting Objects are not provided, because we think this is not necessary for this kind of project.
+However, bulk deletion is possible using the method truncateTable(String tableName).

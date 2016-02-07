@@ -1,20 +1,17 @@
 package de.due.ldsa.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.Transient;
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 /**
  * Hashtag for social data. To get this object, fetch it from a comment or feed.
- * 
- * @author: Romina (scrobart)
- * 
+ * @author scrobart
  */
 @Table(keyspace = "ldsa", name = "hashtags")
 public class Hashtag implements Serializable {
@@ -64,7 +61,7 @@ public class Hashtag implements Serializable {
 		return title.hashCode();
 	}
 
-	public List<SocialNetworkContent> getUsedAtList() throws DbException {
+	public List<SocialNetworkContent> getUsedAtList() throws ModelException {
 		return usedAtList;
 	}
 
@@ -77,9 +74,9 @@ public class Hashtag implements Serializable {
 		this.usedAtList = usedAtList;
 	}
 
-	public long getTimesUsed() throws DbException {
+	public long getTimesUsed() throws ModelException {
 		if (usedAtList == null) {
-			throw new DbException("Please use setUsedAtList before calling getTimesUsed");
+			throw new ModelException("Please use setUsedAtList before calling getTimesUsed");
 		}
 		return usedAtList.size();
 	}

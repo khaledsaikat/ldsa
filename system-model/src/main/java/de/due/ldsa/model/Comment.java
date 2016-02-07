@@ -3,10 +3,9 @@ package de.due.ldsa.model;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import com.datastax.driver.mapping.annotations.Transient;
 import com.google.gson.annotations.SerializedName;
 
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -74,11 +73,11 @@ public class Comment extends SocialNetworkContentImpl implements Serializable {
 		this.id = id;
 	}
 
-	public OffsetDateTime getContentTimestamp() throws DbException {
+	public OffsetDateTime getContentTimestamp() throws ModelException {
 		return this.contentTimestamp;
 	}
 
-	public OffsetDateTime getCrawlingTimestamp() throws DbException {
+	public OffsetDateTime getCrawlingTimestamp() throws ModelException {
 		return this.crawlingTimestamp;
 	}
 
@@ -148,7 +147,7 @@ public class Comment extends SocialNetworkContentImpl implements Serializable {
 	// Complex methods
 	// ------------------------------------------------------------------------------------------------------------------
 
-	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
 		this.socialNetworkId = sn.getId();
@@ -179,11 +178,11 @@ public class Comment extends SocialNetworkContentImpl implements Serializable {
 			return false;
 		if (text != null ? !text.equals(comment.text) : comment.text != null)
 			return false;
-		if (hashtagNames != null ? !hashtagNames.equals(comment.hashtagNames) : comment.hashtagNames != null)
-			return false;
-		if (likerIds != null ? !likerIds.equals(comment.likerIds) : comment.likerIds != null)
-			return false;
-		return !(commentIds != null ? !commentIds.equals(comment.commentIds) : comment.commentIds != null);
+		if (!(hashtagNames != null ? !hashtagNames.equals(comment.hashtagNames) : comment.hashtagNames != null))
+			if (!(likerIds != null ? !likerIds.equals(comment.likerIds) : comment.likerIds != null))
+				if (!(commentIds != null ? !commentIds.equals(comment.commentIds) : comment.commentIds != null))
+					return true;
+		return false;
 
 	}
 

@@ -12,6 +12,7 @@ import java.nio.ByteBuffer;
  * Author: Romina (scrobart)
  *
  * Used to save an RelationshipStatus into Cassandra. (used in Relationship)
+ * Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class RelationshipStatusCodec extends TypeCodec<RelationshipStatus> {
     public RelationshipStatusCodec() {

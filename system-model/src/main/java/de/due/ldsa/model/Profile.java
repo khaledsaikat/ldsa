@@ -1,12 +1,7 @@
 package de.due.ldsa.model;
 
-import com.datastax.driver.mapping.annotations.Transient;
-
-import de.due.ldsa.exception.DbException;
-
 import java.io.Serializable;
 import java.net.URL;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**

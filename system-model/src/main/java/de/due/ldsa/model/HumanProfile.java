@@ -7,7 +7,7 @@ import com.datastax.driver.mapping.annotations.Transient;
 import com.google.gson.annotations.SerializedName;
 
 import de.due.ldsa.ModelUtils;
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -374,7 +374,7 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 	}
 
 	@Override
-	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
 		this.socialNetworkId = sn.getId();
@@ -390,7 +390,7 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 		this.relationshipStatus = relationshipStatus;
 	}
 
-	public Relationship getRelationship() throws DbException {
+	public Relationship getRelationship() throws ModelException {
 		return new Relationship(getRelationshipStatus(), getRelationshipPersons());
 	}
 
@@ -449,14 +449,12 @@ public class HumanProfile extends Profile implements Serializable, SocialNetwork
 			return false;
 		if (sex != that.sex)
 			return false;
-		if (birthday != null ? !birthday.equals(that.birthday) : that.birthday != null)
-			return false;
-		if (relationshipStatus != that.relationshipStatus)
-			return false;
-		if (relationshipPersons != null ? !relationshipPersons.equals(that.relationshipPersons)
-				: that.relationshipPersons != null)
-			return false;
-		return !(interestKinds != null ? !interestKinds.equals(that.interestKinds) : that.interestKinds != null);
+		if (!(birthday != null ? !birthday.equals(that.birthday) : that.birthday != null))
+			if (relationshipStatus == that.relationshipStatus)
+				if (!(relationshipPersons != null ? !relationshipPersons.equals(that.relationshipPersons) : that.relationshipPersons != null))
+					if (!(interestKinds != null ? !interestKinds.equals(that.interestKinds) : that.interestKinds != null))
+						return true;
+		return false;
 
 	}
 

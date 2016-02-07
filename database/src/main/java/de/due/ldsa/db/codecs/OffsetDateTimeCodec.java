@@ -18,6 +18,7 @@ import java.util.Date;
  * Author: Romina (scrobart)
  * <p>
  * Used to save an OffsetDateTime into Cassandra. (used in SocialNetworkContent)
+ * Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class OffsetDateTimeCodec extends TypeCodec<OffsetDateTime>
 {

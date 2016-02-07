@@ -12,6 +12,7 @@ import java.nio.ByteBuffer;
  * Author: Romina (scrobart)
  *
  * Needed to save a byte Array into Cassandra. (used in Media)
+ * Usually, you won't need to do anything with this class. All of this is used by the Cassandra mapper internally.
  */
 public class ByteArrayCodec extends TypeCodec<byte[]> {
     public ByteArrayCodec() {

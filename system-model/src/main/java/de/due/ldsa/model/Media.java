@@ -4,7 +4,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -49,19 +49,12 @@ public class Media extends SocialNetworkContentImpl implements Serializable {
 	}
 
 	public Filetyp getFiletype() {
-		byte[] buf = new byte[64];
-		for (int i = 0; i < Math.min(64, bytes.length); i++) {
-			buf[i] = bytes[i];
-		}
+		byte[] buf = Arrays.copyOf(bytes, Math.min(64, bytes.length));
 
 		if ((buf[0] == 0x42) && (buf[1] == 0x4d)) {
 			return Filetyp.MicrosoftBMP;
 		} else if ((buf[0] == 0x47) && (buf[1] == 0x49) && (buf[2] == 0x38)) {
 			return Filetyp.GraphicsInterchangeFormat;
-		} else if ((buf[0] == 0xff) && (buf[1] == 0xd8) && (buf[2] == 0xff)) {
-			return Filetyp.JPEG;
-		} else if ((buf[0] == 0x89) && (buf[1] == 0x50) && (buf[2] == 0x4e) && (buf[3] == 0x47)) {
-			return Filetyp.PortableNetworkGraphic;
 		} else if ((buf[31] == 0x77) && (buf[32] == 0x65) && (buf[33] == 0x62) && (buf[34] == 0x6d)) {
 			return Filetyp.WebM;
 		} else if ((buf[8] == 0x57) && (buf[9] == 0x41) && (buf[10] == 0x56) && (buf[11] == 0x45)) {
@@ -98,7 +91,7 @@ public class Media extends SocialNetworkContentImpl implements Serializable {
 	}
 
 	@Override
-	public OffsetDateTime getContentTimestamp() throws DbException {
+	public OffsetDateTime getContentTimestamp() throws ModelException {
 		return contentTimestamp;
 	}
 
@@ -107,7 +100,7 @@ public class Media extends SocialNetworkContentImpl implements Serializable {
 	}
 
 	@Override
-	public OffsetDateTime getCrawlingTimestamp() throws DbException {
+	public OffsetDateTime getCrawlingTimestamp() throws ModelException {
 		return crawlingTimestamp;
 	}
 
@@ -116,7 +109,7 @@ public class Media extends SocialNetworkContentImpl implements Serializable {
 	}
 
 	@Override
-	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
 		this.socialNetworkId = sn.getId();
@@ -147,13 +140,7 @@ public class Media extends SocialNetworkContentImpl implements Serializable {
 			return false;
 		if (filename != null ? !filename.equals(media.filename) : media.filename != null)
 			return false;
-		if (!Arrays.equals(bytes, media.bytes))
-			return false;
-		if (contentTimestamp != null ? !contentTimestamp.equals(media.contentTimestamp)
-				: media.contentTimestamp != null)
-			return false;
-		return !(crawlingTimestamp != null ? !crawlingTimestamp.equals(media.crawlingTimestamp)
-				: media.crawlingTimestamp != null);
+		return Arrays.equals(bytes, media.bytes) && !(contentTimestamp != null ? !contentTimestamp.equals(media.contentTimestamp) : media.contentTimestamp != null) && !(crawlingTimestamp != null ? !crawlingTimestamp.equals(media.crawlingTimestamp) : media.crawlingTimestamp != null);
 
 	}
 

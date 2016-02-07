@@ -3,10 +3,9 @@ package de.due.ldsa.model;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
-import com.datastax.driver.mapping.annotations.Transient;
 
 import de.due.ldsa.ModelUtils;
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -172,8 +171,8 @@ public class OrganisationPlace extends SocialNetworkContentImpl implements Locat
 	// ------------------------------------------------------------------------------------------------------------------
 	// Complex methods
 	// ------------------------------------------------------------------------------------------------------------------
-	public CoopProfile getCoopProfile() throws DbException {
-		throw new DbException("not yet implemented.");
+	public CoopProfile getCoopProfile() throws ModelException {
+		throw new ModelException("not yet implemented.");
 	}
 
 	@Override
@@ -188,7 +187,7 @@ public class OrganisationPlace extends SocialNetworkContentImpl implements Locat
 	}
 
 	@Override
-	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException {
+	public void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException {
 		this.contentTimestamp = content;
 		this.crawlingTimestamp = crawling;
 		this.socialNetworkId = sn.getId();
@@ -217,14 +216,8 @@ public class OrganisationPlace extends SocialNetworkContentImpl implements Locat
 			return false;
 		if (contentTimestamp != null ? !contentTimestamp.equals(that.contentTimestamp) : that.contentTimestamp != null)
 			return false;
-		if (crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp)
-				: that.crawlingTimestamp != null)
-			return false;
-		if (!name.equals(that.name))
-			return false;
-		if (city != null ? !city.equals(that.city) : that.city != null)
-			return false;
-		return !(country != null ? !country.equals(that.country) : that.country != null);
+		return !(crawlingTimestamp != null ? !crawlingTimestamp.equals(that.crawlingTimestamp)
+				: that.crawlingTimestamp != null) && name.equals(that.name) && !(city != null ? !city.equals(that.city) : that.city != null) && !(country != null ? !country.equals(that.country) : that.country != null);
 
 	}
 

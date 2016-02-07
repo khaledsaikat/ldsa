@@ -1,10 +1,7 @@
 package de.due.ldsa.model;
 
 
-import java.io.Serializable;
 import java.util.ArrayList;
-
-import de.due.ldsa.exception.DbException;
 
 /**
  * Author: Romina (scrobart)

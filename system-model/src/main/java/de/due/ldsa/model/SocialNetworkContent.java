@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 /**
  * Author: Romina (scrobart)
@@ -16,11 +16,11 @@ public interface SocialNetworkContent extends Serializable {
 	// If we would declare fields in an abstract class, they would neither be
 	// written nor read in the database.
 
-	OffsetDateTime getContentTimestamp() throws DbException;
+	OffsetDateTime getContentTimestamp() throws ModelException;
 
-	OffsetDateTime getCrawlingTimestamp() throws DbException;
+	OffsetDateTime getCrawlingTimestamp() throws ModelException;
 
-	void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws DbException;
+	void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn) throws ModelException;
 
 	int getSocialNetworkId();
 

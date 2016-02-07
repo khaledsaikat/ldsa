@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 /**
  * Author: Romina (scrobart)
@@ -14,14 +14,14 @@ import de.due.ldsa.exception.DbException;
 public abstract class SocialNetworkContentImpl implements SocialNetworkContent, Serializable
 {
     @Override
-    public abstract OffsetDateTime getContentTimestamp() throws DbException;
+    public abstract OffsetDateTime getContentTimestamp() throws ModelException;
 
     @Override
-    public abstract OffsetDateTime getCrawlingTimestamp() throws DbException;
+    public abstract OffsetDateTime getCrawlingTimestamp() throws ModelException;
 
     @Override
     public abstract void setContentMeta(OffsetDateTime content, OffsetDateTime crawling, SocialNetwork sn)
-            throws DbException;
+            throws ModelException;
 
     @Override
     public abstract void setId(long id);

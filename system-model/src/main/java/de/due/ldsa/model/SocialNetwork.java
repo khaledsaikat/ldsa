@@ -4,11 +4,10 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
-import de.due.ldsa.exception.DbException;
+import de.due.ldsa.exception.ModelException;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
@@ -71,20 +70,20 @@ public class SocialNetwork implements Serializable {
 	// ------------------------------------------------------------------------------------------------------------------
 	// Complex methods
 	// ------------------------------------------------------------------------------------------------------------------
-	public Iterable<Profile> allProfiles() throws DbException {
-		throw new DbException("not yet implemented.");
+	public Iterable<Profile> allProfiles() throws ModelException {
+		throw new ModelException("not yet implemented.");
 	}
 
-	public Iterable<ProfileFeed> allProfileFeed() throws DbException {
-		throw new DbException("not yet implemented.");
+	public Iterable<ProfileFeed> allProfileFeed() throws ModelException {
+		throw new ModelException("not yet implemented.");
 	}
 
-	public Iterable<Media> allMedia() throws DbException {
-		throw new DbException("not yet implemented.");
+	public Iterable<Media> allMedia() throws ModelException {
+		throw new ModelException("not yet implemented.");
 	}
 
-	public Iterable<SocialNetworkContent> allContent() throws DbException {
-		throw new DbException("not yet implemented.");
+	public Iterable<SocialNetworkContent> allContent() throws ModelException {
+		throw new ModelException("not yet implemented.");
 	}
 
 	@Override
@@ -98,11 +97,7 @@ public class SocialNetwork implements Serializable {
 
 		if (id != that.id)
 			return false;
-		if (!name.equals(that.name))
-			return false;
-		if (homeURL != null ? !homeURL.equals(that.homeURL) : that.homeURL != null)
-			return false;
-		return Arrays.equals(logo, that.logo);
+		return name.equals(that.name) && !(homeURL != null ? !homeURL.equals(that.homeURL) : that.homeURL != null) && Arrays.equals(logo, that.logo);
 
 	}
 

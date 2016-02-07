@@ -13,6 +13,7 @@ import java.nio.ByteBuffer;
  * Author: Romina (scrobart)
  *
  * Used to save an URL into Cassandra. (used in Profile)
+ * Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class UrlCodec extends TypeCodec<URL> {
     public UrlCodec() {
@@ -32,10 +33,9 @@ public class UrlCodec extends TypeCodec<URL> {
     public URL deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         String temp = TypeCodec.varchar().deserialize(bytes, protocolVersion);
         try {
-            URL result = new URL(temp);
-            return result;
+            return new URL(temp);
         } catch (MalformedURLException e) {
-            System.out.println("Malformed URL saved in Database: " + temp.toString());
+            System.out.println("Malformed URL saved in Database: " + temp);
             return null;
         }
     }
@@ -43,8 +43,7 @@ public class UrlCodec extends TypeCodec<URL> {
     @Override
     public URL parse(String value) throws InvalidTypeException {
         try {
-            URL result = new URL(value);
-            return result;
+            return new URL(value);
         } catch (MalformedURLException e) {
             System.out.println("Malformed URL saved in Database: " + value);
             return null;

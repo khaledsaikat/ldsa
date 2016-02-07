@@ -13,6 +13,7 @@ import java.nio.ByteBuffer;
  * Author: Romina (scrobart)
  *
  * Used to save an Sex into Cassandra. (used in HumanProfile)
+ * Usually, you won't need to do anything with this class. All of this will be used by the Cassandra mapper internally.
  */
 public class SexCodec extends TypeCodec<Sex> {
     public SexCodec() {
@@ -31,7 +32,7 @@ public class SexCodec extends TypeCodec<Sex> {
     public Sex deserialize(ByteBuffer bytes, ProtocolVersion protocolVersion) throws InvalidTypeException {
         int m = TypeCodec.cint().deserialize(bytes, protocolVersion);
         if ((m != 0) && (m != 1)) {
-            System.out.println("The sex codec returned: " + new Integer(m).toString());
+            System.out.println("The sex codec returned: " + Integer.toString(m));
             return null;
         }
         return Sex.fromOrdinal(m);
