@@ -55,25 +55,25 @@ angular
 	  })
 	  .within()
 		.segment('users', {
-			templateUrl: 'views/users.html'
+			templateUrl: 'views/request/users.html'
 		})
 		.segment('relationships', {
-			templateUrl: 'views/relationships.html'
+			templateUrl: 'views/request/relationships.html'
 		})
 		.segment('media', {
-			templateUrl: 'views/media.html'
+			templateUrl: 'views/request/media.html'
 		})
 		.segment('comments', {
-			templateUrl: 'views/comments.html'
+			templateUrl: 'views/request/comments.html'
 		})
 		.segment('likes', {
-			templateUrl: 'views/likes.html'
+			templateUrl: 'views/request/likes.html'
 		})
 		.segment('tags', {
-			templateUrl: 'views/tags.html'
+			templateUrl: 'views/request/tags.html'
 		})
 		.segment('locations', {
-			templateUrl: 'views/locations.html'
+			templateUrl: 'views/request/locations.html'
 		})
 		.up()
 	  .segment('token', {
