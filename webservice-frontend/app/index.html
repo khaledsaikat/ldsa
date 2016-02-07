@@ -61,11 +61,11 @@
           <ul class="sidebar-menu">
             <li class="header">DO SOMETHING!</li>
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#/" class="sidebarbutton"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+            <li ng-class="active"><a href="#/main" class="sidebarbutton"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
             <li><a href="#/analysis" class="sidebarbutton"><i class="fa fa-bar-chart"></i> <span>Big Data Analysis</span></a></li>
 			<li><a href="#/database" class="sidebarbutton"><i class="fa fa-database"></i> <span>Database Query</span></a></li>
             <li class="treeview">
-			 <a href="."><i class="fa fa-exchange"></i> <span>Tracking Service</span> <i class="fa fa-angle-left pull-right"></i></a>
+			 <a href="{$routeSegment.name}"><i class="fa fa-exchange"></i> <span>Tracking Service</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
                 <li><a href="#/request">Request Data</a></li>
                 <li><a href="#/token">Application Settings</a></li>
@@ -89,7 +89,7 @@
 
         <!-- Main content -->
         <section class="content">
-    		<div ng-view=""></div>
+    		<div app-view-segment="0"></div>
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
 
@@ -179,6 +179,7 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
+	<script src="bower_components/angular-route-segment/build/angular-route-segment.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/js/select2.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
