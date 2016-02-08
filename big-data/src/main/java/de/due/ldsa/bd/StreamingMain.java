@@ -6,10 +6,9 @@ package de.due.ldsa.bd;
  * @author Khaled Hossain
  */
 public class StreamingMain {
-	
+
 	public static void main(String[] args) {
 		new SampleData().populateCommentsSample();
 		Streaming.getInstance().run();
 	}
-	
 }

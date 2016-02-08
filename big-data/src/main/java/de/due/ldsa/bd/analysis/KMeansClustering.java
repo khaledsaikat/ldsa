@@ -1,55 +1,74 @@
 package de.due.ldsa.bd.analysis;
 
-import java.util.List;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.mllib.clustering.KMeansModel;
-import org.apache.spark.streaming.api.java.JavaDStream;
-import org.apache.spark.streaming.api.java.JavaStreamingContext;
-import de.due.ldsa.bd.Helper;
-import twitter4j.Status;
+import org.apache.spark.ml.Pipeline;
+import org.apache.spark.ml.PipelineModel;
+import org.apache.spark.ml.PipelineStage;
+import org.apache.spark.ml.clustering.KMeans;
+import org.apache.spark.ml.feature.HashingTF;
+import org.apache.spark.ml.feature.IDF;
+import org.apache.spark.ml.feature.Tokenizer;
+import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.SQLContext;
 
 /**
- * A KMeans Analysis Class
+ * A KMeans Clustering Analysis Class
  * 
  * @author Abdul Qadir
- *
+ * @version 1.0
  */
 public class KMeansClustering {
-	/**
-	 * This method takes sample tweets from project resources and prints out in
-	 * different clusters based on KMeans for offline analysis
-	 * 
-	 * @param tweets
-	 * @param sc
-	 */
-	public static void offlineKMeans(JavaRDD<Iterable<String>> tweets, JavaSparkContext sc) {
-		KMeansModel model = Helper.loadModel(sc);
-		List<Iterable<String>> someTweets = tweets.take(150);
-		int i;
-		for (i = 0; i < 5; i++) {
-			int x = i;
-			System.out.println("Cluster:" + (x + 1));
-			someTweets.forEach(t -> {
-				if (model.predict(Helper.featurizeVector(t)) == x) {
-					System.out.println(t);
-				}
-			});
-		}
+
+	private JavaSparkContext sparkContext;
+	private SQLContext sqlContext;
+
+	public void setSparkContext(JavaSparkContext sparkContext) {
+		this.sparkContext = sparkContext;
+	}
+
+	public void setSqlContext(SQLContext sqlContext) {
+		this.sqlContext = sqlContext;
 	}
 
 	/**
-	 * This method filters live streaming tweets on given cluster number
-	 * 
-	 * @param tweets
-	 * @param ssc
+	 * @return DataFrame for training.
 	 */
-	public static void streamingKMeans(JavaDStream<Status> tweets, JavaStreamingContext ssc) {
-		KMeansModel model = Helper.streamingLoadModel(ssc);
-		KMeansModel modelObject = new KMeansModel(model.clusterCenters());
-		JavaDStream<Iterable<String>> filteredTweets = Helper.getTweets(tweets)
-				.filter(t -> modelObject.predict(Helper.featurizeVector(t)) == 0);
-		filteredTweets.print();
+	private DataFrame getTrainingDataFrame() {
+		String path = "../big-data/src/main/resources/smsspamcollection/SMSSpamCollection";
+		JavaRDD<Object> rdd = sparkContext.textFile(path).map(line -> {
+			String[] parts = line.split("\t");
+			CommentSample model = new CommentSample(parts[1]);
+			return model;
+		});
+		DataFrame dataFrame = sqlContext.createDataFrame(rdd, CommentSample.class);
+
+		return dataFrame;
 	}
 
+	/**
+	 * Combined Tokenizer, HashingTF, IDF and KMeans to a single pipeline
+	 */
+	private Pipeline getPipeline() {
+		Tokenizer tokenizer = new Tokenizer().setInputCol("text").setOutputCol("words");
+		HashingTF hashingTF = new HashingTF().setNumFeatures(1000).setInputCol(tokenizer.getOutputCol())
+				.setOutputCol("rawFeatures");
+		IDF idf = new IDF().setInputCol(hashingTF.getOutputCol()).setOutputCol("features");
+		KMeans kmeans = new KMeans().setK(3).setFeaturesCol(idf.getOutputCol()).setPredictionCol("prediction")
+				.setMaxIter(10);
+		Pipeline pipeline = new Pipeline().setStages(new PipelineStage[] { tokenizer, hashingTF, idf, kmeans });
+		return pipeline;
+	}
+
+	/**
+	 * KMeans Clustering on comments based on trained model
+	 */
+	public void analysis(DataFrame data) {
+		DataFrame training = getTrainingDataFrame();
+		training.cache().count();
+		Pipeline pipeline = getPipeline();
+		PipelineModel model = pipeline.fit(training);
+		DataFrame predictions = model.transform(data);
+		predictions.show();
+	}
 }

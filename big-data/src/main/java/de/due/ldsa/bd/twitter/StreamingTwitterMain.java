@@ -1,4 +1,4 @@
-package de.due.ldsa.bd;
+package de.due.ldsa.bd.twitter;
 
 /**
  * Main Class for running online streaming clustering application
@@ -24,7 +24,12 @@ public class StreamingTwitterMain {
 		 */
 		Helper.configureTwitterCredentials(Helper.getApiKey(), Helper.getApiSecret(), Helper.getAccessToken(),
 				Helper.getAccessTokenSecret());
-		StreamingTwitter app = new StreamingTwitter();
-		app.run();
+
+		try {
+			StreamingTwitter app = new StreamingTwitter();
+			app.run();
+		} catch (Exception e) {
+			System.out.println("Please first execute TwitterTrainAndSaveModel program");
+		}
 	}
 }

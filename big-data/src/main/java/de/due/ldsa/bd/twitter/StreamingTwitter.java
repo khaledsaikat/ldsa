@@ -1,11 +1,13 @@
-package de.due.ldsa.bd;
+package de.due.ldsa.bd.twitter;
 
 import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaDStream;
 //import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.twitter.TwitterUtils;
-import de.due.ldsa.bd.analysis.TwitterKMeansClustering;
+
+import de.due.ldsa.bd.Base;
+import de.due.ldsa.bd.Config;
 //import de.due.ldsa.bd.analysis.Top;
 import twitter4j.Status;
 

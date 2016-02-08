@@ -1,4 +1,4 @@
-package de.due.ldsa.bd;
+package de.due.ldsa.bd.twitter;
 
 import java.util.Arrays;
 import org.apache.spark.SparkConf;
@@ -7,7 +7,9 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.mllib.clustering.KMeansModel;
 import org.apache.spark.mllib.linalg.Vector;
-import de.due.ldsa.bd.analysis.TwitterKMeansClustering;
+
+import de.due.ldsa.bd.Base;
+import de.due.ldsa.bd.Config;
 
 /**
  * Class for Offline Tweets Analysis

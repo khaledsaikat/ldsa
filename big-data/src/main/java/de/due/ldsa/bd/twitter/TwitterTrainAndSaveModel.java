@@ -1,7 +1,8 @@
-package de.due.ldsa.bd;
+package de.due.ldsa.bd.twitter;
 
 /**
- * Main Class for running online streaming clustering application
+ * A class containing main method to train and save KMeans model to project
+ * resources for later analysis
  * 
  * (This is the sample class which is implemented to run machine learning
  * analysis using Spark Twitter API. So, it serves as a part of separate
@@ -12,19 +13,21 @@ package de.due.ldsa.bd;
  * @author Abdul Qadir
  * @version 1.0
  */
-public class StreamingTwitterMain {
+public class TwitterTrainAndSaveModel {
+
 	public static void main(String[] args) throws Exception {
 		/**
 		 * Setting Winutil property is only valid for Windows machine
 		 */
 		Helper.setProperty();
 
-		/**
-		 * Configuring Twitter credentials
-		 */
-		Helper.configureTwitterCredentials(Helper.getApiKey(), Helper.getApiSecret(), Helper.getAccessToken(),
-				Helper.getAccessTokenSecret());
-		StreamingTwitter app = new StreamingTwitter();
-		app.run();
+		try {
+			OfflineTwitter.Offline();
+			OfflineTwitter.trainAndSaveModel();
+		} catch (Exception e) {
+			System.out.println("Please first execute CollectTweets program");
+		}
+
 	}
+
 }

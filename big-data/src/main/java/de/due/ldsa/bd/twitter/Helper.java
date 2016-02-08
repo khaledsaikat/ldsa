@@ -1,4 +1,4 @@
-package de.due.ldsa.bd;
+package de.due.ldsa.bd.twitter;
 
 import java.io.File;
 import java.util.Arrays;

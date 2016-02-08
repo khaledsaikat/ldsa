@@ -3,6 +3,7 @@ package de.due.ldsa.bd;
 import org.apache.spark.sql.DataFrame;
 import de.due.ldsa.bd.analysis.BinaryClassification;
 import de.due.ldsa.bd.analysis.CommentSample;
+import de.due.ldsa.bd.analysis.KMeansClustering;
 
 /**
  * Class for offline analysis.
@@ -11,7 +12,7 @@ import de.due.ldsa.bd.analysis.CommentSample;
  */
 public class Offline extends Base {
 	private static Offline instance = null;
-	
+
 	/**
 	 * Get singleton instance
 	 */
@@ -21,9 +22,10 @@ public class Offline extends Base {
 		}
 		return instance;
 	}
-	
+
 	/**
-	 * Private constructor for singleton object to create all necessary context and populate baseRDD.
+	 * Private constructor for singleton object to create all necessary context
+	 * and populate baseRDD.
 	 */
 	private Offline() {
 		super();
@@ -32,6 +34,19 @@ public class Offline extends Base {
 
 	private void populateBaseData() {
 		baseData = new Data(sparkContext.parallelize(DataProvider.getInstance().getListSourceData()));
+	}
+
+	/**
+	 * Run KMeans Clustering to divide Comment object into different clusters.
+	 * 
+	 * @author Abdul Qadir
+	 */
+	private void runKMeansClustering() {
+		DataFrame data = sqlContext.createDataFrame(baseData.getRdd(), CommentSample.class);
+		KMeansClustering kmeans = new KMeansClustering();
+		kmeans.setSparkContext(sparkContext);
+		kmeans.setSqlContext(sqlContext);
+		kmeans.analysis(data);
 	}
 
 	/**
@@ -49,6 +64,7 @@ public class Offline extends Base {
 	 * Run analysis.
 	 */
 	public void run() {
+		runKMeansClustering();
 		runBinaryClassification();
 		sparkContext.stop();
 	}
