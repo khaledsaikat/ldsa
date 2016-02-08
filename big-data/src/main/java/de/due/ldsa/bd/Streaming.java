@@ -1,10 +1,7 @@
 package de.due.ldsa.bd;
 
-import java.util.List;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.DataFrame;
 import org.apache.spark.streaming.Durations;
-import org.apache.spark.streaming.api.java.JavaReceiverInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import de.due.ldsa.bd.analysis.BinaryClassification;
 import de.due.ldsa.bd.analysis.CommentSample;
@@ -20,7 +17,6 @@ import de.due.ldsa.bd.analysis.CommentSample;
 public class Streaming extends Base {
 	private static Streaming instance = null;
 	private JavaStreamingContext streamingContext;
-	private JavaReceiverInputDStream<List<?>> baseDStream;
 
 	/**
 	 * Get singleton instance
@@ -38,19 +34,18 @@ public class Streaming extends Base {
 	private Streaming() {
 		super();
 		streamingContext = new JavaStreamingContext(sparkContext, Durations.seconds(Config.interval));
-		populateBaseDStream();
+		populateBaseData();
 	}
 
 	/**
-	 * Set baseDStream
+	 * Set baseData with dStream
 	 */
-	private void populateBaseDStream() {
-		baseDStream = streamingContext.receiverStream(new CustomReceiver());
+	private void populateBaseData() {
+		baseData = new Data(streamingContext.receiverStream(new CustomReceiver()));
 	}
 	
 	private void runBinaryClassification() {
-		baseDStream.foreachRDD(rdds -> {
-			JavaRDD<Object> rdd = rdds.map(r -> r.get(0));		
+		baseData.getDstream().foreachRDD(rdd -> {	
 			DataFrame data = sqlContext.createDataFrame(rdd, CommentSample.class);
 			BinaryClassification binaryClassification = new BinaryClassification();
 			binaryClassification.setSparkContext(sparkContext);

@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
  * 
  * @author Khaled Hossain
  */
-public class CustomReceiver extends Receiver<List<?>> {
+public class CustomReceiver extends Receiver<Object> {
 	private static final long serialVersionUID = -1187714361055563697L;
 
 	/**
@@ -56,7 +56,9 @@ public class CustomReceiver extends Receiver<List<?>> {
 		try {
 			List<?> data = DataProvider.getInstance().getListSourceData();
 			if (data != null) {
-				store(data);
+				for (Object single : data) {
+					store(single);
+				}
 			}
 			restart("Restarting");
 		} catch (Exception e) {
