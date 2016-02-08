@@ -23,6 +23,13 @@ public class SampleData {
 	}
 
 	/**
+	 * @return List of sample string
+	 */
+	public List<String> getTextSamples() {
+		return Arrays.asList("Sample text", "Some other sample text", "One more sample text");
+	}
+
+	/**
 	 * Populate List of CommentSample object into DataProvider.
 	 */
 	public void populateCommentsSample() {

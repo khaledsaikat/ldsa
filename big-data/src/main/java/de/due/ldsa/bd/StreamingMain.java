@@ -11,4 +11,5 @@ public class StreamingMain {
 		new SampleData().populateCommentsSample();
 		Streaming.getInstance().run();
 	}
+	
 }

@@ -3,6 +3,7 @@ package de.due.ldsa.bd;
 import org.apache.spark.sql.DataFrame;
 import de.due.ldsa.bd.analysis.BinaryClassification;
 import de.due.ldsa.bd.analysis.CommentSample;
+import de.due.ldsa.bd.analysis.FPGrowthAnalysis;
 import de.due.ldsa.bd.analysis.KMeansClustering;
 
 /**
@@ -62,6 +63,7 @@ public class Offline extends Base {
 	 * Run analysis.
 	 */
 	public void run() {
+		FPGrowthAnalysis.analysis(baseData);
 		runKMeansClustering();
 		runBinaryClassification();
 		sparkContext.stop();

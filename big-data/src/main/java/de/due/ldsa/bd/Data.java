@@ -25,10 +25,12 @@ public class Data {
 
 	public Data(JavaRDD<?> rdd) {
 		this.rdd = rdd;
+		this.rdd.cache();
 	}
 
 	public Data(JavaReceiverInputDStream<?> dstream) {
 		this.dstream = dstream;
+		this.dstream.cache();
 	}
 	
 	public void setSparkContext(JavaSparkContext sparkContext) {
@@ -50,6 +52,7 @@ public class Data {
 	public JavaRDD<?> getRdd() {
 		if (rdd == null && rawList != null) {
 			rdd = sparkContext.parallelize(rawList);
+			rdd.cache();
 		}
 		return rdd;
 	}

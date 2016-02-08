@@ -58,7 +58,6 @@ public class KMeansClustering {
 	 */
 	public void analysis(DataFrame data) {
 		DataFrame training = getTrainingDataFrame();
-		training.cache().count();
 		Pipeline pipeline = getPipeline();
 		PipelineModel model = pipeline.fit(training);
 		DataFrame predictions = model.transform(data);

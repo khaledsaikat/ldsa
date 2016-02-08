@@ -1,12 +1,12 @@
 package de.due.ldsa.bd.analysis;
 
 import java.util.ArrayList;
+import java.util.List;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import org.apache.spark.SparkConf;
+import de.due.ldsa.bd.Data;
+import de.due.ldsa.bd.SampleData;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.Function;
 import org.apache.spark.mllib.fpm.FPGrowth;
 import org.apache.spark.mllib.fpm.FPGrowthModel;
 
@@ -20,16 +20,12 @@ public class FPGrowthAnalysis {
 	 * supporting of 5/6 = 0.7. numPartitions: it used to distributed the
 	 * itemsets
 	 */
-	private String inputFile;
 	private double minSupport;
 	private int numPartition;
+	private Data baseData;
 
-	public String getInputFile() {
-		return inputFile;
-	}
-
-	public void setInputFile(String inputFile) {
-		this.inputFile = inputFile;
+	public FPGrowthAnalysis(Data data) {
+		baseData = data;
 	}
 
 	public double getMinSupport() {
@@ -55,35 +51,18 @@ public class FPGrowthAnalysis {
 	 * their frequency in the data set FP Growth take an JavaRDD set of
 	 * transactions Iteration of array of items are generic type
 	 */
-	public static void main(String[] args) {
-		FPGrowthAnalysis analysis = new FPGrowthAnalysis();
-		analysis.setInputFile("src/main/resources/FPGrowth");
+	public static void analysis(Data data) {
+		FPGrowthAnalysis analysis = new FPGrowthAnalysis(data);
 		analysis.setMinSupport(0.3);
 		analysis.setNumPartition(-1);
-
-		SparkConf sparkConf = new SparkConf().setMaster("local").setAppName("FPGrowth Analysis");
-		JavaSparkContext sc = new JavaSparkContext(sparkConf);
-
-		JavaRDD<ArrayList<String>> transactions = sc.textFile(analysis.getInputFile())
-				.map(new Function<String, ArrayList<String>>() {
-					/**
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public ArrayList<String> call(String s) {
-						return Lists.newArrayList(s.split(" "));
-					}
-				});
-
+		List<String> list = new SampleData().getTextSamples();
+		JavaRDD<String> rdd = analysis.baseData.getSparkContext().parallelize(list);
+		JavaRDD<ArrayList<String>> transactions1 = rdd.map(r -> Lists.newArrayList(r.split(" ")));
 		FPGrowthModel<String> model = new FPGrowth().setMinSupport(analysis.getMinSupport())
-				.setNumPartitions(analysis.getNumPartition()).run(transactions);
+				.setNumPartitions(analysis.getNumPartition()).run(transactions1);
 
 		for (FPGrowth.FreqItemset<String> s : model.freqItemsets().toJavaRDD().collect()) {
 			System.out.println("[" + Joiner.on(",").join(s.javaItems()) + "], " + s.freq());
 		}
-
-		sc.close();
 	}
 }
