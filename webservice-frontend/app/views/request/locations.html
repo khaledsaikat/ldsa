@@ -1,1 +1,203 @@
-<p>This is the locations view.</p>
+<div class="nav-tabs-custom">
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a data-toggle="tab" data-target="#tab_1">Basic Information</a>
+		</li>
+		<li>
+			<a data-toggle="tab" data-target="#tab_2">Media by Location</a>
+		</li>
+		<li>
+			<a data-toggle="tab" data-target="#tab_3">Search</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div id="tab_1" class="tab-pane active">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Get basic information about a location.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Location ID</label>
+						<input class="form-control" placeholder="location id"></input>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+		<div id="tab_2" class="tab-pane">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Get a list of recent media objects from a given location.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Location ID</label>
+						<input class="form-control" placeholder="location id"></input>
+					</div>
+					<div class="form-group">
+						<label>Optional Min ID</label>
+						<input class="form-control" placeholder="return media before this min id"></input>
+					</div>
+					<div class="form-group">
+						<label>Optional Max ID</label>
+						<input class="form-control" placeholder="return media after this max id"></input>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+		<div id="tab_3" class="tab-pane">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Search for a location by geographic coordinate.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Optional Distance</label>
+						<input class="form-control" placeholder="default 1km(1000) max 5km"></input>
+					</div>
+					<div class="form-group">
+						<label>Facebook Places ID</label>
+						<input class="form-control" placeholder="returns location mapped off facebook places id"></input>
+					</div>
+					<div class="form-group">
+						<label>Foursquare v2 ID</label>
+						<input class="form-control" placeholder="returns location mapped off foursquare v2 api location id"></input>
+					</div>
+					<div class="form-group">
+						<label>Latitude</label>
+						<input class="form-control" placeholder="latitude"></input>
+					</div>
+					<div class="form-group">
+						<label>Longitude</label>
+						<input class="form-control" placeholder="longitude"></input>
+					</div>
+					<div class="form-group">
+						<div class="radio">
+							<label>
+								<input type="radio" checked="" value="location_facebook" name="mediaRadios"></input>
+								By Facebook Places ID
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" value="location_foursquare" name="mediaRadios"></input>
+								By Foursquare ID
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" value="location_latlng" name="mediaRadios"></input>
+								By Lat/Lng
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(function(){
+		$(".select2").select2({});
+	});
+</script>

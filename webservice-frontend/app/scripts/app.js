@@ -23,6 +23,7 @@ angular
     $routeSegmentProvider.options.autoLoadTemplates = true;
 	$routeSegmentProvider
       .when('/main', 'main')
+	  .when('/login', 'login')
       .when('/about', 'about')
 	  .when('/analysis', 'analysis')
 	  .when('/database', 'database')
@@ -35,10 +36,13 @@ angular
 	  .when('/request/tags', 'request.tags')
 	  .when('/request/locations', 'request.locations')
 	  .when('/token', 'token')
-	  .segment('main', {
-		default: true, 
+	  .segment('main', { 
 		templateUrl: 'views/main.html',
         controller: 'MainCtrl'  
+	  })
+	  .segment('login', {
+		default: true,
+		templateUrl: 'views/login.html',  
 	  })
 	  .segment('about', {
 		templateUrl: 'views/about.html',
@@ -55,6 +59,7 @@ angular
 	  })
 	  .within()
 		.segment('users', {
+			default: true,
 			templateUrl: 'views/request/users.html'
 		})
 		.segment('relationships', {

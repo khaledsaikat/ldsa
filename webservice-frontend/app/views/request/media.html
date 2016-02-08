@@ -1,1 +1,133 @@
-<p>This is the media view.</p>
+<div class="nav-tabs-custom">
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a data-toggle="tab" data-target="#tab_1">Basic Information</a>
+		</li>
+		<li>
+			<a data-toggle="tab" data-target="#tab_2">Search by Location</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div id="tab_1" class="tab-pane active">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Get information about a media object by its id or shortcode<br>
+					Response will contain the type of the object as well as the information wether the current user has liked this object.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Media ID / Shortcode</label>
+						<input class="form-control" placeholder="media id or shortcode"></input>
+					</div>
+					<div class="form-group">
+						<div class="radio">
+							<label>
+								<input type="radio" checked="" value="media_id" name="mediaRadios"></input>
+								By ID
+							</label>
+						</div>
+						<div class="radio">
+							<label>
+								<input type="radio" value="media_shortcode" name="mediaRadios"></input>
+								By Shortcode
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+		<div id="tab_2" class="tab-pane">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Search for recent media in a given area.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Latitude</label>
+						<input class="form-control" placeholder="latitude"></input>
+					</div>
+					<div class="form-group">
+						<label>Longitude</label>
+						<input class="form-control" placeholder="longitude"></input>
+					</div>
+					<div class="form-group">
+						<label>Distance</label>
+						<input class="form-control" placeholder="default 1km (1000) max 5km"></input>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(function(){
+		$(".select2").select2({});
+	});
+</script>
