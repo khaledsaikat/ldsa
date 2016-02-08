@@ -1,7 +1,6 @@
 package de.due.ldsa.bd.analysis;
 
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -10,7 +9,7 @@ import org.apache.spark.ml.feature.HashingTF;
 import org.apache.spark.ml.feature.IDF;
 import org.apache.spark.ml.feature.Tokenizer;
 import org.apache.spark.sql.DataFrame;
-import org.apache.spark.sql.SQLContext;
+import de.due.ldsa.bd.Data;
 
 /**
  * A KMeans Clustering Analysis Class
@@ -19,16 +18,10 @@ import org.apache.spark.sql.SQLContext;
  * @version 1.0
  */
 public class KMeansClustering {
+	private Data baseData;
 
-	private JavaSparkContext sparkContext;
-	private SQLContext sqlContext;
-
-	public void setSparkContext(JavaSparkContext sparkContext) {
-		this.sparkContext = sparkContext;
-	}
-
-	public void setSqlContext(SQLContext sqlContext) {
-		this.sqlContext = sqlContext;
+	public KMeansClustering(Data data) {
+		baseData = data;
 	}
 
 	/**
@@ -36,12 +29,12 @@ public class KMeansClustering {
 	 */
 	private DataFrame getTrainingDataFrame() {
 		String path = "../big-data/src/main/resources/smsspamcollection/SMSSpamCollection";
-		JavaRDD<Object> rdd = sparkContext.textFile(path).map(line -> {
+		JavaRDD<Object> rdd = baseData.getSparkContext().textFile(path).map(line -> {
 			String[] parts = line.split("\t");
 			CommentSample model = new CommentSample(parts[1]);
 			return model;
 		});
-		DataFrame dataFrame = sqlContext.createDataFrame(rdd, CommentSample.class);
+		DataFrame dataFrame = baseData.rddToDataframe(rdd, new CommentSample());
 
 		return dataFrame;
 	}

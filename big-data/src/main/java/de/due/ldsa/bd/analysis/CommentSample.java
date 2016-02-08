@@ -10,6 +10,10 @@ import java.io.Serializable;
 public class CommentSample implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String text;
+	
+	public CommentSample() {
+		
+	}
 
 	public CommentSample(String text) {
 		this.setText(text);

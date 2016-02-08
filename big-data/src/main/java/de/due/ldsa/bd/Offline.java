@@ -33,7 +33,9 @@ public class Offline extends Base {
 	}
 
 	private void populateBaseData() {
-		baseData = new Data(sparkContext.parallelize(DataProvider.getInstance().getListSourceData()));
+		baseData = new Data(DataProvider.getInstance().getListSourceData());
+		baseData.setSparkContext(sparkContext);
+		baseData.setSqlContext(sqlContext);	
 	}
 
 	/**
@@ -42,22 +44,18 @@ public class Offline extends Base {
 	 * @author Abdul Qadir
 	 */
 	private void runKMeansClustering() {
-		DataFrame data = sqlContext.createDataFrame(baseData.getRdd(), CommentSample.class);
-		KMeansClustering kmeans = new KMeansClustering();
-		kmeans.setSparkContext(sparkContext);
-		kmeans.setSqlContext(sqlContext);
-		kmeans.analysis(data);
+		DataFrame dataFrame = baseData.rddToDataframe(baseData.getRdd(), new CommentSample());
+		KMeansClustering kmeans = new KMeansClustering(baseData);
+		kmeans.analysis(dataFrame);
 	}
 
 	/**
 	 * Run binary classification for finding ham or spam form Comment object.
 	 */
 	private void runBinaryClassification() {
-		DataFrame data = sqlContext.createDataFrame(baseData.getRdd(), CommentSample.class);
-		BinaryClassification binaryClassification = new BinaryClassification();
-		binaryClassification.setSparkContext(sparkContext);
-		binaryClassification.setSqlContext(sqlContext);
-		binaryClassification.analysis(data);
+		DataFrame dataFrame = baseData.rddToDataframe(baseData.getRdd(), new CommentSample());
+		BinaryClassification binaryClassification = new BinaryClassification(baseData);
+		binaryClassification.analysis(dataFrame);
 	}
 
 	/**

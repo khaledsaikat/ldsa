@@ -1,7 +1,6 @@
 package de.due.ldsa.bd.analysis;
 
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
 import org.apache.spark.ml.PipelineStage;
@@ -9,7 +8,7 @@ import org.apache.spark.ml.classification.LogisticRegression;
 import org.apache.spark.ml.feature.HashingTF;
 import org.apache.spark.ml.feature.Tokenizer;
 import org.apache.spark.sql.DataFrame;
-import org.apache.spark.sql.SQLContext;
+import de.due.ldsa.bd.Data;
 
 /**
  * Binary classification analysis. We need to provide training data to train the
@@ -19,15 +18,10 @@ import org.apache.spark.sql.SQLContext;
  * @author Khaled Hossain
  */
 public class BinaryClassification {
-	private JavaSparkContext sparkContext;
-	private SQLContext sqlContext;
+	private Data baseData;
 
-	public void setSparkContext(JavaSparkContext sparkContext) {
-		this.sparkContext = sparkContext;
-	}
-
-	public void setSqlContext(SQLContext sqlContext) {
-		this.sqlContext = sqlContext;
+	public BinaryClassification(Data data) {
+		baseData = data;
 	}
 
 	/**
@@ -35,13 +29,13 @@ public class BinaryClassification {
 	 */
 	private DataFrame getTrainingDataFrame() {
 		String path = "../big-data/src/main/resources/smsspamcollection/SMSSpamCollection";
-		JavaRDD<Object> rdd = sparkContext.textFile(path).map(line -> {
+		JavaRDD<Object> rdd = baseData.getSparkContext().textFile(path).map(line -> {
 			String[] parts = line.split("\t");
 			Double label = parts[0].equals("spam") ? 1.0 : 0.0;
 			BinaryClassificationModel model = new BinaryClassificationModel(label, parts[1]);
 			return model;
 		});
-		DataFrame dataFrame = sqlContext.createDataFrame(rdd, BinaryClassificationModel.class);
+		DataFrame dataFrame = baseData.rddToDataframe(rdd, new BinaryClassificationModel());
 
 		return dataFrame;
 	}

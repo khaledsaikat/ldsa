@@ -44,6 +44,8 @@ public class Streaming extends Base {
 	 */
 	private void populateBaseData() {
 		baseData = new Data(streamingContext.receiverStream(new CustomReceiver()));
+		baseData.setSparkContext(sparkContext);
+		baseData.setSqlContext(sqlContext);	
 	}
 
 	/**
@@ -51,11 +53,9 @@ public class Streaming extends Base {
 	 */
 	private void runBinaryClassification() {
 		baseData.getDstream().foreachRDD(rdd -> {
-			DataFrame data = sqlContext.createDataFrame(rdd, CommentSample.class);
-			BinaryClassification binaryClassification = new BinaryClassification();
-			binaryClassification.setSparkContext(sparkContext);
-			binaryClassification.setSqlContext(sqlContext);
-			binaryClassification.analysis(data);
+			DataFrame dataFrame = baseData.rddToDataframe(rdd, new CommentSample());
+			BinaryClassification binaryClassification = new BinaryClassification(baseData);
+			binaryClassification.analysis(dataFrame);
 		});
 	}
 
@@ -66,11 +66,9 @@ public class Streaming extends Base {
 	 */
 	private void runKMeansClustering() {
 		baseData.getDstream().foreachRDD(rdd -> {
-			DataFrame data = sqlContext.createDataFrame(rdd, CommentSample.class);
-			KMeansClustering kmeans = new KMeansClustering();
-			kmeans.setSparkContext(sparkContext);
-			kmeans.setSqlContext(sqlContext);
-			kmeans.analysis(data);
+			DataFrame dataFrame = baseData.rddToDataframe(rdd, new CommentSample());
+			KMeansClustering kmeans = new KMeansClustering(baseData);
+			kmeans.analysis(dataFrame);
 		});
 	}
 
