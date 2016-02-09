@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 /**
- * Author: Romina (scrobart)
+ * Author: Romina Barth (scrobart), Janine Neffgen (sijaneff), Marc Henning (sdmahenn)
  *
  * If you need to serialize this, make sure your serializer honors transient
  * fields.
@@ -45,9 +45,9 @@ public class ProfileFeed extends SocialNetworkContentImpl {
 	@Column(name = "links")
 	ArrayList<URL> links;
 	@Column(name = "locationId")
-	int locationId;
+	long locationId;
 	@Column(name = "mediaId")
-	int mediaId;
+	long mediaId;
 	@Column(name = "taggedUserIds")
 	ArrayList<Long> taggedUserIds;
 	@Column(name = "commentIds")
@@ -125,7 +125,7 @@ public class ProfileFeed extends SocialNetworkContentImpl {
 		this.links = links;
 	}
 
-	public int getLocationId() {
+	public long getLocationId() {
 		return locationId;
 	}
 
@@ -133,7 +133,7 @@ public class ProfileFeed extends SocialNetworkContentImpl {
 		this.locationId = locationId;
 	}
 
-	public int getMediaId() {
+	public long getMediaId() {
 		return mediaId;
 	}
 
@@ -223,8 +223,8 @@ public class ProfileFeed extends SocialNetworkContentImpl {
 		result = 31 * result + (sharerIds != null ? sharerIds.hashCode() : 0);
 		result = 31 * result + (hashtagNames != null ? hashtagNames.hashCode() : 0);
 		result = 31 * result + (links != null ? links.hashCode() : 0);
-		result = 31 * result + locationId;
-		result = 31 * result + mediaId;
+		result = 31 * result + (int)(locationId ^(locationId >>> 32));
+		result = 31 * result + (int) (mediaId ^ (mediaId >>>32));
 		result = 31 * result + (taggedUserIds != null ? taggedUserIds.hashCode() : 0);
 		result = 31 * result + (commentIds != null ? commentIds.hashCode() : 0);
 		return result;
