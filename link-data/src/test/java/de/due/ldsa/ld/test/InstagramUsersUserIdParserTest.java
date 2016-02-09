@@ -6,7 +6,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import de.due.ldsa.ld.example.InstagramUsersUserIdParser;
+import de.due.ldsa.ld.parsers.InstagramUsersUserIdParser;
 import de.due.ldsa.model.Profile;
 
 /**A test case for {@link InstagramUsersUserIdParser}.

@@ -8,7 +8,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import de.due.ldsa.ld.example.InstagramMediaSearchParser;
+import de.due.ldsa.ld.parsers.InstagramMediaSearchParser;
 import de.due.ldsa.model.Media;
 import de.due.ldsa.model.Profile;
 import de.due.ldsa.model.ProfileFeed;

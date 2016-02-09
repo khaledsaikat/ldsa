@@ -1,31 +1,29 @@
-package de.due.ldsa.ld.example;
+package de.due.ldsa.ld.parsers;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import de.due.ldsa.ld.Parser;
 import de.due.ldsa.model.Location;
 import de.due.ldsa.model.Media;
 import de.due.ldsa.model.Profile;
 import de.due.ldsa.model.ProfileFeed;
 import de.due.ldsa.model.SocialNetworkContent;
+import de.due.ldsa.ld.Parser;
 
-/**Parses a list of {@link profilefeed}'s by an Instagram Api /users/self/media/liked
- * response. Uses the {@link InstagramObjectParser} to parse the different parts.
+/**A Parser for an Instagram Api response from /users/self/media/recent. 
+ * Creates a List of a media objects, profiles, profilefeeds and also
+ * Locations, if those are included in the response.
  * 
- * @return an ArrayList with all parsed data from the response.
- * 
- * @author Maik Wosnitzka
+ * @author Jan Kowollik
  *
  */
-public class InstagramUsersSelfMediaLikedParser implements Parser<ArrayList<SocialNetworkContent>>{
-	
-	public static final InstagramUsersSelfMediaLikedParser INSTANCE = 
-			new InstagramUsersSelfMediaLikedParser();
+public class InstagramUsersSelfMediaRecentParser implements Parser<ArrayList<SocialNetworkContent>>{
+
+	public static final InstagramUsersSelfMediaRecentParser INSTANCE = new
+			InstagramUsersSelfMediaRecentParser();
 	
 	@Override
 	public ArrayList<SocialNetworkContent> parse(JSONObject json) throws JSONException {
@@ -33,11 +31,10 @@ public class InstagramUsersSelfMediaLikedParser implements Parser<ArrayList<Soci
 		ArrayList<SocialNetworkContent> contentList = new ArrayList<>();
 		
 		for (int i = 0; i < jsonArray.length(); i++) {
-			json = jsonArray.getJSONObject(i);
-			
-			Media media = InstagramObjectParser.parseMedia(json);
-			Profile creator = InstagramObjectParser.parseProfile(json.getJSONObject("user"));
-			ProfileFeed profileFeed = InstagramObjectParser.parseProfileFeed(json);
+			JSONObject elementJson = jsonArray.getJSONObject(i);
+			Media media = InstagramObjectParser.parseMedia(elementJson);
+			Profile creator = InstagramObjectParser.parseProfile(elementJson.getJSONObject("user"));
+			ProfileFeed profileFeed = InstagramObjectParser.parseProfileFeed(elementJson);
 			
 			profileFeed.setMediaId((int) media.getId());
 			ArrayList<Long> profileFeedIdList = new ArrayList<>();
@@ -48,11 +45,11 @@ public class InstagramUsersSelfMediaLikedParser implements Parser<ArrayList<Soci
 			contentList.add(creator);
 			contentList.add(profileFeed);
 			
-			if(!json.isNull("location")){
-				JSONObject jsonLocation = json.getJSONObject("location");
-				Location location = InstagramObjectParser.parseLocation(jsonLocation);
-				contentList.add(location);
+			if(!elementJson.isNull("location")){
+				JSONObject locationJson = elementJson.getJSONObject("location");
+				Location location = InstagramObjectParser.parseLocation(locationJson);
 				profileFeed.setLocationId((int) location.getId());
+				contentList.add(location);
 			}
 		}
 		

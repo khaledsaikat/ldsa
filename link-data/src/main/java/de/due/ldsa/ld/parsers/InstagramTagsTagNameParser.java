@@ -1,4 +1,4 @@
-package de.due.ldsa.ld.example;
+package de.due.ldsa.ld.parsers;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;

@@ -8,7 +8,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import de.due.ldsa.ld.example.InstagramUsersSelfFollowsParser;
+import de.due.ldsa.ld.parsers.InstagramUsersSelfFollowsParser;
 import de.due.ldsa.model.Profile;
 
 /**A Test case for {@link InstgramUsersSelfFollowsParser}.

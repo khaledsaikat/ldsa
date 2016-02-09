@@ -8,8 +8,8 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import de.due.ldsa.ld.example.InstagramUsersSelfFollowedByParser;
-import de.due.ldsa.ld.example.InstagramUsersSelfMediaLikedParser;
+import de.due.ldsa.ld.parsers.InstagramUsersSelfFollowedByParser;
+import de.due.ldsa.ld.parsers.InstagramUsersSelfMediaLikedParser;
 import de.due.ldsa.model.Location;
 import de.due.ldsa.model.Media;
 import de.due.ldsa.model.Profile;

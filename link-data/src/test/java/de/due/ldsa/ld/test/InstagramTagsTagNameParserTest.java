@@ -6,7 +6,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import de.due.ldsa.ld.example.InstagramTagsTagNameParser;
+import de.due.ldsa.ld.parsers.InstagramTagsTagNameParser;
 import de.due.ldsa.model.Hashtag;
 
 public class InstagramTagsTagNameParserTest {

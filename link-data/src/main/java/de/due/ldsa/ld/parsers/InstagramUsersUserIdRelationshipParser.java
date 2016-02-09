@@ -1,4 +1,4 @@
-package de.due.ldsa.ld.example;
+package de.due.ldsa.ld.parsers;
 
 import java.util.Collections;
 import java.util.List;

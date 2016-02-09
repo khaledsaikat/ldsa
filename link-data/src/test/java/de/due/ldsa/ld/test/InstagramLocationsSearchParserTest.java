@@ -8,7 +8,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import de.due.ldsa.ld.example.InstagramLocationsSearchParser;
+import de.due.ldsa.ld.parsers.InstagramLocationsSearchParser;
 import de.due.ldsa.model.Location;
 
 /**A test case for {@link InstagramLocationsSearchParser}.

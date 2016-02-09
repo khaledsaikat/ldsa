@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.junit.Test;
 
-import de.due.ldsa.ld.example.InstagramUsersSearchParser;
+import de.due.ldsa.ld.parsers.InstagramUsersSearchParser;
 import de.due.ldsa.model.Profile;
 
 /**A test case for {@link InstagramUsersSearchParser}.
