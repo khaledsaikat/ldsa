@@ -1,1 +1,79 @@
-<p>This is the analysis view.</p>
+<style type="text/css">.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}</style>
+
+<div class="row">
+	<div class="col-sm-12">
+		<h1 class="page-header"></i>Big Data Analysis</h1>
+	</div>
+</div>	
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="box box-primary">
+			<div class="box-header with-border">
+				<h3 class="box-title">Analyse Box</h3>
+			</div>
+			
+		<div class="box-body">
+			<div class="col-sm-2">
+				<form>				
+					<select name="analysisTools" size="10" onchange="">
+						<option value="KC">KMeans Clustering</option>
+						<option value="BC">Binary Classification</option>
+						<option value="RA" selected>Recommendation Analysis</option>
+						<option value="GA">FP Growth Analysis</option>
+					</select>
+				</form>
+			</div>
+			<div class="col-sm-3" style="margin-left:10px;">				
+				<fieldset>
+					<span style="color:black"><b>Which procedure of Analyse?</b> </span><br>
+					<input type="radio" id="OFF"name="AnalysisType" value="Offline"><label for="mc">Offline</label><br> 
+					<input type="radio" id="RT" name="AnalysisType" value="Real-Time"><label for="vi">Real-Time</label><br>			
+				</fieldset>
+				<button class="btn btn-primary" type="button" style="width:200px;height:70px; margin-top:48px;">Execute</button>	
+			</div>
+		
+	
+			<div class="col-sm-12"style="margin-top:10px;">
+				<div class="progress" style="border-style: solid;border-width : 2px;">
+					<div class="progress-bar" role="progressbar" style="width: 60%;border-color: black;" > 
+	
+					<span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>	60% Complete
+					</div>
+				</div>
+				
+			</div>	
+		</div>
+	</div>
+	</div>
+</div>
+
+<div class="row">
+		<div class="col-sm-12">
+			<div class="box box-solid">
+				<div class="box-header with-border">
+					<h3 class="box-title">Results</h3>
+				</div>
+				<div class="box-body">
+					<pre><code class="http">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+					</code></pre>
+				</div>
+			</div>
+		</div>
+</div>
+
+		
+
