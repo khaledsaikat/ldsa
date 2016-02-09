@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript">
+		
+		$( '#search' ).click(function()
+		{
+			var id =$('input[name=message]').val(); 
+			if(id !== "")
+				{
+					$('#display').fadeIn(1000);
+					$('#display').html(id);
+					$('input[name=message]').val("");
+				}
+			else
+				{
+					alert("Enter some Query....!!");
+				}
+		});
+	</script>
+    	
+	<style type="text/css">
+		#display{
+
+			height: 400px;
+			width: 1100px;
+			border: 1px solid #525354;
+			margin-top: 45px;
+			color: #234455;
+			display:none;
+			padding:20px;
+			font-style: BOld;
+			font-size: 18px;
+		}
+		#custom-search-input {
+			margin:0;
+			margin-top: 10px;
+			padding: 0;
+		}
+	 
+		#custom-search-input .search-query {
+			padding-right: 3px;
+			padding-right: 4px \9;
+			padding-left: 3px;
+			padding-left: 4px \9;
+			margin-bottom: 0;
+			-webkit-border-radius: 3px;
+			-moz-border-radius: 3px;
+			border-radius: 3px;
+		}
+	 
+		#custom-search-input button {
+			border: 0;
+			background: none;
+			padding: 2px 5px;
+			margin-top: 2px;
+			position: relative;
+			left: -28px;
+			margin-bottom: 0;
+			-webkit-border-radius: 3px;
+			-moz-border-radius: 3px;
+			border-radius: 3px;
+			color:#D9230F;
+		}
+	 
+		.search-query:focus + button {
+			z-index: 3;   
+		}
+
+	</style>
+</head>
+<body>
+	<div>
+		<form action=" ">
+			<div class="container">
+				<div class="row">
+					<div id="custom-search-input">
+						<div class="input-group col-md-6">
+							<input type="text" class="  search-query form-control" name='message' placeholder="Enter the query..." />
+							<span class="input-group-btn">
+								<input class="btn btn-danger" id='search' type="button" value='Search' />                                       
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		
+		<div id="display"></div>
+	</div>
+
+</body>
+</html>

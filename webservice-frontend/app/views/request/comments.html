@@ -1,0 +1,61 @@
+<div class="nav-tabs-custom">
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a data-toggle="tab" data-target="#tab_1">Comments on Media</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div id="tab_1" class="tab-pane active">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+						Get a list of recent comments on a media object.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Media ID</label>
+						<input class="form-control" placeholder="media id"/>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(function(){
+		$(".select2").select2({});
+	});
+</script>

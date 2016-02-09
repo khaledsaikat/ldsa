@@ -1,0 +1,226 @@
+<div class="nav-tabs-custom">
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a data-toggle="tab" data-target="#tab_1">Basic Information</a>
+		</li>
+		<li>
+			<a data-toggle="tab" data-target="#tab_2">Recent Media</a>
+		</li>
+		<li>
+			<a data-toggle="tab" data-target="#tab_3">Liked Media</a>
+		</li>
+		<li>
+			<a data-toggle="tab" data-target="#tab_4">Search</a>
+		</li>
+	</ul>
+	<div class="tab-content">
+		<div id="tab_1" class="tab-pane active">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Get basic information about the current user or a user with the given user id.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12 form-group">
+					<label>Optional User ID</label>
+					<input class="form-control" placeholder="Optional User ID"/>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+		<div id="tab_2" class="tab-pane">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Get recent media published by the current user or a user with the given user id.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Optional User ID</label>
+						<input class="form-control" placeholder="user id"/>
+					</div>
+					<div class="form-group">
+						<label>Optional Count</label>
+						<input class="form-control" placeholder="count of media to return"/>
+					</div>
+					<div class="form-group">
+						<label>Optional Min ID</label>
+						<input class="form-control" placeholder="return media later than min id"/>
+					</div>
+					<div class="form-group">
+						<label>Optional Max ID</label>
+						<input class="form-control" placeholder="return media earlier than max id"/>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+		<div id="tab_3" class="tab-pane">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Get a list of recent media liked by the current user.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Optional Count</label>
+						<input class="form-control" placeholder="count of media to return"/>
+					</div>
+					<div class="form-group">
+						<label>Optional Max Like ID</label>
+						<input class="form-control" placeholder="return media liked before this id"/>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+		<div id="tab_4" class="tab-pane">
+			<!-- Description -->
+			<div class="row">
+				<div class="col-sm-12">
+					<p>
+					Get a list of users matching the given query.
+					</p>
+				</div>
+			</div>
+			<!-- Header -->
+			<div class="row">
+				<div class="col-sm-12">
+					<h3 class="page-header">Request Options</h3>
+				</div>
+			</div>
+			<!-- Query Params -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Query</label>
+						<input class="form-control" placeholder="Search ..."/>
+					</div>
+					<div class="form-group">
+						<label>Optional Count</label>
+						<input class="form-control" placeholder="number of users to return"/>
+					</div>
+				</div>
+			</div>
+			<!-- Access Token -->
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group">
+						<label>Choose Access Token</label>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1">
+							<option>Token 1</option>
+							<option>Token 2</option>
+							<option>Token 3</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr>
+			<!-- Button Footer -->
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-primary" type="button">Execute</button>
+					<button class="btn btn-default" type="button">Clear</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(function(){
+		$(".select2").select2({});
+	});
+</script>
