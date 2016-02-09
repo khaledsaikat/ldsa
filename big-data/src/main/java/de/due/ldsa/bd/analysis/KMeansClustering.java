@@ -10,6 +10,8 @@ import org.apache.spark.ml.feature.IDF;
 import org.apache.spark.ml.feature.Tokenizer;
 import org.apache.spark.sql.DataFrame;
 import de.due.ldsa.bd.Data;
+import de.due.ldsa.bd.exceptions.AnalysisException;
+import de.due.ldsa.bd.exceptions.SparkContextDataException;
 
 /**
  * A KMeans Clustering Analysis Class
@@ -27,7 +29,7 @@ public class KMeansClustering {
 	/**
 	 * @return DataFrame for training.
 	 */
-	private DataFrame getTrainingDataFrame() {
+	private DataFrame getTrainingDataFrame() throws SparkContextDataException {
 		String path = "../big-data/src/main/resources/smsspamcollection/SMSSpamCollection";
 		JavaRDD<Object> rdd = baseData.getSparkContext().textFile(path).map(line -> {
 			String[] parts = line.split("\t");
@@ -42,7 +44,7 @@ public class KMeansClustering {
 	/**
 	 * Combined Tokenizer, HashingTF, IDF and KMeans to a single pipeline
 	 */
-	private Pipeline getPipeline() {
+	private Pipeline getPipeline() throws AnalysisException {
 		Tokenizer tokenizer = new Tokenizer().setInputCol("text").setOutputCol("words");
 		HashingTF hashingTF = new HashingTF().setNumFeatures(1000).setInputCol(tokenizer.getOutputCol())
 				.setOutputCol("rawFeatures");
@@ -56,7 +58,7 @@ public class KMeansClustering {
 	/**
 	 * KMeans Clustering on comments based on trained model
 	 */
-	public void analysis(DataFrame data) {
+	public void analysis(DataFrame data) throws AnalysisException {
 		DataFrame training = getTrainingDataFrame();
 		Pipeline pipeline = getPipeline();
 		PipelineModel model = pipeline.fit(training);

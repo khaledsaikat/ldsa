@@ -6,6 +6,8 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import de.due.ldsa.bd.Data;
 import de.due.ldsa.bd.SampleData;
+import de.due.ldsa.bd.exceptions.AnalysisException;
+
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.mllib.fpm.FPGrowth;
 import org.apache.spark.mllib.fpm.FPGrowthModel;
@@ -51,7 +53,7 @@ public class FPGrowthAnalysis {
 	 * their frequency in the data set FP Growth take an JavaRDD set of
 	 * transactions Iteration of array of items are generic type
 	 */
-	public static void analysis(Data data) {
+	public static void analysis(Data data) throws AnalysisException {
 		FPGrowthAnalysis analysis = new FPGrowthAnalysis(data);
 		analysis.setMinSupport(0.3);
 		analysis.setNumPartition(-1);

@@ -9,6 +9,8 @@ import org.apache.spark.ml.feature.HashingTF;
 import org.apache.spark.ml.feature.Tokenizer;
 import org.apache.spark.sql.DataFrame;
 import de.due.ldsa.bd.Data;
+import de.due.ldsa.bd.exceptions.AnalysisException;
+import de.due.ldsa.bd.exceptions.SparkContextDataException;
 
 /**
  * Binary classification analysis. We need to provide training data to train the
@@ -27,7 +29,7 @@ public class BinaryClassification {
 	/**
 	 * @return DataFrame for training.
 	 */
-	private DataFrame getTrainingDataFrame() {
+	private DataFrame getTrainingDataFrame() throws SparkContextDataException {
 		String path = "../big-data/src/main/resources/smsspamcollection/SMSSpamCollection";
 		JavaRDD<Object> rdd = baseData.getSparkContext().textFile(path).map(line -> {
 			String[] parts = line.split("\t");
@@ -44,7 +46,7 @@ public class BinaryClassification {
 	 * Combined Tokenizer, HashingTF and LogisticRegression to a single
 	 * pipeline.
 	 */
-	private Pipeline getPipeline() {
+	private Pipeline getPipeline() throws AnalysisException {
 		Tokenizer tokenizer = new Tokenizer().setInputCol("text").setOutputCol("words");
 		HashingTF hashingTF = new HashingTF().setNumFeatures(1000).setInputCol(tokenizer.getOutputCol())
 				.setOutputCol("features");
@@ -57,7 +59,7 @@ public class BinaryClassification {
 	/**
 	 * Train the model and based on trained model run test data
 	 */
-	public void analysisRandom() {
+	public void analysisRandom() throws AnalysisException {
 		DataFrame[] splits = getTrainingDataFrame().randomSplit(new double[] { 0.9, 0.1 });
 		DataFrame training = splits[0];
 		DataFrame test = splits[1];
@@ -70,7 +72,7 @@ public class BinaryClassification {
 	/**
 	 * Analysis comments based on trained model
 	 */
-	public void analysis(DataFrame data) {
+	public void analysis(DataFrame data) throws AnalysisException {
 		DataFrame training = getTrainingDataFrame();
 		Pipeline pipeline = getPipeline();
 		PipelineModel model = pipeline.fit(training);

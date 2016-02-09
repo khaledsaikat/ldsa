@@ -3,6 +3,7 @@ package de.due.ldsa.bd;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.SQLContext;
+import de.due.ldsa.bd.exceptions.SparkContextDataException;
 
 /**
  * Base class for creating spark context.
@@ -20,7 +21,7 @@ public abstract class Base {
 	/**
 	 * Initializing conf, sparkContext and sqlContext.
 	 */
-	public Base() {
+	public Base() throws SparkContextDataException {
 		conf = new SparkConf().setMaster(Config.master).setAppName(Config.appName);
 		sparkContext = new JavaSparkContext(conf);
 		sqlContext = new SQLContext(sparkContext);
