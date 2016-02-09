@@ -1,0 +1,119 @@
+<div class="row">
+	<div class="col-sm-3">
+        <h2 class="page-header">Endpoints</h2>
+		<div class="info-box">
+			<a href="request/users"><span class="info-box-icon" ng-class="{'bg-light-blue': ('request.users' | routeSegmentStartsWith)}"><i class="fa fa-user"></i></span></a>
+			<div class="info-box-content">
+				<span class="info-box-number">Users</span>
+			</div><!-- /.info-box-content -->
+		</div><!-- /.info-box -->
+		<div class="info-box">
+			<a href="request/relationships"><span class="info-box-icon" ng-class="{'bg-light-blue': ('request.relationships' | routeSegmentStartsWith)}"><i class="fa fa-users"></i></span></a>
+			<div class="info-box-content">
+				<span class="info-box-number">Relationships</span>
+			</div><!-- /.info-box-content -->
+		</div><!-- /.info-box -->
+		<div class="info-box">
+			<a href="request/media"><span class="info-box-icon" ng-class="{'bg-light-blue': ('request.media' | routeSegmentStartsWith)}"><i class="fa fa-camera-retro"></i></span></a>
+			<div class="info-box-content">
+				<span class="info-box-number">Media</span>
+			</div><!-- /.info-box-content -->
+		</div><!-- /.info-box -->
+		<div class="info-box">
+			<a href="request/comments"><span class="info-box-icon" ng-class="{'bg-light-blue': ('request.comments' | routeSegmentStartsWith)}"><i class="fa fa-comments"></i></span></a>
+			<div class="info-box-content">
+				<span class="info-box-number">Comments</span>
+			</div><!-- /.info-box-content -->
+		</div><!-- /.info-box -->
+		<div class="info-box">
+			<a href="request/likes"><span class="info-box-icon" ng-class="{'bg-light-blue': ('request.likes' | routeSegmentStartsWith)}"><i class="fa fa-thumbs-o-up"></i></span></a>
+			<div class="info-box-content">
+				<span class="info-box-number">Likes</span>
+			</div><!-- /.info-box-content -->
+		</div><!-- /.info-box -->
+		<div class="info-box">
+			<a href="request/tags"><span class="info-box-icon" ng-class="{'bg-light-blue': ('request.tags' | routeSegmentStartsWith)}"><i class="fa fa-tag"></i></span></a>
+			<div class="info-box-content">
+				<span class="info-box-number">Tags</span>
+			</div><!-- /.info-box-content -->
+		</div><!-- /.info-box -->
+		<div class="info-box">
+			<a href="request/locations"><span class="info-box-icon" ng-class="{'bg-light-blue': ('request.locations' | routeSegmentStartsWith)}"><i class="fa fa-compass"></i></span></a>
+			<div class="info-box-content">
+				<span class="info-box-number">Locations</span>
+			</div><!-- /.info-box-content -->
+		</div><!-- /.info-box -->
+	</div>
+	<div class="col-sm-9">
+		<div class="row">
+			<div class="col-sm-12">
+				<h2 class="page-header">Query Settings</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<!-- Main content -->
+				<div app-view-segment="1"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<h2 class="page-header">Response</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="box box-solid">
+					<div class="box-header with-border">
+						<h3 class="box-title">Header</h3>
+					</div>
+					<div class="box-body">
+						<pre><code class="http">
+POST /task?id=1 HTTP/1.1
+Host: example.org
+Content-Type: application/json; charset=utf-8
+Content-Length: 19
+
+{"status": "ok", "extended": true}
+						</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="box box-solid">
+					<div class="box-header with-border">
+						<h3 class="box-title">Body</h3>
+					</div>
+					<div class="box-body">
+						<pre><code class="json">
+{
+	"data": {
+	"id": "1574083",
+	"username": "snoopdogg",
+	"full_name": "Snoop Dogg",
+	"profile_picture": "http://distillery.s3.amazonaws.com/profiles/profile_1574083_75sq_1295469061.jpg",
+	"bio": "This is my bio",
+	"website": "http://snoopdogg.com",
+	"counts": {
+		"media": 1320,
+		"follows": 420,
+		"followed_by": 3410
+	}
+}
+						</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready(function() {
+  $('pre code').each(function(i, block) {
+    hljs.highlightBlock(block);
+  });
+});
+</script>
