@@ -24,8 +24,14 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 
 /**
- * A class containins collaborating filtering algorithm implementation
- * and Analysis as Recommendation Model for predict best recommendation from user and products/followers
+ * A class containing collaborating filtering algorithm :
+ * (which commonly use for recommend system as finding or predicting missing entries as user-item association matrix)
+ * implementation and Analysis as Recommendation Model for predict best recommendation from user and products/followers
+ * Use-case for Instagram is: we could predict followers for a new or existing Instagram users by it. 
+ * MLlib currently support model based collaborating filters and we implement alternating least squares (ALS) algorithm 
+ * to learn latent factors(users and products are described by a small set of latent factors that can be used to predict missing entries.).
+ * Data info: Here i used 1 million ratings, 6000 users and 5000 products data
+ * version used: spark 1.5.2
  * 
  * @author MD Ariful Islam, MCE,UDE
  *
@@ -39,9 +45,11 @@ public class RecommendationModel implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	public static final String LINE_SEPERATOR = "::";
-	//absoulute path to the directory that the data files are stored
+	//Absolute path to the directory that the data files are stored
     public static final String RESOURCE_PATH = "src/main/resources/mllib/"; 
+    //this data is in this UserID::MovieID::Rating::Time-stamp format, for instagram it will be followers as example
     public static final String RATINGS_FILE_NAME = "ratings.dat";
+    //this data is in MovieID::Title::Genres format, for instagram it will be users as example
     public static final String PRODUCTS_FILE_NAME = "movies.dat";
     public static final String APP_NAME = "BigDataAnalysis";
     public static final String CLUSTER = "local[2]";
@@ -50,6 +58,7 @@ public class RecommendationModel implements Serializable{
 	public static void main(String[] args) throws Exception{
 		
 		/**
+		 * Set up environment
 		 * Setting Winutil property is only valid for Windows machine
 		 * for Linux OS we dont need it
 		 */
@@ -86,7 +95,8 @@ public class RecommendationModel implements Serializable{
 		            }
 		        }
 		);
-	
+	 
+	    //Read in movie ids and titles, collect them into a movie id to title map.	
 		Map<Integer, String> products = productData.mapToPair(
 		        new PairFunction<String, Integer, String>() {
 					private static final long serialVersionUID = 1L;
@@ -98,7 +108,7 @@ public class RecommendationModel implements Serializable{
 		).collectAsMap();	
 		
 		/*
-		 * Rating summary
+		 * Rating summary of ratings data
 		 */
 		long ratingCount = ratings.count();
 		long userCount = ratings.map(
@@ -125,6 +135,7 @@ public class RecommendationModel implements Serializable{
 		 * Training: for train multiple model
 		 * Validation: for select the best model by RMSE(Root Mean Squared Error)
 		 * Test : for evaluate the best model on test set
+		 * then cache them so we could use it several time just by loading it
 		 */
 		int numPartitions = 10;
 		//Training data set
@@ -193,10 +204,10 @@ public class RecommendationModel implements Serializable{
          * Training the Model based on these sets of data
          * Using ALS.train we will train some models and find the best one
          * ALS best parameter we need are:
-         * Rank,
-         * Lambda(regularization constant)&	
-         * Number of iterations					
-         */        
+         * Rank:rank is the number of latent factors in the model.,
+         * Lambda(lambda specifies the regularization parameter in ALS)&	
+         * numIterations:iterations is the number of iterations to run. Here its also count as user id					
+         */  
 	    int rank = 10;
 	    int numIterations = 2;
 	    MatrixFactorizationModel model = ALS.train(JavaRDD.toRDD(training), rank, numIterations, 0.01);
