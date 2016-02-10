@@ -41,7 +41,6 @@ public class TestRecommendationModel extends RecommendationModel implements Seri
 	public void RmseComputationtest() {
 		RMSEcomputation object = new RMSEcomputation();
 		assertNotNull(object);
-		assertTrue(true);
 	}
 	
 	//test get recommendation class
@@ -49,7 +48,6 @@ public class TestRecommendationModel extends RecommendationModel implements Seri
 	public void GetRecommendationtest() {
 		GetRecommendation object2 = new GetRecommendation();
 		assertNotNull(object2);
-		assertTrue(true);
 	}
 	
 	//Test main class of recommendation
@@ -57,7 +55,6 @@ public class TestRecommendationModel extends RecommendationModel implements Seri
 	public void RecommendationModelMaintest() {
 		RecommendationModel object3 = new RecommendationModel();
 		assertNotNull(object3);
-		assertTrue(true);
 	}
 	
 	//Test mapping
