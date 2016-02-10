@@ -20,7 +20,8 @@ public class IndexController {
 		"/request/likes",
 		"/request/tags",
 		"/request/locations",
-		"/token"})
+		"/token",
+		})
 	public String index(){
 		return "forward:/index.html";
 	}
