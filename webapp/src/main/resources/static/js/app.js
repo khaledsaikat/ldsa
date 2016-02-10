@@ -60,7 +60,8 @@ angular
 	  .within()
 		.segment('users', {
 			default: true,
-			templateUrl: 'partials/request/users.html'
+			templateUrl: 'partials/request/users.html',
+            controller: 'RequestUserCtrl'
 		})
 		.segment('relationships', {
 			templateUrl: 'partials/request/relationships.html'

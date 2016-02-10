@@ -24,7 +24,7 @@ public class TokenController {
 
 	}
 
-	@RequestMapping("/getTokens")
+	@RequestMapping("/api/getTokens")
 	public @ResponseBody List<TokenDummy> getTokens() {
 
 		return list;

@@ -41,10 +41,8 @@
 				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Choose Access Token</label>
-						<select class="form-control select2" style="width: 100%;" tabindex="-1">
-							<option>Token 1</option>
-							<option>Token 2</option>
-							<option>Token 3</option>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1" ng-model="userBasic.token">
+							<option ng-repeat="token in tokens" value="{{token.id}}">{{token.userName}}</option>
 						</select>
 					</div>
 				</div>
@@ -99,10 +97,8 @@
 				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Choose Access Token</label>
-						<select class="form-control select2" style="width: 100%;" tabindex="-1">
-							<option>Token 1</option>
-							<option>Token 2</option>
-							<option>Token 3</option>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1" ng-model="userRecent.token">
+							<option ng-repeat="token in tokens" value="{{token.id}}">{{token.userName}}</option>
 						</select>
 					</div>
 				</div>
@@ -149,10 +145,8 @@
 				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Choose Access Token</label>
-						<select class="form-control select2" style="width: 100%;" tabindex="-1">
-							<option>Token 1</option>
-							<option>Token 2</option>
-							<option>Token 3</option>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1" ng-model="userMedia.token">
+							<option ng-repeat="token in tokens" value="{{token.id}}">{{token.userName}}</option>
 						</select>
 					</div>
 				</div>
@@ -199,10 +193,8 @@
 				<div class="col-sm-12">
 					<div class="form-group">
 						<label>Choose Access Token</label>
-						<select class="form-control select2" style="width: 100%;" tabindex="-1">
-							<option>Token 1</option>
-							<option>Token 2</option>
-							<option>Token 3</option>
+						<select class="form-control select2" style="width: 100%;" tabindex="-1" ng-model="userSearch.token">
+							<option ng-repeat="token in tokens" value="{{token.id}}">{{token.userName}}</option>
 						</select>
 					</div>
 				</div>

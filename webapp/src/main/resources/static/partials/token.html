@@ -77,14 +77,10 @@
     
 	<div class="col-md-4" ng-repeat="token in tokens">
 		<div class="info-box bg-light-blue">
-            <span class="info-box-icon"><img ng-src="{{token.imgUri || 'http://placehold.it/200x200'}}" style="img-align:left;" alt="User Image" /></span>
+            <span class="info-box-icon"><img ng-src="{{token.imgUri || 'http://placehold.it/200x200'}}" style="img-align:right;" alt="User Image" /></span>
             <div class="info-box-content">
               <span class="info-box-text">{{token.userName}}</span>
-				<span class="info-box-number">{{token.accessToken}}
-					<button class="btn btn-xs bg-light-blue pull-right" type="button">
-						<i class="fa fa-remove"></i>
-					</button>
-				</span>
+				<span class="info-box-number">{{token.accessToken}}</span>
               <div class="progress">
                 <div class="progress-bar" style="width: 20%"></div>
               </div>
@@ -94,50 +90,7 @@
             </div>
         </div>
 	</div>	
-    
-	<div class="col-md-4">
-
-		<div class="info-box bg-light-blue">
-            <span class="info-box-icon"><img src="http://placehold.it/200x200" style="img-align:left;" alt="User Image"/></span>
-
-            <div class="info-box-content">
-				<span class="info-box-text">User 2</span>
-				<span class="info-box-number">...0123456789
-					<button class="btn btn-xs bg-light-blue pull-right" type="button">
-						<i class="fa fa-remove"></i>
-					</button>
-				</span>
-				<div class="progress">
-					<div class="progress-bar" style="width: 50%"></div>
-				</div>
-                <span class="progress-description">
-					250/500 requests made this hour 
-                </span>
-            </div>
-        </div>
-	</div>	
-	<div class="col-md-4">
-
-		<div class="info-box bg-light-blue">
-            <span class="info-box-icon"><img src="http://placehold.it/200x200" style="img-align:left;" alt="User Image"/></span>
-
-            <div class="info-box-content">
-              <span class="info-box-text">Another User</span>
-              <span class="info-box-number">...0123456789
-				<button class="btn btn-xs bg-light-blue pull-right" type="button">
-						<i class="fa fa-remove"></i>
-				</button>
-			  </span>
-              <div class="progress">
-                <div class="progress-bar" style="width: 80%"></div>
-              </div>
-                  <span class="progress-description">
-                     400/500 requests made this hour 
-                  </span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-	</div>		
+    	
 	<div class="col-md-4">
 		<a href='javascript:window.prompt("Enter AccessToken here","AccessToken");'>
         <span class="info-box-icon"><i class="ion ion-android-add"></i></span>
