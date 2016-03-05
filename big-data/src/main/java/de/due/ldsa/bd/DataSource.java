@@ -35,4 +35,9 @@ public interface DataSource {
 	 * @return List
 	 */
 	public List<?> getListSourceData();
+	
+	/**
+	 * Make the data as empty
+	 */
+	public void empty();
 }

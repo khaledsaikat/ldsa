@@ -9,7 +9,7 @@ public class StreamingMain {
 
 	public static void main(String[] args) throws Exception {
 		new SampleData().populateCommentsSample();
-		Streaming.getInstance().run();
+		Streaming.getInstance().run("BC");
 	}
 
 }

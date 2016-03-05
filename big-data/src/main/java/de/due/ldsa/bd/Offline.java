@@ -36,7 +36,7 @@ public class Offline extends Base {
 	private void populateBaseData() {
 		baseData = new Data(DataProvider.getInstance().getListSourceData());
 		baseData.setSparkContext(sparkContext);
-		baseData.setSqlContext(sqlContext);	
+		baseData.setSqlContext(sqlContext);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class Offline extends Base {
 	private void runKMeansClustering() {
 		DataFrame dataFrame = baseData.rddToDataframe(baseData.getRdd(), new CommentSample());
 		KMeansClustering kmeans = new KMeansClustering(baseData);
-		kmeans.analysis(dataFrame);
+		ResultContainer.getInstance().setResults(kmeans.analysis(dataFrame));
 	}
 
 	/**
@@ -56,16 +56,25 @@ public class Offline extends Base {
 	private void runBinaryClassification() {
 		DataFrame dataFrame = baseData.rddToDataframe(baseData.getRdd(), new CommentSample());
 		BinaryClassification binaryClassification = new BinaryClassification(baseData);
-		binaryClassification.analysis(dataFrame);
+		ResultContainer.getInstance().setResults(binaryClassification.analysis(dataFrame));
 	}
 
 	/**
 	 * Run analysis.
 	 */
-	public void run() {
-		FPGrowthAnalysis.analysis(baseData);
-		runKMeansClustering();
-		runBinaryClassification();
+	public void run(String analysisName) {
+		switch (analysisName) {
+		case "KC":
+			runKMeansClustering();
+			break;
+		case "BC":
+			runBinaryClassification();
+			break;
+		case "GA":
+			FPGrowthAnalysis.analysis(baseData);
+			break;
+		}
 		sparkContext.stop();
 	}
+
 }

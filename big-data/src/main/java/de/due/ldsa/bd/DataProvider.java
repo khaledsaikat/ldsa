@@ -1,5 +1,7 @@
 package de.due.ldsa.bd;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ import java.util.List;
  */
 public class DataProvider implements DataSource {
 	private static DataProvider instance = null;
-	private String stringSource;
+	private String stringSource = null;
 	private List<?> listSource;
 
 	/**
@@ -41,6 +43,9 @@ public class DataProvider implements DataSource {
 	@Override
 	public void setSourceData(List<?> data) {
 		listSource = data;
+		/*for (Object single : data) {
+			listSource.add(single);
+		}*/
 	}
 
 	@Override
@@ -53,6 +58,7 @@ public class DataProvider implements DataSource {
 		return listSource;
 	}
 	
+	@Override
 	public void empty() {
 		stringSource = null;
 		listSource = null;
