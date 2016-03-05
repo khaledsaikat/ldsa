@@ -1,5 +1,6 @@
 package de.due.ldsa.bd.analysis;
 
+import java.util.List;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.ml.Pipeline;
 import org.apache.spark.ml.PipelineModel;
@@ -72,11 +73,11 @@ public class BinaryClassification {
 	/**
 	 * Analysis comments based on trained model
 	 */
-	public void analysis(DataFrame data) throws AnalysisException {
+	public List<String> analysis(DataFrame data) throws AnalysisException {
 		DataFrame training = getTrainingDataFrame();
 		Pipeline pipeline = getPipeline();
 		PipelineModel model = pipeline.fit(training);
 		DataFrame predictions = model.transform(data);
-		predictions.show();
+		return predictions.javaRDD().map(r -> r.getString(0) + ":" + String.valueOf((int) r.getDouble(5))).collect();
 	}
 }

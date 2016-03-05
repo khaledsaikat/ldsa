@@ -9,7 +9,7 @@ public class OfflineMain {
 	
 	public static void main(String[] args) throws Exception {
 		new SampleData().populateCommentsSample();
-		Offline.getInstance().run();
+		Offline.getInstance().run("GA");
 	}
 	
 }

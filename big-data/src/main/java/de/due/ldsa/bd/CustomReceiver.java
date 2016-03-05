@@ -46,7 +46,7 @@ public class CustomReceiver extends Receiver<Object> {
 	 * get called on stop.
 	 */
 	public void onStop() {
-		// DataProvider.getInstance().empty();
+		//DataProvider.getInstance().empty();
 	}
 
 	/**
