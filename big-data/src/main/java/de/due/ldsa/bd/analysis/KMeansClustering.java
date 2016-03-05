@@ -34,11 +34,10 @@ public class KMeansClustering {
 		String path = "../big-data/src/main/resources/smsspamcollection/SMSSpamCollection";
 		JavaRDD<Object> rdd = baseData.getSparkContext().textFile(path).map(line -> {
 			String[] parts = line.split("\t");
-			CommentSample model = new CommentSample(parts[1]);
+			AnalysisModel model = new AnalysisModel(parts[1]);
 			return model;
 		});
-		DataFrame dataFrame = baseData.rddToDataframe(rdd, new CommentSample());
-
+		DataFrame dataFrame = baseData.rddToDataframe(rdd, new AnalysisModel());
 		return dataFrame;
 	}
 

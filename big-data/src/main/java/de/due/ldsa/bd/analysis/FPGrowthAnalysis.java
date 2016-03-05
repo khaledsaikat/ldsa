@@ -7,7 +7,6 @@ import com.google.common.collect.Lists;
 import de.due.ldsa.bd.Data;
 import de.due.ldsa.bd.SampleData;
 import de.due.ldsa.bd.exceptions.AnalysisException;
-
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.mllib.fpm.FPGrowth;
 import org.apache.spark.mllib.fpm.FPGrowthModel;
@@ -45,6 +44,15 @@ public class FPGrowthAnalysis {
 	public void setNumPartition(int numPartition) {
 		this.numPartition = numPartition;
 	}
+	
+	public List<String> toStringList(List<CommentSample> iteams) {
+		List<String> list = new ArrayList<String>();
+		for (CommentSample x : iteams) {
+			list.add(x.getText());
+		}
+		
+		return list;
+	}
 
 	/**
 	 * Java example for mining frequent itemsets using FP-growth. Example usage:
@@ -53,18 +61,20 @@ public class FPGrowthAnalysis {
 	 * their frequency in the data set FP Growth take an JavaRDD set of
 	 * transactions Iteration of array of items are generic type
 	 */
-	public static void analysis(Data data) throws AnalysisException {
+	public static List<String> analysis(Data data) throws AnalysisException {
 		FPGrowthAnalysis analysis = new FPGrowthAnalysis(data);
 		analysis.setMinSupport(0.3);
 		analysis.setNumPartition(-1);
+		//List<String> list = analysis.toStringList((List<CommentSample>) data.getRawList());
 		List<String> list = new SampleData().getTextSamples();
 		JavaRDD<String> rdd = analysis.baseData.getSparkContext().parallelize(list);
 		JavaRDD<ArrayList<String>> transactions1 = rdd.map(r -> Lists.newArrayList(r.split(" ")));
 		FPGrowthModel<String> model = new FPGrowth().setMinSupport(analysis.getMinSupport())
 				.setNumPartitions(analysis.getNumPartition()).run(transactions1);
-
+		List<String> result = new ArrayList<String>();
 		for (FPGrowth.FreqItemset<String> s : model.freqItemsets().toJavaRDD().collect()) {
-			System.out.println("[" + Joiner.on(",").join(s.javaItems()) + "], " + s.freq());
+			result.add("[" + Joiner.on(",").join(s.javaItems()) + "], " + s.freq());
 		}
+		return result;
 	}
 }

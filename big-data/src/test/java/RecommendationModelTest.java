@@ -29,7 +29,7 @@ import scala.Tuple2;
  *
  */
 
-public class TestRecommendationModel extends RecommendationModel implements Serializable {
+public class RecommendationModelTest extends RecommendationModel implements Serializable {
 
 	/**
 	 * 
@@ -116,7 +116,7 @@ public class TestRecommendationModel extends RecommendationModel implements Seri
 	   @Test
 	   public void testAdd() {
 		// add the test's in the suite
-		      TestSuite suite = new TestSuite(TestRecommendationModel.class, BinaryClassificationModelTest.class);
+		      TestSuite suite = new TestSuite(RecommendationModelTest.class, AnalysisModelTest.class);
 		      TestResult result = new TestResult();
 		      suite.run(result);
 		      System.out.println("Number of test cases = " + result.runCount());

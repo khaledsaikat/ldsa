@@ -5,6 +5,7 @@ import org.apache.spark.streaming.Durations;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import de.due.ldsa.bd.analysis.BinaryClassification;
 import de.due.ldsa.bd.analysis.CommentSample;
+import de.due.ldsa.bd.analysis.FPGrowthAnalysis;
 import de.due.ldsa.bd.analysis.KMeansClustering;
 
 /**
@@ -71,6 +72,12 @@ public class Streaming extends Base {
 			ResultContainer.getInstance().setResults(kmeans.analysis(dataFrame));
 		});
 	}
+	
+	private void runFPGrowth() {
+		baseData.getDstream().foreachRDD(rdd -> {
+			ResultContainer.getInstance().setResults(FPGrowthAnalysis.analysis(baseData));
+		});
+	}
 
 	/**
 	 * Run analysis.
@@ -82,6 +89,9 @@ public class Streaming extends Base {
 			break;
 		case "BC":
 			runBinaryClassification();
+			break;
+		case "GA":
+			runFPGrowth();	
 			break;
 		}
 		streamingContext.start();

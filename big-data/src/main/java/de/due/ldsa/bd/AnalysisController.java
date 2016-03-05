@@ -1,6 +1,10 @@
 package de.due.ldsa.bd;
 
 import java.util.List;
+import de.due.ldsa.bd.exceptions.AnalysisException;
+import de.due.ldsa.bd.exceptions.SparkContextDataException;
+import de.due.ldsa.db.Database;
+import de.due.ldsa.db.DatabaseImpl;
 
 /**
  * Implementation for BDController
@@ -10,7 +14,7 @@ import java.util.List;
 public class AnalysisController implements BDController {
 
 	@Override
-	public void analysis(String analysisType, String analysisName) {
+	public void analysis(String analysisType, String analysisName) throws SparkContextDataException {
 		if (analysisType == "Offline") {
 			populateOfflineDataSource();
 			Offline.getInstance().run(analysisName);
@@ -25,7 +29,7 @@ public class AnalysisController implements BDController {
 	 * 
 	 * @param analysisName
 	 */
-	private void runStreaming(String analysisName) {
+	private void runStreaming(String analysisName) throws SparkContextDataException {
 		new Thread() {
 			@Override
 			public void run() {
@@ -35,27 +39,20 @@ public class AnalysisController implements BDController {
 	}
 
 	/**
-	 * @todo Pull data from database
+	 * Pull data from database. For exception, populate sample data.
 	 */
 	private void populateOfflineDataSource() {
-		new SampleData().populateCommentsSample();
+		try {
+			Database database = DatabaseImpl.getInstance();
+			DataProvider.getInstance().setSourceData(database.getAllComments());
+		} catch (Exception e) {
+			new SampleData().populateCommentsSample();
+		}
 	}
 
 	@Override
-	public List<String> getResult() {
+	public List<String> getResult() throws AnalysisException {
 		return ResultContainer.getInstance().getResults();
-	}
-
-	/**
-	 * This method is only provided for local run case.
-	 */
-	public static void main(String[] args) throws Exception {
-		new SampleData().populateCommentsSample();
-		AnalysisController controller = new AnalysisController();
-		controller.analysis("Offline", "BC");
-		// controller.analysis("Real-Time", "BC");
-		List<String> result = controller.getResult();
-		System.out.println(result);
 	}
 
 }

@@ -35,10 +35,10 @@ public class BinaryClassification {
 		JavaRDD<Object> rdd = baseData.getSparkContext().textFile(path).map(line -> {
 			String[] parts = line.split("\t");
 			Double label = parts[0].equals("spam") ? 1.0 : 0.0;
-			BinaryClassificationModel model = new BinaryClassificationModel(label, parts[1]);
+			AnalysisModel model = new AnalysisModel(label, parts[1]);
 			return model;
 		});
-		DataFrame dataFrame = baseData.rddToDataframe(rdd, new BinaryClassificationModel());
+		DataFrame dataFrame = baseData.rddToDataframe(rdd, new AnalysisModel());
 
 		return dataFrame;
 	}

@@ -3,21 +3,25 @@ package de.due.ldsa.bd.analysis;
 import java.io.Serializable;
 
 /**
- * JavaBeans model for binary classification. This model is useful for logistic
+ * JavaBeans model for analysis. This model is useful for logistic
  * regression.
  * 
  * @author Khaled Hossain
  */
-public class BinaryClassificationModel implements Serializable {
+public class AnalysisModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Double label;
 	private String text;
 
-	public BinaryClassificationModel() {
+	public AnalysisModel() {
 	}
 
-	public BinaryClassificationModel(Double label, String text) {
+	public AnalysisModel(Double label, String text) {
 		this.setLabel(label);
+		this.setText(text);
+	}
+	
+	public AnalysisModel(String text) {
 		this.setText(text);
 	}
 

@@ -58,6 +58,10 @@ public class Offline extends Base {
 		BinaryClassification binaryClassification = new BinaryClassification(baseData);
 		ResultContainer.getInstance().setResults(binaryClassification.analysis(dataFrame));
 	}
+	
+	private void runFPGrowth() {
+		ResultContainer.getInstance().setResults(FPGrowthAnalysis.analysis(baseData));
+	}
 
 	/**
 	 * Run analysis.
@@ -71,7 +75,7 @@ public class Offline extends Base {
 			runBinaryClassification();
 			break;
 		case "GA":
-			FPGrowthAnalysis.analysis(baseData);
+			runFPGrowth();	
 			break;
 		}
 		sparkContext.stop();

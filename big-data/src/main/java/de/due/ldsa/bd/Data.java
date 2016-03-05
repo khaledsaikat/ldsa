@@ -49,6 +49,10 @@ public class Data {
 	public SQLContext getSqlContext() throws SparkContextDataException {
 		return sqlContext;
 	}
+	
+	public List<?> getRawList() {
+		return rawList;
+	}
 
 	public JavaRDD<?> getRdd() throws SparkContextDataException {
 		if (rdd == null && rawList != null) {

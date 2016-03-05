@@ -1,7 +1,5 @@
 package de.due.ldsa.bd;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -43,9 +41,6 @@ public class DataProvider implements DataSource {
 	@Override
 	public void setSourceData(List<?> data) {
 		listSource = data;
-		/*for (Object single : data) {
-			listSource.add(single);
-		}*/
 	}
 
 	@Override
