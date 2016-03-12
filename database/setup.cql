@@ -29,8 +29,8 @@ CREATE TABLE profileFeeds (
     sharerIds LIST<BIGINT>,
     hashtags LIST<VARCHAR>,
     links LIST<VARCHAR>,
-    locationId INT,
-    mediaId INT,
+    locationId BIGINT,
+    mediaId BIGINT,
     taggedUserIds LIST<BIGINT>,
     commentIds LIST<BIGINT>
 );
