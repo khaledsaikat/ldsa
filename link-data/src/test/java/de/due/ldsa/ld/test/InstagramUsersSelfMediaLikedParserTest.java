@@ -167,7 +167,7 @@ public class InstagramUsersSelfMediaLikedParserTest {
 		
 		profileFeed = (ProfileFeed) resultContent.get(6);
 		assertEquals(363839373298l, profileFeed.getId());
-		assertEquals((int)363839373298l, profileFeed.getMediaId());
+		assertEquals(363839373298l, profileFeed.getMediaId());
 		assertEquals(3, profileFeed.getProfileId());
 	
 	}

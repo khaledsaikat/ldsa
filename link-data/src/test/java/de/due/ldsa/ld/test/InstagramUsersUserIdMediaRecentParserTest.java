@@ -64,7 +64,7 @@ public class InstagramUsersUserIdMediaRecentParserTest {
 		
 		profileFeed = (ProfileFeed) resultList.get(6);
 		assertEquals(363839373298L, profileFeed.getId());
-		//assertEquals(363839373298L, profileFeed.getMediaId());	// TODO system model change media id type from int to long
+		assertEquals(363839373298L, profileFeed.getMediaId());
 		assertEquals(3, profileFeed.getProfileId());
 		
 	}

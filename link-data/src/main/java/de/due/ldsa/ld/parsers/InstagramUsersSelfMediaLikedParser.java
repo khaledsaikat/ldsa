@@ -39,7 +39,7 @@ public class InstagramUsersSelfMediaLikedParser implements Parser<ArrayList<Soci
 			Profile creator = InstagramObjectParser.parseProfile(json.getJSONObject("user"));
 			ProfileFeed profileFeed = InstagramObjectParser.parseProfileFeed(json);
 			
-			profileFeed.setMediaId((int) media.getId());
+			profileFeed.setMediaId(media.getId());
 			ArrayList<Long> profileFeedIdList = new ArrayList<>();
 			profileFeedIdList.add(profileFeed.getId());
 			creator.setProfileFeedIds(profileFeedIdList);
@@ -52,7 +52,7 @@ public class InstagramUsersSelfMediaLikedParser implements Parser<ArrayList<Soci
 				JSONObject jsonLocation = json.getJSONObject("location");
 				Location location = InstagramObjectParser.parseLocation(jsonLocation);
 				contentList.add(location);
-				profileFeed.setLocationId((int) location.getId());
+				profileFeed.setLocationId(location.getId());
 			}
 		}
 		

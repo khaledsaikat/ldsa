@@ -36,7 +36,7 @@ public class InstagramUsersSelfMediaRecentParser implements Parser<ArrayList<Soc
 			Profile creator = InstagramObjectParser.parseProfile(elementJson.getJSONObject("user"));
 			ProfileFeed profileFeed = InstagramObjectParser.parseProfileFeed(elementJson);
 			
-			profileFeed.setMediaId((int) media.getId());
+			profileFeed.setMediaId(media.getId());
 			ArrayList<Long> profileFeedIdList = new ArrayList<>();
 			profileFeedIdList.add(profileFeed.getId());
 			creator.setProfileFeedIds(profileFeedIdList);
@@ -48,7 +48,7 @@ public class InstagramUsersSelfMediaRecentParser implements Parser<ArrayList<Soc
 			if(!elementJson.isNull("location")){
 				JSONObject locationJson = elementJson.getJSONObject("location");
 				Location location = InstagramObjectParser.parseLocation(locationJson);
-				profileFeed.setLocationId((int) location.getId());
+				profileFeed.setLocationId(location.getId());
 				contentList.add(location);
 			}
 		}

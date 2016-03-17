@@ -34,7 +34,7 @@ public class InstagramMediaSearchParser implements Parser<ArrayList<SocialNetwor
 			Profile creator = InstagramObjectParser.parseProfile(elementJson.getJSONObject("user"));
 			ProfileFeed profileFeed = InstagramObjectParser.parseProfileFeed(elementJson);
 			
-			profileFeed.setMediaId((int) media.getId());
+			profileFeed.setMediaId(media.getId());
 			ArrayList<Long> profileFeedIdList = new ArrayList<>();
 			profileFeedIdList.add(profileFeed.getId());
 			creator.setProfileFeedIds(profileFeedIdList);
