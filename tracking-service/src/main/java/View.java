@@ -12,7 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
-import net.miginfocom.swing.MigLayout;
+
 
 /**
  * GUI of the tracking service
@@ -34,7 +34,6 @@ public class View extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		contentPane = this.getContentPane();
-		contentPane.setLayout(new MigLayout("wrap 1"));
 		
 		
 		Dimension smallDimension = new Dimension(600,50);

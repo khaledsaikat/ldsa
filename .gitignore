@@ -4,3 +4,16 @@
 .classpath
 .project
 .gradle
+webapp/.settings/gradle.prefs
+webapp/build
+webapp/bin/com/webapp/WebappApplication.class
+webapp/bin/static/js/app.js
+webapp/bin/static/js/controllers/controllers.js
+webapp/bin/static/partials/request/users.html
+webapp/bin/static/partials/token.html
+webapp/build/classes/main/com/webapp/controllers/token/TokenController.class
+webapp/build/classes/main/com/webapp/WebappApplication.class
+webapp/build/resources/main/static/js/app.js
+webapp/build/resources/main/static/js/controllers/controllers.js
+webapp/build/resources/main/static/partials/request/users.html
+webapp/build/resources/main/static/partials/token.html
