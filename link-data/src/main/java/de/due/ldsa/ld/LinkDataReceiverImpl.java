@@ -231,8 +231,8 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 	}
 
 	@Override
-	public void setSaveToDatabase(boolean saveToDatabase) {
-		this.saveToDatabase = saveToDatabase;
+	public void setOnlineAnalysis(boolean onlineAnalysis) {
+		this.saveToDatabase = onlineAnalysis;
 	}
 
 	@Override

@@ -63,11 +63,11 @@ public interface LinkDataReceiver {
 	public void setMedia(String mediaJson);
 
 	/**
-	 * Switch the mode of database storage on and off
+	 * Switch the mode of forwarding to analysis part on and off
 	 * 
-	 * @param saveToDatabase
+	 * @param onlineAnalysis
 	 */
-	public void setSaveToDatabase(boolean saveToDatabase);
+	public void setOnlineAnalysis(boolean onlineAnalysis);
 
 	/**
 	 * Get the available HumanProfiles according to the fetch mode
