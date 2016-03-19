@@ -12,7 +12,7 @@ import java.io.*;
  */
 public class DataGenerator {
 	
-	JsonObject theObject = null;
+	static JsonObject theObject = null;
 	
 	public DataGenerator(){
 		
@@ -23,7 +23,7 @@ public class DataGenerator {
      *
      * @return String
      */
-	public String giveRandomData(){
+	public static String giveRandomData(){
 		File file = new File("MOCK_DATA.json");
 		try(InputStream in = new FileInputStream(file)){
 			 JsonReader jr = Json.createReader(in);
