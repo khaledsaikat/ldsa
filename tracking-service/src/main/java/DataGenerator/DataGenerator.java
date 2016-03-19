@@ -11,7 +11,9 @@ import java.io.*;
  *
  */
 public class DataGenerator {
-	private JsonArray jsonArrayOneHundred = null;
+	
+	JsonObject theObject = null;
+	
 	public DataGenerator(){
 		
 	}
@@ -28,18 +30,21 @@ public class DataGenerator {
 			 JsonArray jsonArray = jr.readArray();
 			 jr.close();
 			 JsonArrayBuilder jab = Json.createArrayBuilder();
+			 
+			 JsonObjectBuilder finished = Json.createObjectBuilder(); 
 			 for (int i = 0; i < 100; i++){
 			 int rnd = 0 + (int)(Math.random() * 999); 
 			 JsonObject added = jsonArray.getJsonObject(rnd);
 			 jab.add(added);
 			 }
-			 jsonArrayOneHundred=jab.build();
-			 			
+			 
+			 finished.add("data", jab);
+			 theObject = finished.build();
 		}catch (IOException e){
 			e.printStackTrace();
 			
 		}
-		return jsonArrayOneHundred.toString();
+		return theObject.toString();
 	}
 
 }
