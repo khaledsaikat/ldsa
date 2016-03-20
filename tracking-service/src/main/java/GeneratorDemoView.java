@@ -13,6 +13,10 @@ import javax.swing.ScrollPaneConstants;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
+
+import java.util.*;
 
 import DataGenerator.DataGenerator;
 import de.due.ldsa.bd.AnalysisController;
@@ -67,8 +71,6 @@ public class GeneratorDemoView extends JFrame implements ActionListener{
 		
 		addActionListener(this);
 		
-		mockData = DataGenerator.giveRandomData();
-		System.out.println(mockData);
 		linkDataLayer = LinkDataReceiverImpl.getInstance();
 		linkDataLayer.setOnlineAnalysis(true);
 		bdController = new AnalysisController();
@@ -89,9 +91,21 @@ public class GeneratorDemoView extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		try {
+			mockData = DataGenerator.giveRandomData();
+			System.out.println(mockData);
 			linkDataLayer.setComments(mockData);
-//			bdController.analysis("Real-Time", "BC");
+			bdController.analysis("Real-Time", "BC");
 		} catch (UnexpectedJsonStringException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void appendLineToOutput(String line){
+		StyledDocument doc = (StyledDocument) responseDisplay.getDocument();
+		try {
+			doc.insertString(doc.getLength(), line, null);
+		} catch (BadLocationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
