@@ -25,6 +25,15 @@ public class StoreInDatabaseAction<T> implements Action<T>{
 		this.database = database;
 	}
 	
+	/**Saves a single object or a list of objects to the database.
+	 * Allowed types of T are {@link Comment}, {@link CoopProfile},
+	 * {@link Hashtag}, {@link HumanProfile}, {@link LocationImpl},
+	 * {@link Media}, {@link CoopLocation}, {@link ProfileFeed},
+	 * {@link SocialNetwork} and {@link List}, where the {@link List}
+	 * contains only elements of types mentioned above(including other lists).
+	 * 
+	 * @param t the object to save in the database
+	 */
 	@Override
 	public void onAction(T t) {
 		save(t);
