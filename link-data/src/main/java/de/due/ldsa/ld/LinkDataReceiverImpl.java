@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 
 import de.due.ldsa.bd.DataProvider;
 import de.due.ldsa.bd.DataSource;
+import de.due.ldsa.bd.analysis.CommentSample;
 import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.ld.exceptions.UndefinedFetchMethodException;
@@ -199,9 +200,9 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		try {
 			InstagramMediaMediaIdCommentsParser parser = InstagramMediaMediaIdCommentsParser.INSTANCE;
 			JSONObject jsonObj = new JSONObject(commentsJson);
-			List<SocialNetworkContent> arr = parser.parse(jsonObj);			
-			for(SocialNetworkContent s : arr) {
-				if(s.getClass().equals(Comment.class)) {
+			List<SocialNetworkContent> arr = parser.parse(jsonObj);
+			for (SocialNetworkContent s : arr) {
+				if (s.getClass().equals(Comment.class)) {
 					arrComment.add((Comment) s);
 				} else {
 					arrProfile.add((Profile) s);
@@ -215,16 +216,20 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				throw new UnexpectedJsonStringException("Json string must be list of comments");
 			}
 		}
-		
-		for(Comment c : arrComment) {
+
+		for (Comment c : arrComment) {
 			databaseService.saveComment(c);
 		}
-		for(Profile p : arrProfile) {
+		for (Profile p : arrProfile) {
 			databaseService.autoSaveProfile(p);
 		}
-		if(onlineAnalysis) {
-			dataSource.setSourceData(arrComment);
-		}		
+		List<CommentSample> arr = new ArrayList<CommentSample>();
+		for (Comment comment : arrComment) {
+			arr.add(new CommentSample(comment.getText()));
+		}
+		if (onlineAnalysis) {
+			dataSource.setSourceData(arr);
+		}
 	}
 
 	@Override
