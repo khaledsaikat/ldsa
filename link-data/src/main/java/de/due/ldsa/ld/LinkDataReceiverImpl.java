@@ -1,7 +1,6 @@
 package de.due.ldsa.ld;
 
 import java.util.ArrayList;
-import java.lang.reflect.Type;
 import java.util.List;
 
 import org.codehaus.jettison.json.JSONException;
@@ -17,11 +16,7 @@ import de.due.ldsa.db.Database;
 import de.due.ldsa.db.DatabaseImpl;
 import de.due.ldsa.ld.exceptions.UndefinedFetchMethodException;
 import de.due.ldsa.ld.exceptions.UnexpectedJsonStringException;
-import de.due.ldsa.model.Comment;
-import de.due.ldsa.model.Hashtag;
-import de.due.ldsa.model.HumanProfile;
-import de.due.ldsa.model.Profile;
-import de.due.ldsa.model.ProfileFeed;
+import de.due.ldsa.ld.parsers.InstagramMediaMediaIdCommentsParser;
 import de.due.ldsa.ld.services.CommentsService;
 import de.due.ldsa.ld.services.HashtagsService;
 import de.due.ldsa.ld.services.HumanProfilesService;
@@ -29,9 +24,16 @@ import de.due.ldsa.ld.services.LocationsService;
 import de.due.ldsa.ld.services.MediaService;
 import de.due.ldsa.ld.services.ProfileFeedsService;
 import de.due.ldsa.ld.services.StreamsProviderService;
+import de.due.ldsa.model.Comment;
+import de.due.ldsa.model.Hashtag;
+import de.due.ldsa.model.HumanProfile;
 import de.due.ldsa.model.Location;
 import de.due.ldsa.model.LocationImpl;
 import de.due.ldsa.model.Media;
+import de.due.ldsa.model.Profile;
+import de.due.ldsa.model.ProfileFeed;
+import de.due.ldsa.model.SocialNetworkContent;
+import de.due.ldsa.model.SocialNetworkContentImpl;
 
 /**
  * @author Firas Sabbah
@@ -52,7 +54,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 
 	private Database databaseService;
 
-	private boolean saveToDatabase;
+	private boolean onlineAnalysis;
 
 	private DataSource dataSource;
 
@@ -69,7 +71,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		mediaService = MediaService.getInstance();
 		databaseService = DatabaseImpl.getInstance();
 		streamsProviderService = StreamsProviderService.getInstance();
-		saveToDatabase = false;
+		onlineAnalysis = false;
 		dataSource = DataProvider.getInstance();
 	}
 
@@ -100,7 +102,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 
 		streamsProviderService.setLastUpdatedHumanProfilesSteam(humanProfilesSteam);
 
-		if (saveToDatabase) {
+		if (onlineAnalysis) {
 			for (HumanProfile humanProfile : humanProfilesSteam) {
 				databaseService.saveHumanProfile(humanProfile);
 			}
@@ -138,7 +140,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		}
 
 		streamsProviderService.setLastUpdatedLocationsStream(locationsSteam);
-		if (saveToDatabase) {
+		if (onlineAnalysis) {
 			for (Location location : locationsSteam) {
 				databaseService.saveLocation((LocationImpl) location);
 			}
@@ -164,7 +166,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		}
 
 		streamsProviderService.setLastUpdatedProfileFeedsStream(profileFeedsStream);
-		if (saveToDatabase) {
+		if (onlineAnalysis) {
 			for (ProfileFeed profileFeed : profileFeedsStream) {
 				databaseService.saveProfileFeed(profileFeed);
 			}
@@ -179,7 +181,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		}.getType());
 
 		streamsProviderService.setLastUpdatedHashtagsStream(hashtagsStream);
-		if (saveToDatabase) {
+		if (onlineAnalysis) {
 			for (Hashtag hashtag : hashtagsStream) {
 				databaseService.saveHashtag(hashtag);
 			}
@@ -192,10 +194,20 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 	public void setComments(String commentsJson) throws UnexpectedJsonStringException {
 		String jsonObject = getJsonData(commentsJson);
 		List<Comment> commentsStream = new ArrayList<Comment>();
+		List<Comment> arrComment = new ArrayList<>();
+		List<Profile> arrProfile = new ArrayList<>();
 		try {
-			commentsStream = new Gson().fromJson(commentsJson, new TypeToken<ArrayList<Comment>>() {
-			}.getType());
-		} catch (JsonParseException e) {
+			InstagramMediaMediaIdCommentsParser parser = InstagramMediaMediaIdCommentsParser.INSTANCE;
+			JSONObject jsonObj = new JSONObject(commentsJson);
+			List<SocialNetworkContent> arr = parser.parse(jsonObj);			
+			for(SocialNetworkContent s : arr) {
+				if(s.getClass().equals(Comment.class)) {
+					arrComment.add((Comment) s);
+				} else {
+					arrProfile.add((Profile) s);
+				}
+			}
+		} catch (JsonParseException | JSONException e) {
 			try {
 				Comment comment = new Gson().fromJson(jsonObject, Comment.class);
 				commentsStream.add(comment);
@@ -203,15 +215,16 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 				throw new UnexpectedJsonStringException("Json string must be list of comments");
 			}
 		}
-
-		streamsProviderService.setLastUpdatedCommentsStream(commentsStream);
-		if (saveToDatabase) {
-			for (Comment comment : commentsStream) {
-				databaseService.saveComment(comment);
-			}
+		
+		for(Comment c : arrComment) {
+			databaseService.saveComment(c);
 		}
-
-		dataSource.setSourceData(commentsStream);
+		for(Profile p : arrProfile) {
+			databaseService.autoSaveProfile(p);
+		}
+		if(onlineAnalysis) {
+			dataSource.setSourceData(arrComment);
+		}		
 	}
 
 	@Override
@@ -220,7 +233,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 		}.getType());
 
 		streamsProviderService.setLastUpdatedMediaSteam(mediaStream);
-		if (saveToDatabase) {
+		if (onlineAnalysis) {
 			for (Media media : mediaStream) {
 				databaseService.saveMedia(media);
 			}
@@ -232,7 +245,7 @@ public class LinkDataReceiverImpl implements LinkDataReceiver {
 
 	@Override
 	public void setOnlineAnalysis(boolean onlineAnalysis) {
-		this.saveToDatabase = onlineAnalysis;
+		this.onlineAnalysis = onlineAnalysis;
 	}
 
 	@Override

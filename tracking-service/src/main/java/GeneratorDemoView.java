@@ -15,6 +15,8 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 import DataGenerator.DataGenerator;
+import de.due.ldsa.bd.AnalysisController;
+import de.due.ldsa.bd.BDController;
 import de.due.ldsa.ld.LinkDataReceiverImpl;
 import de.due.ldsa.ld.exceptions.UnexpectedJsonStringException;
 
@@ -31,7 +33,8 @@ public class GeneratorDemoView extends JFrame implements ActionListener{
 	public JButton btnBigDataAnalysis;
 	private String mockData;	
 	private LinkDataReceiverImpl linkDataLayer; 
-
+	private BDController bdController;
+	
 	public static void main(String[] args) {
 		GeneratorDemoView frame = new GeneratorDemoView();
 		
@@ -68,6 +71,7 @@ public class GeneratorDemoView extends JFrame implements ActionListener{
 		System.out.println(mockData);
 		linkDataLayer = LinkDataReceiverImpl.getInstance();
 		linkDataLayer.setOnlineAnalysis(true);
+		bdController = new AnalysisController();
 	}
 
 	public void addActionListener(ActionListener actionListener) {
@@ -86,6 +90,7 @@ public class GeneratorDemoView extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		try {
 			linkDataLayer.setComments(mockData);
+//			bdController.analysis("Real-Time", "BC");
 		} catch (UnexpectedJsonStringException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
