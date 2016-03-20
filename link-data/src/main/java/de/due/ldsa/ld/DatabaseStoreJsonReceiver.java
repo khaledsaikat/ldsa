@@ -13,16 +13,25 @@ import de.due.ldsa.db.Database;
  */
 public class DatabaseStoreJsonReceiver implements JsonReceiver {
 
-	private Database database;
 	private StoreInDatabaseAction storeInDatabaseAction;
 	
-	
+	/**Creates a new instance of this class using the supplied database
+	 * instance to save objects.
+	 * 
+	 * @param database the {@link Database} instance to use
+	 */
 	public DatabaseStoreJsonReceiver(Database database) {
-		this.database = database;
 		storeInDatabaseAction = new StoreInDatabaseAction<>(database);
 	}
 	
-	
+	/**Parses a JsonObject using the supplied parser and then saves all
+	 * objects created from the parser into the database.
+	 * 
+	 * @param jsonObject the to be processed JsonObject
+	 * @param parser a {@link Parser} that can parse the correct Json structure
+	 * @throws JSONException any {@link JSONException} occuring during the
+	 * parsing step
+	 */
 	@Override
 	public <T> void submitJsonObject(JSONObject jsonObject, Parser<T> parser) throws JSONException {
 		T t = parser.parse(jsonObject);
